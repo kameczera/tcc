@@ -53,4 +53,8 @@ Once compiled, you can run the tool with:
 bash
 Copiar
 .\liveness.exe
+<<<<<<< HEAD
 This will execute the program and print the liveness analysis results based on the input program.
+=======
+This will execute the program and print the liveness analysis results based on the input program.
+>>>>>>> af63b86715027b3da2193e2733073aefc7b67367
