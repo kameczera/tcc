@@ -1,8 +1,11 @@
+L0
 {
  int z = 10;
  int x = 0;
  int y = 1;
 }
+cond a > N L0 L1
+L1
 {
  int t = 1;
  int v = 1;

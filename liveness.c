@@ -1,28 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-typedef enum {
-    INT,
-    WHILE,
-    IF,
-    RETURN
-} token;
-
-typedef struct instruction {
-    char var_name;
-    token token_type;
-    struct instruction* next;
-} instruction;
-
-typedef struct node {
-    instruction* instructions;
-    struct node** neighbors;
-} node;
-
-typedef struct {
-    node* start;
-} graph;
+#include "nodes.h"
 
 void block_analisys(instruction** instructions, FILE* fptr, char code[100]) {
     instruction* last = NULL;
@@ -34,7 +13,7 @@ void block_analisys(instruction** instructions, FILE* fptr, char code[100]) {
 
         if (code[1] == 'i') { 
             new_instruction->var_name = code[5];
-            new_instruction->token_type = INT;
+            new_instruction->next = NULL;
         }
 
         if (*instructions == NULL) {
@@ -54,54 +33,76 @@ int main() {
         return 1;
     }
 
+    // PARSE
+
     char code[100];
-    graph* structure = (graph*)malloc(sizeof(graph));
-    structure->start = NULL;
-    node* curr_node = structure->start;
+    node** list_of_nodes = (node*)malloc(sizeof(node) * 10);
+    int cont = 0;
 
     while (fgets(code, 100, fptr)) {
         node* new_node;
         if (code[0] == '{') {
-            new_node = (node*)malloc(sizeof(node));
-            new_node->instructions = NULL;
-            new_node->neighbors = NULL;
+            new_node = create_block_node();
+            block_analisys(&new_node->block_data.instructions, fptr, code);
+        } else if (code[0] == 'c') {
+            new_node = create_cond_node();
+            new_node->cond_data.labels[0] = code[12] - '0';
+            new_node->cond_data.labels[1] = code[15] - '0';
+        } else if (code[0] == 'L') {
+            int label = code[1] - '0';
+            new_node = create_label_node();
+            new_node->label_data.label_id = label;
+        }
 
-            block_analisys(&new_node->instructions, fptr, code);
+        if (new_node != NULL) {
+            list_of_nodes[cont] = new_node;
+            cont++;
         }
-        if (structure->start == NULL) {
-            structure->start = new_node;
-        } else {
-            curr_node->neighbors = (node**)malloc(sizeof(node*));
-            curr_node->neighbors[0] = new_node;
-        }
-        curr_node = new_node;
-    }
-
-    curr_node = structure->start;
-    while(curr_node != NULL) {
-        instruction* curr_instruction = curr_node->instructions;
-        while (curr_instruction != NULL) {
-            printf("var_name: %c, token_type: %d\n", curr_instruction->var_name, curr_instruction->token_type);
-            curr_instruction = curr_instruction->next;
-        }
-        curr_node = curr_node->neighbors[0];
     }
 
     fclose(fptr);
 
-    // curr_node = structure->start;
-    // while (curr_node != NULL) {
-    //     instruction* curr_instruction = curr_node->instructions;
-    //     while (curr_instruction != NULL) {
-    //         instruction* temp = curr_instruction;
-    //         curr_instruction = curr_instruction->next;
-    //         free(temp);
-    //     }
-    //     node* temp_node = curr_node;
-    //     curr_node = curr_node->neighbors != NULL ? curr_node->neighbors[0] : NULL;
-    //     free(temp_node);
-    // }
-    // free(structure);
+    // CONSTRUÇÃO DO GRAFO
+    
+    node* start = list_of_nodes[0];
+    node* curr_node;
+    for(int i = 0; i < cont - 1; i++) {
+        curr_node = list_of_nodes[i];
+        if(curr_node->type == NODE_COND) {
+            curr_node->neighbors = (node**)malloc(sizeof(node*) * 2);
+            node* ptr_label;
+            int cont_neighbors = 0;
+            for(int j = 0; j < cont; j++) {
+                ptr_label = list_of_nodes[j];
+                if(ptr_label->type == NODE_LABEL && (curr_node->cond_data.labels[0] == ptr_label->label_data.label_id || curr_node->cond_data.labels[1] == ptr_label->label_data.label_id)) {
+                    curr_node->neighbors[cont_neighbors] = ptr_label;
+                    cont_neighbors++;
+                }
+            }
+        } else {
+            curr_node->neighbors = (node**)malloc(sizeof(node*));
+            curr_node->neighbors[0] = list_of_nodes[i + 1];
+        }
+    }
+    curr_node = start;
+    for (int i = 0; i < cont; i++) {
+        printf("Nó atual:\n");
+        print_node(list_of_nodes[i]);
+        if (list_of_nodes[i]->type == NODE_COND) {
+            printf("Neighbors:\n");
+            print_node(list_of_nodes[i]->neighbors[0]);
+            print_node(list_of_nodes[i]->neighbors[1]);
+        } else if (list_of_nodes[i]->neighbors != NULL) {
+            printf("Neighbor:\n");
+            print_node(list_of_nodes[i]->neighbors[0]);
+        }
+    }
+    
+    free(list_of_nodes);
+    
+    // ALGORITMO
+
+    
 
     return 0;
 }
