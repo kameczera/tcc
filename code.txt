@@ -3,10 +3,8 @@
  int x = 0;
  int y = 1;
 }
-while(x < n)
 {
- z = x * 2 + y;
- x++;
- y = x + z;
+ int t = 1;
+ int v = 1;
+ int w = 1;
 }
-return y;
