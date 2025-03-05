@@ -70,6 +70,14 @@ void copy_ptrs(int** dest, int** src, int node_cont, int vars) {
     }
 }
 
+void clean(int** dest, int node_cont, int vars) {
+    for (int i = 0; i < node_cont; i++) {
+        for (int j = 0; j < vars; j++) {
+            dest[i][j] = 0;
+        }
+    }
+}
+
 int main(int argc, char *argv[]) {
     int debug_graph = 0, debug_kill_gen = 0, debug_algorithm = 0;
 
@@ -247,15 +255,19 @@ int main(int argc, char *argv[]) {
         }
     }
     
-    while(!(equal_ptrs(in, tmp_in, node_cont, 3) && equal_ptrs(out, tmp_out, node_cont, 3))) {
+    do {
         copy_ptrs(tmp_in, in, node_cont, 3);
         copy_ptrs(tmp_out, out, node_cont, 3);
+        clean(in, node_cont, 3);
+        clean(out, node_cont, 3);
         in[node_cont - 1][gen[node_cont - 1][0] - 'a'] = 1;
         for(int i = node_cont - 2; i >= 0; i--) {
             // out:
             for(int s = node_cont - 1; s > i; s--) {
-                for (int j = i + 1; j < 3; j++) {
-                    if (in[s][j] == 1) out[i][j] = 1;
+                for (int j = 0; j < 3; j++) {
+                    if (in[s][j] == 1) {
+                        out[i][j] = 1;
+                    }
                 }
                 if (kill[s] != '\0') out[i][kill[s] - 'a'] = 0;
             }
@@ -279,7 +291,7 @@ int main(int argc, char *argv[]) {
                 }
             }
         }
-    }
+    } while(!(equal_ptrs(in, tmp_in, node_cont, 3) && equal_ptrs(out, tmp_out, node_cont, 3)));
 
     if (debug_algorithm) {
         for(int i = 0; i < node_cont; i++) {
