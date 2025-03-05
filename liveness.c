@@ -64,7 +64,7 @@ int main() {
     // PARSE
 
     char code[100];
-    node** list_of_nodes = (node*)malloc(sizeof(node) * 10);
+    node** list_of_nodes = (node**)malloc(sizeof(node) * 10);
     int node_cont = 0;
 
     while (fgets(code, 100, fptr)) {
@@ -152,26 +152,43 @@ int main() {
     // ALGORITMO
 
     char** gen = (char**)malloc(sizeof(char*) * node_cont);
-    char** kill = (char**)malloc(sizeof(char*) * node_cont);
+    for(int i = 0; i < node_cont; i++) gen[i] = (char*)malloc(sizeof(char) * 2);
+    char* kill = (char**)malloc(sizeof(char) * node_cont);
     
-    // for(int i = node_cont - 1; i >= 0; i--) {
-    //     switch (list_of_nodes[i]->type) {
-    //         case NODE_RETURN:
-    //             kill[i] = (char*)malloc(sizeof(char));
-    //             kill[i][0] = list_of_nodes[i]->return_data.var_name;
-    //             break;
-    //         case NODE_INT:
-    //             kill[i] = (char*)malloc(sizeof(char) * 2);
-    //             kill[i][0] = list_of_nodes[i]->int_data.instruction->operands[0];
-    //             kill[i][1] = list_of_nodes[i]->int_data.instruction->operands[1];
-    //             break;
-    //         case NODE_COND:
+    for(int i = 0; i < node_cont; i++) {
+        switch (list_of_nodes[i]->type) {
+            case NODE_RETURN:
+                kill[i] = '\0';
+                gen[i][0] = list_of_nodes[i]->return_data.var_name;
+                break;
+            case NODE_INT:
+                kill[i] = list_of_nodes[i]->int_data.instruction->var_name;
+                gen[i][0] = list_of_nodes[i]->int_data.instruction->operands[0];
+                gen[i][1] = list_of_nodes[i]->int_data.instruction->operands[1];
+                break;
+            case NODE_COND:
+                kill[i] = '\0';
+                gen[i][0] = list_of_nodes[i]->cond_data.operands[0];
+                gen[i][1] = list_of_nodes[i]->cond_data.operands[1];
+                break;
+            default:
+                kill[i] = '\0';
+                gen[i][0] = '\0';
+                gen[i][1] = '\0';
+                break;
+        }
+    }
 
-    //         default:
-    //             break;
-    //     }
+    for(int i = 0; i < node_cont; i++) {
+        if(gen[i][0] != '\0') printf("gen[%i][0] = %c ", i, gen[i][0]);
+        if(gen[i][1] != '\0') printf("gen[%i][1] = %c ", i, gen[i][1]);
+        if(kill[i] != '\0') printf("kill[%i] = %c " , i, kill[i]);
+        printf("\n");
+    }
+
+    // for(int i = node_cont - 1; i >= 0; i++) {
+
     // }
-
 
     return 0;
 }

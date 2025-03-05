@@ -75,8 +75,8 @@ node* create_cond_node() {
     new_node->type = NODE_COND;
     new_node->neighbors = NULL;
     new_node->neighbor_count = 0;
-    new_node->cond_data.labels[0] = NULL;
-    new_node->cond_data.labels[1] = NULL;
+    new_node->cond_data.labels[0] = 0;
+    new_node->cond_data.labels[1] = 0;
     return new_node;
 }
 
