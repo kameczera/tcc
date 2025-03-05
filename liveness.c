@@ -25,7 +25,7 @@ void get_instruction(instruction* new_instruction, char code[100]) {
         }
         cont_str++;
     }
-    new_instruction->operands = (char*)malloc(sizeof(char) * 2);
+    new_instruction->operands = (char*)malloc(sizeof(char) * 2); // TODO: operandos dinamicos
     new_instruction->operands[0] = '\0';
     new_instruction->operands[1] = '\0';
     get_operands(new_instruction->operands, code, cont_str);
@@ -53,6 +53,19 @@ void block_analisys(instruction** instructions, FILE* fptr, char code[100]) {
     }
 }
 
+int equal_ptrs(int** ptr, int** tmp_ptr, int node_cont, int vars) {
+    int equal = 1;
+    for(int i = 0; i < node_cont && equal; i++) {
+        for(int j = 0; j < vars; j++) {
+            if(ptr[i][j] != tmp_ptr[i][j]) {
+                equal = 0;
+                break;
+            }
+        }
+    }
+    return equal;
+}
+
 int main() {
     FILE* fptr;
     fptr = fopen("code.txt", "r");
@@ -64,7 +77,7 @@ int main() {
     // PARSE
 
     char code[100];
-    node** list_of_nodes = (node**)malloc(sizeof(node) * 10);
+    node** list_of_nodes = (node**)malloc(sizeof(node) * 10); // TODO: tamanho dinamico
     int node_cont = 0;
 
     while (fgets(code, 100, fptr)) {
@@ -130,25 +143,26 @@ int main() {
         }
     }
     curr_node = start;
-    for (int i = 0; i < node_cont; i++) {
-        printf("%i. No atual:\n", i + 1);
-        print_node(list_of_nodes[i]);
-        printf("\n");
-        if (list_of_nodes[i]->type == NODE_COND) {
-            printf("Neighbors:\n");
-            printf(" %i. ", succ[i][0] + 1);
-            print_node(list_of_nodes[i]->neighbors[0]);
-            printf(" %i. ", succ[i][1] + 1);
-            print_node(list_of_nodes[i]->neighbors[1]);
-            printf("\n");
-        } else if (list_of_nodes[i]->neighbors != NULL) {
-            printf("Neighbor:\n");
-            printf(" %i. ", succ[i][0] + 1);
-            print_node(list_of_nodes[i]->neighbors[0]);
-            printf("\n");
-        }
-    }
-
+    // ----------------------------- debug graph building ----------------------------- //
+    // for (int i = 0; i < node_cont; i++) {
+    //     printf("%i. No atual:\n", i + 1);
+    //     print_node(list_of_nodes[i]);
+    //     printf("\n");
+    //     if (list_of_nodes[i]->type == NODE_COND) {
+    //         printf("Neighbors:\n");
+    //         printf(" %i. ", succ[i][0] + 1);
+    //         print_node(list_of_nodes[i]->neighbors[0]);
+    //         printf(" %i. ", succ[i][1] + 1);
+    //         print_node(list_of_nodes[i]->neighbors[1]);
+    //         printf("\n");
+    //     } else if (list_of_nodes[i]->neighbors != NULL) {
+    //         printf("Neighbor:\n");
+    //         printf(" %i. ", succ[i][0] + 1);
+    //         print_node(list_of_nodes[i]->neighbors[0]);
+    //         printf("\n");
+    //     }
+    // }
+    // ------------------------------------------------------------------------------- //
     // ALGORITMO
 
     char** gen = (char**)malloc(sizeof(char*) * node_cont);
@@ -171,6 +185,7 @@ int main() {
                 gen[i][0] = list_of_nodes[i]->cond_data.operands[0];
                 gen[i][1] = list_of_nodes[i]->cond_data.operands[1];
                 break;
+            // TODO: implementação do BLOCK
             default:
                 kill[i] = '\0';
                 gen[i][0] = '\0';
@@ -179,40 +194,83 @@ int main() {
         }
     }
 
+    // ----------------------------- debug kill & gen table ----------------------------- //
     for(int i = 0; i < node_cont; i++) {
         if(gen[i][0] != '\0') printf("gen[%i][0] = %c ", i, gen[i][0]);
         if(gen[i][1] != '\0') printf("gen[%i][1] = %c ", i, gen[i][1]);
         if(kill[i] != '\0') printf("kill[%i] = %c " , i, kill[i]);
         printf("\n");
     }
-    // int** in = (int**)malloc(sizeof(int*) * node_cont);
-    // for(int i = 0; i < node_cont; i++) in[i] = (int*)malloc(sizeof(int) * 3);
-    // int** out = (int**)malloc(sizeof(int) * node_cont);
-    // for(int i = 0; i < node_cont; i++) out[i] = (int*)malloc(sizeof(int) * 3);
-    // int cont_in = 0;
-    // int cont_out = 0;
-    // in[node_cont - 1][0] = gen[node_cont - 1][0];
-    // for(int i = node_cont - 2; i >= 0; i++) {
-    //     for(int j = 0; j < 2; j++) {
-    //         if(gen[i][j] != '\0'){
-    //             in[i][gen[i][j]] = gen[i][j] - 'a';
-    //             cont_in++;
-    //         }
-    //     }
-    //     int already_added = 1;
-    //     for(int j = 0; j < 2; j++) {
-    //         if(gen[i][j] != ){
-    //             in[i][gen[i][j]] = gen[i][j] - 'a';
-    //             cont_in++;
-    //         }
-    //     }
-    //     for(int j = 0; j < 2; j++) {
-    //         if(gen[i][j] != '\0'){
-    //             out[i][cont_in] = gen[i][j];
-    //             cont_in++;
-    //         }
-    //     }
-    // }
+    // ---------------------------------------------------------------------------------- //
+
+    int** in = (int**)malloc(sizeof(int*) * node_cont);
+    for(int i = 0; i < node_cont; i++) {
+        in[i] = (int*)malloc(sizeof(int) * 3); // TODO: contabilizar variáveis para fazer a hash bonitinha
+        for(int j = 0; j < 3; j++) {
+            in[i][j] = 0;
+        }
+    }
+    int** out = (int**)malloc(sizeof(int) * node_cont);
+    for(int i = 0; i < node_cont; i++) {
+        out[i] = (int*)malloc(sizeof(int) * 3); // TODO: contabilizar variáveis para fazer a hash bonitinha
+        for(int j = 0; j < 3; j++) {
+            out[i][j] = 0;
+        }
+    }
+
+    int** tmp_in = (int**)malloc(sizeof(int*) * node_cont);
+    for(int i = 0; i < node_cont; i++) {
+        tmp_in[i] = (int*)malloc(sizeof(int) * 3); // TODO: contabilizar variáveis para fazer a hash bonitinha
+        for(int j = 0; j < 3; j++) {
+            tmp_in[i][j] = 0;
+        }
+    }
+    int** tmp_out = (int**)malloc(sizeof(int) * node_cont);
+    for(int i = 0; i < node_cont; i++) {
+        tmp_out[i] = (int*)malloc(sizeof(int) * 3); // TODO: contabilizar variáveis para fazer a hash bonitinha
+        for(int j = 0; j < 3; j++) {
+            tmp_out[i][j] = 0;
+        }
+    }
+    
+    in[node_cont - 1][gen[node_cont - 1][0] - 'a'] = 1;
+    while(!(equal_ptrs(in, tmp_in, node_cont, 3) && equal_ptrs(out, tmp_out, node_cont, 3))) {
+        for(int i = node_cont - 2; i >= 0; i--) {
+            // in:
+            // gen[i]
+            for(int j = 0; j < 2; j++) {
+                if(gen[i][j] != '\0'){
+                    in[i][gen[i][j] - 'a'] = 1;
+                }
+            }
+            // gen[i] U out[i]
+            for(int j = 0; j < 2; j++) {
+                if(gen[i][j] != '\0') {
+                    if(out[i][gen[i][j] - 'a'] == 1) {
+                        in[i][gen[i][j] - 'a'] = 1;
+                    }
+                }
+            }
+            // gen[i] U (out[i] - kill[i])
+            if(kill[i] != '\0'){
+                in[i][kill[i] - 'a'] = 0;
+            }
+        }
+        break;
+        
+    }
+
+    for(int i = 0; i < node_cont; i++) {
+        for(int j = 0; j < 3; j++) {
+            printf("in[%i][%c] = %i, ", i, j + 'a', in[i][j]);
+            
+        }
+        printf("\n");
+        for(int j = 0; j < 3; j++) {
+            printf("out[%i][%c] = %i,", i, j + 'a', out[i][j]);
+        }
+        printf("\n");
+    }
 
     return 0;
 }
