@@ -3,6 +3,35 @@
 #include <string.h>
 #include "nodes.h"
 
+void get_operands(char* operands, char code[100], int cont_str) {
+    int cont_operands = 0;
+    while(1) {
+        if(code[cont_str] >= 'a' && code[cont_str] <= 'z' && cont_operands < 2) {
+            operands[cont_operands] = code[cont_str];
+            cont_operands++;
+        }
+        else if(cont_operands > 2 || code[cont_str] == '\0') break;
+        cont_str++;
+    }
+}
+
+void get_instruction(instruction* new_instruction, char code[100]) {
+    int cont_str = 0;
+    while(1) {
+        if(code[cont_str] == 'i') {
+            new_instruction->var_name = code[cont_str + 4];
+            cont_str += 5;
+            break;
+        }
+        cont_str++;
+    }
+    new_instruction->operands = (char*)malloc(sizeof(char) * 2);
+    new_instruction->operands[0] = '\0';
+    new_instruction->operands[1] = '\0';
+    get_operands(new_instruction->operands, code, cont_str);
+    new_instruction->next = NULL;
+}
+
 void block_analisys(instruction** instructions, FILE* fptr, char code[100]) {
     instruction* last = NULL;
     while (fgets(code, 100, fptr)) {
@@ -12,21 +41,7 @@ void block_analisys(instruction** instructions, FILE* fptr, char code[100]) {
         new_instruction->next = NULL;
 
         if (code[1] == 'i') { 
-            new_instruction->var_name = code[5];
-            int cont_str = 9;
-            int cont_operands = 0;
-            new_instruction->operands = (char*)malloc(sizeof(char) * 2);
-            new_instruction->operands[0] = '\0';
-            new_instruction->operands[1] = '\0';
-            while(1) {
-                if(code[cont_str] > 96 && code[cont_str] < 123 && cont_operands < 2) {
-                    new_instruction->operands[cont_operands] = code[cont_str];
-                    cont_operands++;
-                }
-                else if(code[cont_str] == '\0') break;
-                cont_str++;
-            }
-            new_instruction->next = NULL;
+            get_instruction(new_instruction, code);
         }
 
         if (*instructions == NULL) {
@@ -50,7 +65,7 @@ int main() {
 
     char code[100];
     node** list_of_nodes = (node*)malloc(sizeof(node) * 10);
-    int cont = 0;
+    int node_cont = 0;
 
     while (fgets(code, 100, fptr)) {
         node* new_node;
@@ -59,6 +74,8 @@ int main() {
             block_analisys(&new_node->block_data.instructions, fptr, code);
         } else if (code[0] == 'c') {
             new_node = create_cond_node();
+            new_node->cond_data.operands = (char*)malloc(sizeof(char) * 2);
+            get_operands(new_node->cond_data.operands, code, 4);
             new_node->cond_data.labels[0] = code[12] - '0';
             new_node->cond_data.labels[1] = code[15] - '0';
         } else if (code[0] == 'L') {
@@ -68,11 +85,15 @@ int main() {
         } else if (code[0] == 'R') {
             new_node = create_return_data();
             new_node->return_data.var_name = code[7];
+        } else if(code[0] == 'i') {
+            new_node = create_int_data();
+            new_node->int_data.instruction = (instruction*)malloc(sizeof(instruction));
+            get_instruction(new_node->int_data.instruction, code);
         }
 
         if (new_node != NULL) {
-            list_of_nodes[cont] = new_node;
-            cont++;
+            list_of_nodes[node_cont] = new_node;
+            node_cont++;
         }
     }
 
@@ -82,42 +103,74 @@ int main() {
     
     node* start = list_of_nodes[0];
     node* curr_node;
-    for(int i = 0; i < cont - 1; i++) {
+
+    int** succ = (int*)malloc(sizeof(int*) * node_cont);
+    
+    for(int i = 0; i < node_cont - 1; i++) {
         curr_node = list_of_nodes[i];
         if(curr_node->type == NODE_COND) {
+            succ[i] = (int*) malloc(sizeof(int) * 2);
             curr_node->neighbors = (node**)malloc(sizeof(node*) * 2);
             node* ptr_label;
             int cont_neighbors = 0;
-            for(int j = 0; j < cont; j++) {
+            for(int j = 0; j < node_cont; j++) {
                 ptr_label = list_of_nodes[j];
                 if(ptr_label->type == NODE_LABEL && (curr_node->cond_data.labels[0] == ptr_label->label_data.label_id || curr_node->cond_data.labels[1] == ptr_label->label_data.label_id)) {
                     curr_node->neighbors[cont_neighbors] = ptr_label;
+                    succ[i][cont_neighbors] = j;
                     cont_neighbors++;
                 }
             }
         } else {
+            succ[i] = (int*) malloc(sizeof(int));
             curr_node->neighbors = (node**)malloc(sizeof(node*));
+
+            succ[i][0] = i + 1;
             curr_node->neighbors[0] = list_of_nodes[i + 1];
         }
     }
     curr_node = start;
-    for (int i = 0; i < cont; i++) {
-        printf("Nó atual:\n");
+    for (int i = 0; i < node_cont; i++) {
+        printf("%i. No atual:\n", i + 1);
         print_node(list_of_nodes[i]);
+        printf("\n");
         if (list_of_nodes[i]->type == NODE_COND) {
             printf("Neighbors:\n");
+            printf(" %i. ", succ[i][0] + 1);
             print_node(list_of_nodes[i]->neighbors[0]);
+            printf(" %i. ", succ[i][1] + 1);
             print_node(list_of_nodes[i]->neighbors[1]);
+            printf("\n");
         } else if (list_of_nodes[i]->neighbors != NULL) {
             printf("Neighbor:\n");
+            printf(" %i. ", succ[i][0] + 1);
             print_node(list_of_nodes[i]->neighbors[0]);
+            printf("\n");
         }
     }
-    
-    free(list_of_nodes);
-    
+
     // ALGORITMO
 
+    char** gen = (char**)malloc(sizeof(char*) * node_cont);
+    char** kill = (char**)malloc(sizeof(char*) * node_cont);
+    
+    // for(int i = node_cont - 1; i >= 0; i--) {
+    //     switch (list_of_nodes[i]->type) {
+    //         case NODE_RETURN:
+    //             kill[i] = (char*)malloc(sizeof(char));
+    //             kill[i][0] = list_of_nodes[i]->return_data.var_name;
+    //             break;
+    //         case NODE_INT:
+    //             kill[i] = (char*)malloc(sizeof(char) * 2);
+    //             kill[i][0] = list_of_nodes[i]->int_data.instruction->operands[0];
+    //             kill[i][1] = list_of_nodes[i]->int_data.instruction->operands[1];
+    //             break;
+    //         case NODE_COND:
+
+    //         default:
+    //             break;
+    //     }
+    // }
 
 
     return 0;

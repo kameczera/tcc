@@ -1,12 +1,8 @@
-{
- int a = 0;
-}
+int a = 0;
 L1
-{
- int b = a + 1;
- int c = c + b;
- int a = b * 2;
-}
-cond a > N L1 L2
+int b = a + 1;
+int c = c + b;
+int a = b * 2;
+cond a > n L1 L2
 L2
 RETURN c;
