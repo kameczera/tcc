@@ -8,11 +8,13 @@
 typedef enum {
     NODE_BLOCK,
     NODE_COND,
-    NODE_LABEL
+    NODE_LABEL,
+    NODE_RETURN
 } node_type;
 
 typedef struct instruction {
     char var_name;
+    char* operands;
     struct instruction* next;
 } instruction;
 
@@ -28,6 +30,10 @@ typedef struct {
     int label_id;
 } label_node_data;
 
+typedef struct {
+    char var_name;
+} return_node_data;
+
 typedef struct node {
     node_type type;
     struct node** neighbors;
@@ -36,6 +42,7 @@ typedef struct node {
         block_node_data block_data;
         cond_node_data cond_data;
         label_node_data label_data;
+        return_node_data return_data;
     };
 } node;
 
@@ -78,13 +85,26 @@ node* create_label_node() {
     return new_node;
 }
 
+node* create_return_data() {
+    node* new_node = (node*)malloc(sizeof(node));
+    if (!new_node) {
+        perror("Erro ao alocar memória para o nó");
+        exit(1);
+    }
+    new_node->type = NODE_RETURN;
+    new_node->neighbors = NULL;
+    new_node->neighbor_count = 0;
+    return new_node;
+}
+
 void print_node(const node* n) {
     switch (n->type) {
         case NODE_BLOCK:
             printf("Node Type: BLOCK\n");
             instruction* instr = n->block_data.instructions;
             while (instr != NULL) {
-                printf("  var_name: %c\n", instr->var_name);
+                printf("  var_name: %c, ", instr->var_name);
+                printf("operands: %c %c\n", instr->operands[0], instr->operands[1]);
                 instr = instr->next;
             }
             break;
@@ -97,6 +117,10 @@ void print_node(const node* n) {
             printf("Node Type: LABEL\n");
             printf("  label_id: %d\n", n->label_data.label_id);
             break;
+        case NODE_RETURN:
+            printf("Node Type: RETURN\n");
+            printf("  label_id: %c\n", n->return_data.var_name);
+            break;    
         default:
             printf("Node Type: Unknown\n");
             break;

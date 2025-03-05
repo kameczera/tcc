@@ -1,13 +1,12 @@
-L0
 {
- int z = 10;
- int x = 0;
- int y = 1;
+ int a = 0;
 }
-cond a > N L0 L1
 L1
 {
- int t = 1;
- int v = 1;
- int w = 1;
+ int b = a + 1;
+ int c = c + b;
+ int a = b * 2;
 }
+cond a > N L1 L2
+L2
+RETURN c;

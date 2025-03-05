@@ -13,6 +13,19 @@ void block_analisys(instruction** instructions, FILE* fptr, char code[100]) {
 
         if (code[1] == 'i') { 
             new_instruction->var_name = code[5];
+            int cont_str = 9;
+            int cont_operands = 0;
+            new_instruction->operands = (char*)malloc(sizeof(char) * 2);
+            new_instruction->operands[0] = '\0';
+            new_instruction->operands[1] = '\0';
+            while(1) {
+                if(code[cont_str] > 96 && code[cont_str] < 123 && cont_operands < 2) {
+                    new_instruction->operands[cont_operands] = code[cont_str];
+                    cont_operands++;
+                }
+                else if(code[cont_str] == '\0') break;
+                cont_str++;
+            }
             new_instruction->next = NULL;
         }
 
@@ -52,6 +65,9 @@ int main() {
             int label = code[1] - '0';
             new_node = create_label_node();
             new_node->label_data.label_id = label;
+        } else if (code[0] == 'R') {
+            new_node = create_return_data();
+            new_node->return_data.var_name = code[7];
         }
 
         if (new_node != NULL) {
@@ -102,7 +118,7 @@ int main() {
     
     // ALGORITMO
 
-    
+
 
     return 0;
 }
