@@ -70,6 +70,11 @@ Run the program using:
 - **GCC Compiler** (for compilation)
 - **C Standard Library**
 
+## ✅ TODO List
+- ✅ **Parser**
+- ✅ **Graph Construction**
+- 🟡 **Algorithm Implementation**
+- ❌ **Refactoring**
+
 ## License
 This project is open-source and free to use.
-
