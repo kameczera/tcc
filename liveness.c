@@ -185,9 +185,33 @@ int main() {
         if(kill[i] != '\0') printf("kill[%i] = %c " , i, kill[i]);
         printf("\n");
     }
-
-    // for(int i = node_cont - 1; i >= 0; i++) {
-
+    // int** in = (int**)malloc(sizeof(int*) * node_cont);
+    // for(int i = 0; i < node_cont; i++) in[i] = (int*)malloc(sizeof(int) * 3);
+    // int** out = (int**)malloc(sizeof(int) * node_cont);
+    // for(int i = 0; i < node_cont; i++) out[i] = (int*)malloc(sizeof(int) * 3);
+    // int cont_in = 0;
+    // int cont_out = 0;
+    // in[node_cont - 1][0] = gen[node_cont - 1][0];
+    // for(int i = node_cont - 2; i >= 0; i++) {
+    //     for(int j = 0; j < 2; j++) {
+    //         if(gen[i][j] != '\0'){
+    //             in[i][gen[i][j]] = gen[i][j] - 'a';
+    //             cont_in++;
+    //         }
+    //     }
+    //     int already_added = 1;
+    //     for(int j = 0; j < 2; j++) {
+    //         if(gen[i][j] != ){
+    //             in[i][gen[i][j]] = gen[i][j] - 'a';
+    //             cont_in++;
+    //         }
+    //     }
+    //     for(int j = 0; j < 2; j++) {
+    //         if(gen[i][j] != '\0'){
+    //             out[i][cont_in] = gen[i][j];
+    //             cont_in++;
+    //         }
+    //     }
     // }
 
     return 0;

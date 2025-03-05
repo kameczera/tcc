@@ -3,6 +3,6 @@ L1
 int b = a + 1;
 int c = c + b;
 int a = b * 2;
-cond a > n L1 L2
+cond a > c L1 L2
 L2
 RETURN c;
