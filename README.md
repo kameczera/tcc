@@ -64,6 +64,10 @@ gcc liveness.c -o liveness
 Run the program using:
 ```sh
 ./liveness.exe
+Debug Flags
+-d1 → Enables the display of the constructed graph.
+-d2 → Enables the display of the kill and gen tables.
+-d3 → Enables the display of the final IN and OUT tables.
 ```
 
 ## Requirements
