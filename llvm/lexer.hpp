@@ -51,10 +51,4 @@ static int get_tok() {
     }
 }
 
-static std::unique_ptr<ExprAST> parse_number_expr() {
-    auto result = std::make_unique<NumberExprAST>(num_val);
-    get_next_token();
-    return std::move(result);
-}
-
 #endif
