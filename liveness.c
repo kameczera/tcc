@@ -81,7 +81,6 @@ void clean(int** dest, int node_cont, int vars) {
 int main(int argc, char *argv[]) {
     int debug_graph = 0, debug_kill_gen = 0, debug_algorithm = 0;
 
-    // Verificar flags de debug
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-d1") == 0) debug_graph = 1;
         if (strcmp(argv[i], "-d2") == 0) debug_kill_gen = 1;
