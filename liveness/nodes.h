@@ -16,6 +16,7 @@ typedef enum {
 typedef struct instruction {
     char var_name;
     char* operands;
+    int cont_operands;
     struct instruction* next;
 } instruction;
 
@@ -25,6 +26,7 @@ typedef struct {
 
 typedef struct {
     int labels[2];
+    int cont_operands;
     char* operands;
 } cond_node_data;
 
@@ -132,7 +134,8 @@ void print_node(const node* n) {
             printf("Node Type: COND\n");
             printf("    condition LABEL 1: %i\n", n->cond_data.labels[0]);
             printf("    condition LABEL 2: %i\n", n->cond_data.labels[1]);
-            printf("    operands: %c, %c", n->cond_data.operands[0], n->cond_data.operands[1]);
+            printf("    operands: ");
+            for(int i = 0; i < n->cond_data.cont_operands; i++) printf("%c ", n->cond_data.operands[i]);
             break;
         case NODE_LABEL:
             printf("Node Type: LABEL\n");
@@ -144,8 +147,9 @@ void print_node(const node* n) {
             break;
         case NODE_INT:
             printf("Node Type: INT\n");
-            printf("    var_name: %c, ", n->int_data.instruction->var_name);
-            printf("operands: %c %c\n", n->int_data.instruction->operands[0], n->int_data.instruction->operands[1]);
+            printf("    var_name: %c\n", n->int_data.instruction->var_name);
+            printf("    operands: ");
+            for(int i = 0; i < n->int_data.instruction->cont_operands; i++) printf("%c ", n->int_data.instruction->operands[i]);
             break;
         default:
             printf("Node Type: Unknown\n");

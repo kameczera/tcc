@@ -2,7 +2,7 @@ int a = 0;
 L1
 int b = a + 1;
 int c = c + b;
-int a = b * 2;
-cond a > 0 L1 L2
+int a = b * e;
+COND a > b L1 L2
 L2
 RETURN c;
