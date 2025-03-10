@@ -297,7 +297,6 @@ int main(int argc, char *argv[]) {
             tmp_out[i][j] = 0;
         }
     }
-    printf("%c", in[node_cont - 1][hash_alphabet[*gen[node_cont - 1] - 'a']]);
     do {
         copy_ptrs(tmp_in, in, node_cont, cont_variables);
         copy_ptrs(tmp_out, out, node_cont, cont_variables);
@@ -333,7 +332,6 @@ int main(int argc, char *argv[]) {
             else len = 0;
             for(int j = 0; j < len; j++) {
                 if(gen[i][j] != '\0'){
-                    printf("gen[%d][%d] = %c\n", i, j, gen[i][j]);
                     in[i][hash_alphabet[gen[i][j] - 'a']] = 1;
                 }
             }

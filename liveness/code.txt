@@ -1,8 +1,8 @@
 int a = 0;
 L1
 int b = a + 1;
-int c = c + b;
-int a = b * e;
+int c = b + a;
+int a = b * c + a;
 COND a > b L1 L2
 L2
 RETURN c;
