@@ -69,10 +69,10 @@ To run the program, use the following command:
 ```
 
 ## Parameters:
--f <code_file>: Specifies the code file to be analyzed (e.g., code.txt).
--d1: Enables the display of the constructed graph.
--d2: Enables the display of the kill and gen tables.
--d3: Enables the display of the final IN and OUT tables.
+- -f <code_file>: Specifies the code file to be analyzed (e.g., code.txt).
+- -d1: Enables the display of the constructed graph.
+- -d2: Enables the display of the kill and gen tables.
+- -d3: Enables the display of the final IN and OUT tables.
 
 ## Example:
 
