@@ -56,19 +56,31 @@ out: x, y, n
 
 ## Compilation
 To compile the program, run:
-```sh
+```
 gcc liveness.c -o liveness
 ```
 
 ## Execution
-Run the program using:
-```sh
-./liveness.exe
-Debug Flags
--d1 → Enables the display of the constructed graph.
--d2 → Enables the display of the kill and gen tables.
--d3 → Enables the display of the final IN and OUT tables.
+
+To run the program, use the following command:
+
 ```
+./liveness -f <code_file> -d1 -d2 -d3
+```
+
+## Parameters:
+-f <code_file>: Specifies the code file to be analyzed (e.g., code.txt).
+-d1: Enables the display of the constructed graph.
+-d2: Enables the display of the kill and gen tables.
+-d3: Enables the display of the final IN and OUT tables.
+
+## Example:
+
+```
+./liveness -f code.txt -d1 -d2 -d3
+```
+
+## This command runs the program using code.txt as input and enables all display options.
 
 ## Requirements
 - **GCC Compiler** (for compilation)
