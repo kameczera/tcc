@@ -92,14 +92,24 @@ void clean(int** dest, int node_cont, int vars) {
 
 int main(int argc, char *argv[]) {
     int debug_graph = 0, debug_kill_gen = 0, debug_algorithm = 0;
+    char *file_path = "code.txt";
 
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-d1") == 0) debug_graph = 1;
         if (strcmp(argv[i], "-d2") == 0) debug_kill_gen = 1;
         if (strcmp(argv[i], "-d3") == 0) debug_algorithm = 1;
+        if (strcmp(argv[i], "-f") == 0) {
+            if (i + 1 < argc) {
+                file_path = argv[i + 1];
+                i++;
+            } else {
+                fprintf(stderr, "Erro: -f requer um caminho de arquivo.\n");
+                return 1;
+            }
+        }
     }
 
-    FILE* fptr = fopen("code.txt", "r");
+    FILE* fptr = fopen(file_path, "r");
     if (!fptr) {
         perror("Erro ao abrir o arquivo");
         return 1;
@@ -147,28 +157,27 @@ int main(int argc, char *argv[]) {
 
     node* start = list_of_nodes[0];
     node* curr_node;
-    int** succ = (int*)malloc(sizeof(int*) * node_cont);
-    
-    for(int i = 0; i < node_cont - 1; i++) {
+    int** succ = (int**)malloc(sizeof(int*) * node_cont);
+    for (int i = 0; i < node_cont; i++) {
+        succ[i] = (int*)malloc(sizeof(int) * 2); // Máximo de 2 sucessores
+        for (int j = 0; j < 2; j++) {
+            succ[i][j] = -1;
+        }
+    }
+
+    for (int i = 0; i < node_cont - 1; i++) {
         curr_node = list_of_nodes[i];
-        if(curr_node->type == NODE_COND) {
-            succ[i] = (int*) malloc(sizeof(int) * 2);
-            curr_node->neighbors = (node**)malloc(sizeof(node*) * 2);
-            node* ptr_label;
+        if (curr_node->type == NODE_COND) {
             int cont_neighbors = 0;
-            for(int j = 0; j < node_cont; j++) {
-                ptr_label = list_of_nodes[j];
-                if(ptr_label->type == NODE_LABEL && (curr_node->cond_data.labels[0] == ptr_label->label_data.label_id || curr_node->cond_data.labels[1] == ptr_label->label_data.label_id)) {
-                    curr_node->neighbors[cont_neighbors] = ptr_label;
+            for (int j = 0; j < node_cont; j++) {
+                node* ptr_label = list_of_nodes[j];
+                if (ptr_label->type == NODE_LABEL && (curr_node->cond_data.labels[0] == ptr_label->label_data.label_id || curr_node->cond_data.labels[1] == ptr_label->label_data.label_id)) {
                     succ[i][cont_neighbors] = j;
                     cont_neighbors++;
                 }
             }
         } else {
-            succ[i] = (int*) malloc(sizeof(int));
-            curr_node->neighbors = (node**)malloc(sizeof(node*));
             succ[i][0] = i + 1;
-            curr_node->neighbors[0] = list_of_nodes[i + 1];
         }
     }
     curr_node = start;
@@ -181,15 +190,17 @@ int main(int argc, char *argv[]) {
             printf("\n");
             if (list_of_nodes[i]->type == NODE_COND) {
                 printf("Neighbors:\n");
-                printf(" %i. ", succ[i][0] + 1);
-                print_node(list_of_nodes[i]->neighbors[0]);
-                printf(" %i. ", succ[i][1] + 1);
-                print_node(list_of_nodes[i]->neighbors[1]);
+                for (int j = 0; j < 2; j++) {
+                    if (succ[i][j] != -1) {
+                        printf(" %i. ", succ[i][j] + 1);
+                        print_node(list_of_nodes[succ[i][j]]);
+                    }
+                }
                 printf("\n");
-            } else if (list_of_nodes[i]->neighbors != NULL) {
+            } else if (succ[i][0] != -1) {
                 printf("Neighbor:\n");
                 printf(" %i. ", succ[i][0] + 1);
-                print_node(list_of_nodes[i]->neighbors[0]);
+                print_node(list_of_nodes[succ[i][0]]);
                 printf("\n");
             }
         }
@@ -199,15 +210,15 @@ int main(int argc, char *argv[]) {
     // ALGORITMO
 
     char** gen = (char**)malloc(sizeof(char*) * node_cont);
-    for(int i = 0; i < node_cont; i++) {
-        if(list_of_nodes[i]->type == NODE_COND) gen[i] = (char*)malloc(sizeof(char) * list_of_nodes[i]->cond_data.cont_operands);
-        else if(list_of_nodes[i]->type == NODE_INT) gen[i] = (char*)malloc(sizeof(char) * list_of_nodes[i]->int_data.instruction->cont_operands);
-        else if(list_of_nodes[i]->type == NODE_RETURN) gen[i] = (char*)malloc(sizeof(char) * 2);
+    for (int i = 0; i < node_cont; i++) {
+        if (list_of_nodes[i]->type == NODE_COND) gen[i] = (char*)malloc(sizeof(char) * list_of_nodes[i]->cond_data.cont_operands);
+        else if (list_of_nodes[i]->type == NODE_INT) gen[i] = (char*)malloc(sizeof(char) * list_of_nodes[i]->int_data.instruction->cont_operands);
+        else if (list_of_nodes[i]->type == NODE_RETURN) gen[i] = (char*)malloc(sizeof(char) * 2);
         else gen[i] = NULL;
     }
     char* kill = (char*)malloc(sizeof(char) * node_cont);
-    
-    for(int i = 0; i < node_cont; i++) {
+
+    for (int i = 0; i < node_cont; i++) {
         switch (list_of_nodes[i]->type) {
             case NODE_RETURN:
                 kill[i] = '\0';
@@ -216,13 +227,13 @@ int main(int argc, char *argv[]) {
                 break;
             case NODE_INT:
                 kill[i] = list_of_nodes[i]->int_data.instruction->var_name;
-                for(int j = 0; j < list_of_nodes[i]->int_data.instruction->cont_operands; j++) {
+                for (int j = 0; j < list_of_nodes[i]->int_data.instruction->cont_operands; j++) {
                     gen[i][j] = list_of_nodes[i]->int_data.instruction->operands[j];
                 }
                 break;
             case NODE_COND:
                 kill[i] = '\0';
-                for(int j = 0; j < list_of_nodes[i]->cond_data.cont_operands; j++) {
+                for (int j = 0; j < list_of_nodes[i]->cond_data.cont_operands; j++) {
                     gen[i][j] = list_of_nodes[i]->cond_data.operands[j];
                 }
                 break;
@@ -234,22 +245,20 @@ int main(int argc, char *argv[]) {
 
     // ----------------------------- debug kill & gen table ----------------------------- //
     if (debug_kill_gen) {
-        for(int i = 0; i < node_cont; i++) {
-            if(list_of_nodes[i]->type == NODE_COND) {
-                for(int j = 0; j < list_of_nodes[i]->cond_data.cont_operands; j++) {
+        for (int i = 0; i < node_cont; i++) {
+            if (list_of_nodes[i]->type == NODE_COND) {
+                for (int j = 0; j < list_of_nodes[i]->cond_data.cont_operands; j++) {
                     printf("gen[%i][%i] = %c, ", i + 1, j, gen[i][j]);
                 }
                 printf("\n");
                 printf("kill[%i] = %c\n", i + 1, kill[i]);
-            }
-            else if(list_of_nodes[i]->type == NODE_INT){
-                for(int j = 0; j < list_of_nodes[i]->int_data.instruction->cont_operands; j++) {
+            } else if (list_of_nodes[i]->type == NODE_INT) {
+                for (int j = 0; j < list_of_nodes[i]->int_data.instruction->cont_operands; j++) {
                     printf("gen[%i][%i] = %c, ", i + 1, j, gen[i][j]);
                 }
                 printf("\n");
                 printf("kill[%i] = %c\n", i + 1, kill[i]);
-            }
-            else if(list_of_nodes[i]->type == NODE_RETURN){
+            } else if (list_of_nodes[i]->type == NODE_RETURN) {
                 printf("gen[%i] = %c\n", i + 1, gen[i][0]);
             }
         }
@@ -258,10 +267,10 @@ int main(int argc, char *argv[]) {
 
     int cont_variables = 0;
     int hash_alphabet[26];
-    for(int i = 0; i < 26; i++) hash_alphabet[i] = -1;
-    for(int i = 0; i < node_cont; i++) {
-        if(list_of_nodes[i]->type == NODE_INT) {
-            if(hash_alphabet[list_of_nodes[i]->int_data.instruction->var_name - 'a'] == -1) {
+    for (int i = 0; i < 26; i++) hash_alphabet[i] = -1;
+    for (int i = 0; i < node_cont; i++) {
+        if (list_of_nodes[i]->type == NODE_INT) {
+            if (hash_alphabet[list_of_nodes[i]->int_data.instruction->var_name - 'a'] == -1) {
                 hash_alphabet[list_of_nodes[i]->int_data.instruction->var_name - 'a'] = cont_variables;
                 cont_variables++;
             }
@@ -269,31 +278,31 @@ int main(int argc, char *argv[]) {
     }
 
     int** in = (int**)malloc(sizeof(int*) * node_cont);
-    for(int i = 0; i < node_cont; i++) {
+    for (int i = 0; i < node_cont; i++) {
         in[i] = (int*)malloc(sizeof(int) * cont_variables);
-        for(int j = 0; j < cont_variables; j++) {
+        for (int j = 0; j < cont_variables; j++) {
             in[i][j] = 0;
         }
     }
     int** out = (int**)malloc(sizeof(int) * node_cont);
-    for(int i = 0; i < node_cont; i++) {
+    for (int i = 0; i < node_cont; i++) {
         out[i] = (int*)malloc(sizeof(int) * cont_variables);
-        for(int j = 0; j < cont_variables; j++) {
+        for (int j = 0; j < cont_variables; j++) {
             out[i][j] = 0;
         }
     }
 
     int** tmp_in = (int**)malloc(sizeof(int*) * node_cont);
-    for(int i = 0; i < node_cont; i++) {
+    for (int i = 0; i < node_cont; i++) {
         tmp_in[i] = (int*)malloc(sizeof(int) * cont_variables);
-        for(int j = 0; j < cont_variables; j++) {
+        for (int j = 0; j < cont_variables; j++) {
             tmp_in[i][j] = 0;
         }
     }
     int** tmp_out = (int**)malloc(sizeof(int) * node_cont);
-    for(int i = 0; i < node_cont; i++) {
+    for (int i = 0; i < node_cont; i++) {
         tmp_out[i] = (int*)malloc(sizeof(int) * cont_variables);
-        for(int j = 0; j < cont_variables; j++) {
+        for (int j = 0; j < cont_variables; j++) {
             tmp_out[i][j] = 0;
         }
     }
@@ -303,58 +312,96 @@ int main(int argc, char *argv[]) {
         clean(in, node_cont, cont_variables);
         clean(out, node_cont, cont_variables);
         in[node_cont - 1][hash_alphabet[*gen[node_cont - 1] - 'a']] = 1;
-        for(int i = node_cont - 2; i >= 0; i--) {
+        for (int i = node_cont - 2; i >= 0; i--) {
             // out:
-            for(int s = node_cont - 1; s > i; s--) {
-                for (int j = 0; j < cont_variables; j++) {
-                    if (in[s][j] == 1) {
-                        out[i][j] = 1;
+            for (int s = 0; s < 2; s++) {
+                if (succ[i][s] != -1) {
+                    int adj_node = succ[i][s];
+                    for (int j = 0; j < cont_variables; j++) {
+                        if (in[adj_node][j] == 1) {
+                            out[i][j] = 1;
+                        }
+                    }
+                    if (kill[adj_node] != '\0') {
+                        out[i][hash_alphabet[kill[adj_node] - 'a']] = 0;
                     }
                 }
-                if (kill[s] != '\0') out[i][hash_alphabet[kill[s] - 'a']] = 0;
             }
             // in:
-            // out
-            for(int j = 0; j < cont_variables; j++) {
-                if(out[i][j] == 1) {
+            for (int j = 0; j < cont_variables; j++) {
+                if (out[i][j] == 1) {
                     in[i][j] = 1;
                 }
             }
             // (out[i] - kill[i])
-            if(kill[i] != '\0'){
+            if (kill[i] != '\0') {
                 in[i][hash_alphabet[kill[i] - 'a']] = 0;
             }
-            
             // gen[i] U (out[i] - kill[i])
             int len = 0;
-            if(list_of_nodes[i]->type == NODE_INT) len = list_of_nodes[i]->int_data.instruction->cont_operands;
-            else if(list_of_nodes[i]->type == NODE_COND) len = list_of_nodes[i]->cond_data.cont_operands;
-            else len = 0;
-            for(int j = 0; j < len; j++) {
-                if(gen[i][j] != '\0'){
+            if (list_of_nodes[i]->type == NODE_INT) len = list_of_nodes[i]->int_data.instruction->cont_operands;
+            else if (list_of_nodes[i]->type == NODE_COND) len = list_of_nodes[i]->cond_data.cont_operands;
+            for (int j = 0; j < len; j++) {
+                if (gen[i][j] != '\0') {
                     in[i][hash_alphabet[gen[i][j] - 'a']] = 1;
                 }
             }
         }
-    } while(!(equal_ptrs(in, tmp_in, node_cont, cont_variables) && equal_ptrs(out, tmp_out, node_cont, cont_variables)));
+    } while (!(equal_ptrs(in, tmp_in, node_cont, cont_variables) && equal_ptrs(out, tmp_out, node_cont, cont_variables)));
     char* vars = (char*)malloc(sizeof(char) * cont_variables);
-    for(int i = 0; i < cont_variables; i++) {
-        for(int j = 0; j < 26; j++) {
-            if(hash_alphabet[j] == i) vars[i] = j + 'a';
+    for (int i = 0; i < cont_variables; i++) {
+        for (int j = 0; j < 26; j++) {
+            if (hash_alphabet[j] == i) vars[i] = j + 'a';
         }
     }
 
     if (debug_algorithm) {
-        for(int i = 0; i < node_cont; i++) {
-            for(int j = 0; j < cont_variables; j++) {
-                printf("in[%i][%c] = %i, ", i + 1, vars[j], in[i][j]);
-                
+        for (int i = 0; i < node_cont; i++) {
+            // Imprimir o tipo do nó
+            switch (list_of_nodes[i]->type) {
+                case NODE_BLOCK:
+                    printf("NODE BLOCK:\n");
+                    break;
+                case NODE_INT:
+                    printf("NODE INT:\n");
+                    break;
+                case NODE_COND:
+                    printf("NODE COND:\n");
+                    break;
+                case NODE_RETURN:
+                    printf("NODE RETURN:\n");
+                    break;
+                case NODE_LABEL:
+                    printf("NODE LABEL:\n");
+                    break;
+                default:
+                    printf("NODE UNKNOWN:\n");
+                    break;
+            }
+
+            // Imprimir o conjunto 'in'
+            printf("in: ");
+            int first = 1;
+            for (int j = 0; j < cont_variables; j++) {
+                if (in[i][j] == 1) {
+                    if (!first) printf(", ");
+                    printf("%c", vars[j]);
+                    first = 0;
+                }
             }
             printf("\n");
-            for(int j = 0; j < cont_variables; j++) {
-                printf("out[%i][%c] = %i,", i + 1, vars[j], out[i][j]);
+
+            // Imprimir o conjunto 'out'
+            printf("out: ");
+            first = 1;
+            for (int j = 0; j < cont_variables; j++) {
+                if (out[i][j] == 1) {
+                    if (!first) printf(", ");
+                    printf("%c", vars[j]);
+                    first = 0;
+                }
             }
-            printf("\n");
+            printf("\n\n");
         }
     }
 

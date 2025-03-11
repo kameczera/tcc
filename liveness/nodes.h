@@ -44,7 +44,6 @@ typedef struct {
 
 typedef struct node {
     node_type type;
-    struct node** neighbors;
     int neighbor_count;
     union {
         block_node_data block_data;
@@ -62,7 +61,6 @@ node* create_block_node() {
         exit(1);
     }
     new_node->type = NODE_BLOCK;
-    new_node->neighbors = NULL;
     new_node->neighbor_count = 0;
     new_node->block_data.instructions = NULL;
     return new_node;
@@ -75,7 +73,6 @@ node* create_cond_node() {
         exit(1);
     }
     new_node->type = NODE_COND;
-    new_node->neighbors = NULL;
     new_node->neighbor_count = 0;
     new_node->cond_data.labels[0] = 0;
     new_node->cond_data.labels[1] = 0;
@@ -89,7 +86,6 @@ node* create_label_node() {
         exit(1);
     }
     new_node->type = NODE_LABEL;
-    new_node->neighbors = NULL;
     new_node->neighbor_count = 0;
     return new_node;
 }
@@ -101,7 +97,6 @@ node* create_return_data() {
         exit(1);
     }
     new_node->type = NODE_RETURN;
-    new_node->neighbors = NULL;
     new_node->neighbor_count = 0;
     return new_node;
 }
@@ -113,7 +108,6 @@ node* create_int_data() {
         exit(1);
     }
     new_node->type = NODE_INT;
-    new_node->neighbors = NULL;
     new_node->neighbor_count = 0;
     new_node->int_data.instruction = NULL;
     return new_node;
