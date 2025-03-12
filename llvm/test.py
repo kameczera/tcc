@@ -21,6 +21,8 @@ def traced_fn(x):
 
 traced_fn = torch.jit.trace(traced_fn, (torch.rand(200, 200, 200),))
 
+# traced_fn = torch.jit.trace(lambda x: 2 * x + 1, (torch.rand(200, 200, 200),)) Tentativa de inline (não deu certo)
+
 @torch.jit.script
 def mixed_fn(x):
     if x.sum() > 0:
@@ -41,6 +43,9 @@ def measure_time(fn, input_tensor, num_iterations=1000):
 input_tensor = torch.rand(200, 200, 200)
 
 num_iterations = 100
+
+print(script_fn.graph)
+print(mixed_fn.graph)
 
 script_time = measure_time(script_fn, input_tensor, num_iterations)
 print(f"Tempo médio de execução da função scriptada: {script_time:.6f} segundos")
