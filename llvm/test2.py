@@ -1,6 +1,7 @@
 import torch
 import time
 
+# ----------------------- Função scriptada ----------------------- #
 @torch.jit.script
 def scripted_fn(x, y):
     result = x @ y + torch.sin(x)
@@ -9,7 +10,9 @@ def scripted_fn(x, y):
     else:
         return result
 
+# ---------------------------------------------------------------- #
 
+# ------------------------ Função traçada ------------------------ #
 def traced_fn(x, y):
     return x @ y + torch.sin(x)
 
@@ -24,6 +27,8 @@ def mixed_fn(x, y):
         return traced_fn(x, y)
     else:
         return x + y
+
+# ---------------------------------------------------------------- #
 
 def measure_time(fn, it_1, it_2, num_iterations=1000):
     fn(it_1, it_2)
