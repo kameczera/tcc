@@ -40,8 +40,12 @@ def measure_time(fn, it_1, it_2, num_iterations=1000):
 
 num_iterations = 1000
 
-script_time = measure_time(scripted_fn, example_x, example_y, num_iterations)
-print(f"Tempo médio de execução da função scriptada: {script_time:.6f} segundos")
+# script_time = measure_time(scripted_fn, example_x, example_y, num_iterations)
+# print(f"Tempo médio de execução da função scriptada: {script_time:.6f} segundos")
 
-mixed_time = measure_time(mixed_fn, example_x, example_y, num_iterations)
-print(f"Tempo médio de execução da função mixada: {mixed_time:.6f} segundos")
+# mixed_time = measure_time(mixed_fn, example_x, example_y, num_iterations)
+# print(f"Tempo médio de execução da função mixada: {mixed_time:.6f} segundos")
+
+# print(scripted_fn.graph)
+# print(mixed_fn.graph)
+print(traced_fn.graph)

@@ -1,0 +1,22 @@
+Language reference:
+https://pytorch.org/docs/stable/torch.html
+
+1. Ideia de Projeto:
+
+Utilizar LLMs para traduzir operações em tensores na biblioteca do pytorch para código CUDA explícito.
+
+Repositório Pytorch: https://github.com/pytorch/pytorch/tree/v2.6.0
+llm.c : https://github.com/karpathy/llm.c 
+AI-CUDA agent: https://www.threads.net/@omarsar0/post/DGTWXOrSrOp   
+Trabalho parecido: https://www.youtube.com/watch?v=ZfjV_GTJLPI&ab_channel=Predibase 
+
+Conversa com chatgpt https://chatgpt.com/share/67d221e7-30c4-8011-8a97-95168e39d7cb 
+
+Perguntas pra próxima reunião (reuniao3)
+
+-> O que são blocos básicos?
+-> O que é grafo de fluxo de controle?
+-> O que é análise interprocedural e intraprocedural?
+-> O que é um passe de otimização?
+-> Como escrever um passe que faz o inline de uma função estaticamente? (Durante a fase de tracing?)
+-> Como escrever um passe que faz o inline de uma função dinamicamente?  (Durante a execução do código?)
