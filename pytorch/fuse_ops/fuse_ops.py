@@ -7,38 +7,47 @@ def fuse_consecutive_ops(graph: torch._C.Graph):
     Otimização para fundir operações consecutivas de soma (aten::add).
     """
     nodes = list(graph.nodes())
-    to_delete = []
-    for i in range(len(nodes) - 1, 1, -1):
-        current = nodes[i - 1]
-        next_node = nodes[i]
+    changes = True
+    while changes:
+        changes = False
+        for i in range(len(nodes) - 1, 1, -1):
+            current = nodes[i - 1]
+            next_node = nodes[i]
+            if current.kind() == "aten::add" and next_node.kind() == "aten::add":
+                current_input1, current_input2, current_alpha = current.inputs()
+                next_input1, next_input2, next_alpha = next_node.inputs()
+                if next_input1 == current.output():
+                    value1 = current_input2.toIValue()
+                    value2 = next_input2.toIValue()
+                    new_int = graph.insertConstant(value1 + value2)
+                    new_int.node().moveBefore(nodes[0])
+                    new_add = graph.create("aten::add", [current_input1, new_int, current_alpha])
+                    new_add.insertBefore(current)
 
-        if current.kind() == "aten::add" and next_node.kind() == "aten::add":
-            current_input1, current_input2, current_alpha = current.inputs()
-            next_input1, next_input2, next_alpha = next_node.inputs()
-            if next_input1 == current.output():
-                value1 = current_input2.toIValue()
-                value2 = next_input2.toIValue()
-                new_int = graph.insertConstant(value1 + value2)
-                new_int_2 = graph.create('prim::Constant')
-                new_int_2.f_( "value", value1 + value2)
-                new_int_2.insertBefore(nodes[0])
-                print(type(new_int_2))
-                print(dir(graph))
-                print(help(graph.create))
-                print(help(graph.insertConstant))
-                new_add = graph.create("aten::add", [current_input1, new_int, current_alpha])
-                new_add.insertBefore(current)
+                    next_node.output().replaceAllUsesWith(new_add.output())
+                    
+                    del nodes[i]
+                    del nodes[i - 1]
+                    next_node.destroy()
+                    current.destroy()
+                    
+                    nodes = list(graph.nodes())
+                    changes = True
+        print(graph)
+    return graph
 
-                next_node.output().replaceAllUsesWith(new_add.output())
-                del nodes[i]
-                del nodes[i - 1]
-                next_node.destroy()
-                current.destroy()
+def destroy_useless_variables(graph: torch._C.Graph):
+    nodes = list(graph.nodes())
+    for current in nodes[:]:
+        if not current.hasUses():
+            current.destroy()
+
     return graph
 
 def optimize_script(script_module: torch.jit.ScriptModule) -> torch.jit.ScriptModule:
     graph = script_module.graph
     fuse_consecutive_ops(graph)
+    destroy_useless_variables(graph)
 
     return script_module
 

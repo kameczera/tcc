@@ -1,4 +1,5 @@
 import torch
+import time
 # from torch._C import _jit_pass_dce
 # from torch._C import _jit_pass_constant_propagation
 # from torch._C import _jit_pass_peephole
@@ -54,20 +55,30 @@ def higher_function(tensor):
 class program(torch.nn.Module):
     def __init__(self, size):
         super().__init__()
-        self.tensor = torch.randn(size, size)
+        self.size = size
         print(f"Size of tensor inside program: {size}")
 
     def forward(self):
-        size =  self.tensor.shape[0]
+        tensor = torch.randn(self.size, self.size)
+        size =  tensor.shape[0]
         result = torch.zeros(1)
         if size >= 1000:
-            result = complex_tensor_op(self.tensor)
+            result = complex_tensor_op(tensor)
         elif size >= 100:
-            result = medium_tensor_op(self.tensor)
+            result = medium_tensor_op(tensor)
         elif size >= 10:
-            result = small_tensor_op(self.tensor)
+            result = small_tensor_op(tensor)
 
         return result
+
+def benchmark(model, iterations=10):
+    times = []
+    for _ in range(iterations):
+        start = time.time()
+        model()
+        end = time.time()
+        times.append(end - start)
+    return sum(times) / iterations
 
 if __name__ == "__main__":
     # ================================
@@ -100,3 +111,10 @@ if __name__ == "__main__":
 
         print("\n2. TorchScript code:")
         print(opt_script.code)
+
+        iterations = 10
+        time_script = benchmark(script.forward, iterations)
+        time_opt_script = benchmark(opt_script.forward, iterations)
+
+        print(f"Tempo médio Script: {time_script:.6f} s")
+        print(f"Tempo médio Opt_Script: {time_opt_script:.6f} s")
