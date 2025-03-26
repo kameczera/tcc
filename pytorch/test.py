@@ -1,12 +1,18 @@
 import torch
-from torch.fx import symbolic_trace
 
-def fn(x):
-    return torch.sin(x) + torch.cos(x)
+def f(x):
+    return torch.sin(x)**2 + torch.cos(x)**2 
 
-x = torch.randn(10, 10)
+torch._dynamo.reset()
+compiled_f = torch.compile(f, backend='inductor',
+                              options={'trace.enabled':True,
+                                       'trace.graph_diagram':True})
 
-fx_fn = symbolic_trace(fn)
-inductor_fn = torch.compile(fn , backend="inductor")
-print(inductor_fn)
-print(fx_fn.graph)
+# device = 'cpu'
+device = 'cuda'
+
+torch.manual_seed(0)
+x = torch.rand(1000, requires_grad=True).to(device)
+y = torch.ones_like(x)
+
+out = torch.nn.functional.mse_loss(compiled_f(x),y).backward()
