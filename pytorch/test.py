@@ -1,11 +1,12 @@
-from typing import List
 import torch
-import torchdynamo
+from torch.fx import symbolic_trace
 
-torchdynamo.config.debug = True
+def fn(x):
+    return torch.sin(x) + torch.cos(x)
 
-def toy_example(a, b):
-  return a + b
+x = torch.randn(10, 10)
 
-with torchdynamo.optimize("eager"):
-  toy_example(torch.randn(10), torch.randn(10))
+fx_fn = symbolic_trace(fn)
+inductor_fn = torch.compile(fn , backend="inductor")
+print(inductor_fn)
+print(fx_fn.graph)
