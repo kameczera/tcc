@@ -1,11 +1,18 @@
-from typing import List
 import torch
-import torchdynamo
 
-torchdynamo.config.debug = True
+def f(x):
+    return torch.sin(x)**2 + torch.cos(x)**2 
 
-def toy_example(a, b):
-  return a + b
+torch._dynamo.reset()
+compiled_f = torch.compile(f, backend='inductor',
+                              options={'trace.enabled':True,
+                                       'trace.graph_diagram':True})
 
-with torchdynamo.optimize("eager"):
-  toy_example(torch.randn(10), torch.randn(10))
+# device = 'cpu'
+device = 'cuda'
+
+torch.manual_seed(0)
+x = torch.rand(1000, requires_grad=True).to(device)
+y = torch.ones_like(x)
+
+out = torch.nn.functional.mse_loss(compiled_f(x),y).backward()
