@@ -1,0 +1,3516 @@
+op0: SchedulerNode(ComputedBuffer)
+op0.writes = [MemoryDep('buf0', c0, {c0: 100}, None)]
+op0.unmet_dependencies = []
+op0.met_dependencies = []
+op0.outputs = [
+    buf0: ComputedBuffer
+    buf0.layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+    buf0.users = [NodeUser(node=OUTPUT, can_inplace=False, is_weak=False)]
+]
+op0.group.device = cuda:0
+op0.group.iteration = (100, 1)
+op0.sizes = ([100], [])
+buf0_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+class op0_loop_body:
+    var_ranges = {z0: 100}
+    index0 = z0
+    def body(self, ops):
+        constant = ops.constant(0.0, torch.float32)
+        get_index = self.get_index('index0')
+        store = ops.store('buf0', get_index, constant, None)
+        return store
+op0 Triton code:
+    import triton
+    import triton.language as tl
+    from triton.compiler.compiler import AttrsDescriptor
+
+    from torch._inductor.runtime import triton_helpers, triton_heuristics
+    from torch._inductor.runtime.triton_helpers import libdevice, math as tl_math
+    from torch._inductor.runtime.hints import AutotuneHint, ReductionHint, TileHint, instance_descriptor, DeviceProperties
+
+    @triton_heuristics.pointwise(
+        size_hints=[128], 
+        filename=__file__,
+        triton_meta={'signature': {0: '*fp32', 1: 'i32'}, 'device': DeviceProperties(type='cuda', index=0, cc=86, major=8, regs_per_multiprocessor=65536, max_threads_per_multi_processor=1536, multi_processor_count=20), 'constants': {}, 'configs': [AttrsDescriptor(divisible_by_16=(0,), equal_to_1=())]},
+        inductor_meta={'autotune_hints': set(), 'kernel_name': 'Placeholder.DESCRIPTIVE_NAME', 'mutated_arg_names': [], 'no_x_dim': False, 'num_load': 0, 'num_reduction': 0, 'backend_hash': '712B1D69F892A891D8FFA5075DCAB47CFF4E132D88BFC66744701CEAE226F127', 'are_deterministic_algorithms_enabled': False, 'assert_indirect_indexing': True, 'autotune_local_cache': True, 'autotune_pointwise': True, 'autotune_remote_cache': None, 'force_disable_caches': False, 'dynamic_scale_rblock': True, 'max_autotune': False, 'max_autotune_pointwise': False, 'min_split_scan_rblock': 256, 'spill_threshold': 16, 'store_cubin': False},
+        min_elem_per_thread=0
+    )
+    @triton.jit
+    def triton_(out_ptr0, xnumel, XBLOCK : tl.constexpr):
+        xnumel = 100
+        xoffset = tl.program_id(0) * XBLOCK
+        xindex = xoffset + tl.arange(0, XBLOCK)[:]
+        xmask = xindex < xnumel
+        x0 = xindex
+        tmp0 = 0.0
+        tl.store(out_ptr0 + (x0), tmp0, xmask)
+
+
+op1_op2_op3_op4_op5_op6_op7_op8_op9_op10_op11_op12_op13_op14_op15_op16_op17: FusedSchedulerNode(SchedulerNode,SchedulerNode,SchedulerNode,SchedulerNode,SchedulerNode,SchedulerNode,SchedulerNode,SchedulerNode,SchedulerNode,SchedulerNode,SchedulerNode,SchedulerNode,SchedulerNode,SchedulerNode,SchedulerNode,SchedulerNode,SchedulerNode)
+op1_op2_op3_op4_op5_op6_op7_op8_op9_op10_op11_op12_op13_op14_op15_op16_op17.writes = 
+    [   MemoryDep('buf1', c0, {c0: 100}, None),
+        MemoryDep('buf10', c0, {c0: 100}, None),
+        MemoryDep('buf11', c0, {c0: 100}, None),
+        MemoryDep('buf12', c0, {c0: 100}, None),
+        MemoryDep('buf13', c0, {c0: 100}, None),
+        MemoryDep('buf14', c0, {c0: 100}, None),
+        MemoryDep('buf15', c0, {c0: 100}, None),
+        MemoryDep('buf16', c0, {c0: 100}, None),
+        MemoryDep('buf17', c0, {c0: 100}, None),
+        MemoryDep('buf2', c0, {c0: 100}, None),
+        MemoryDep('buf3', c0, {c0: 100}, None),
+        MemoryDep('buf4', c0, {c0: 100}, None),
+        MemoryDep('buf5', c0, {c0: 100}, None),
+        MemoryDep('buf6', c0, {c0: 100}, None),
+        MemoryDep('buf7', c0, {c0: 100}, None),
+        MemoryDep('buf8', c0, {c0: 100}, None),
+        MemoryDep('buf9', c0, {c0: 100}, None)]
+op1_op2_op3_op4_op5_op6_op7_op8_op9_op10_op11_op12_op13_op14_op15_op16_op17.unmet_dependencies = []
+op1_op2_op3_op4_op5_op6_op7_op8_op9_op10_op11_op12_op13_op14_op15_op16_op17.met_dependencies = 
+    [   MemoryDep('primals_1', 0, {}, None),
+        MemoryDep('primals_1', 1, {}, None),
+        MemoryDep('primals_1', 10, {}, None),
+        MemoryDep('primals_1', 11, {}, None),
+        MemoryDep('primals_1', 12, {}, None),
+        MemoryDep('primals_1', 13, {}, None),
+        MemoryDep('primals_1', 14, {}, None),
+        MemoryDep('primals_1', 15, {}, None),
+        MemoryDep('primals_1', 16, {}, None),
+        MemoryDep('primals_1', 17, {}, None),
+        MemoryDep('primals_1', 18, {}, None),
+        MemoryDep('primals_1', 19, {}, None),
+        MemoryDep('primals_1', 2, {}, None),
+        MemoryDep('primals_1', 20, {}, None),
+        MemoryDep('primals_1', 21, {}, None),
+        MemoryDep('primals_1', 22, {}, None),
+        MemoryDep('primals_1', 23, {}, None),
+        MemoryDep('primals_1', 24, {}, None),
+        MemoryDep('primals_1', 25, {}, None),
+        MemoryDep('primals_1', 26, {}, None),
+        MemoryDep('primals_1', 27, {}, None),
+        MemoryDep('primals_1', 28, {}, None),
+        MemoryDep('primals_1', 29, {}, None),
+        MemoryDep('primals_1', 3, {}, None),
+        MemoryDep('primals_1', 30, {}, None),
+        MemoryDep('primals_1', 31, {}, None),
+        MemoryDep('primals_1', 32, {}, None),
+        MemoryDep('primals_1', 33, {}, None),
+        MemoryDep('primals_1', 34, {}, None),
+        MemoryDep('primals_1', 35, {}, None),
+        MemoryDep('primals_1', 36, {}, None),
+        MemoryDep('primals_1', 37, {}, None),
+        MemoryDep('primals_1', 38, {}, None),
+        MemoryDep('primals_1', 39, {}, None),
+        MemoryDep('primals_1', 4, {}, None),
+        MemoryDep('primals_1', 40, {}, None),
+        MemoryDep('primals_1', 41, {}, None),
+        MemoryDep('primals_1', 42, {}, None),
+        MemoryDep('primals_1', 43, {}, None),
+        MemoryDep('primals_1', 44, {}, None),
+        MemoryDep('primals_1', 45, {}, None),
+        MemoryDep('primals_1', 46, {}, None),
+        MemoryDep('primals_1', 47, {}, None),
+        MemoryDep('primals_1', 48, {}, None),
+        MemoryDep('primals_1', 49, {}, None),
+        MemoryDep('primals_1', 5, {}, None),
+        MemoryDep('primals_1', 50, {}, None),
+        MemoryDep('primals_1', 51, {}, None),
+        MemoryDep('primals_1', 52, {}, None),
+        MemoryDep('primals_1', 53, {}, None),
+        MemoryDep('primals_1', 54, {}, None),
+        MemoryDep('primals_1', 55, {}, None),
+        MemoryDep('primals_1', 56, {}, None),
+        MemoryDep('primals_1', 57, {}, None),
+        MemoryDep('primals_1', 58, {}, None),
+        MemoryDep('primals_1', 59, {}, None),
+        MemoryDep('primals_1', 6, {}, None),
+        MemoryDep('primals_1', 60, {}, None),
+        MemoryDep('primals_1', 61, {}, None),
+        MemoryDep('primals_1', 62, {}, None),
+        MemoryDep('primals_1', 63, {}, None),
+        MemoryDep('primals_1', 64, {}, None),
+        MemoryDep('primals_1', 65, {}, None),
+        MemoryDep('primals_1', 66, {}, None),
+        MemoryDep('primals_1', 67, {}, None),
+        MemoryDep('primals_1', 68, {}, None),
+        MemoryDep('primals_1', 69, {}, None),
+        MemoryDep('primals_1', 7, {}, None),
+        MemoryDep('primals_1', 70, {}, None),
+        MemoryDep('primals_1', 71, {}, None),
+        MemoryDep('primals_1', 72, {}, None),
+        MemoryDep('primals_1', 73, {}, None),
+        MemoryDep('primals_1', 74, {}, None),
+        MemoryDep('primals_1', 75, {}, None),
+        MemoryDep('primals_1', 76, {}, None),
+        MemoryDep('primals_1', 77, {}, None),
+        MemoryDep('primals_1', 78, {}, None),
+        MemoryDep('primals_1', 79, {}, None),
+        MemoryDep('primals_1', 8, {}, None),
+        MemoryDep('primals_1', 80, {}, None),
+        MemoryDep('primals_1', 81, {}, None),
+        MemoryDep('primals_1', 82, {}, None),
+        MemoryDep('primals_1', 83, {}, None),
+        MemoryDep('primals_1', 84, {}, None),
+        MemoryDep('primals_1', 85, {}, None),
+        MemoryDep('primals_1', 86, {}, None),
+        MemoryDep('primals_1', 87, {}, None),
+        MemoryDep('primals_1', 88, {}, None),
+        MemoryDep('primals_1', 89, {}, None),
+        MemoryDep('primals_1', 9, {}, None),
+        MemoryDep('primals_1', 90, {}, None),
+        MemoryDep('primals_1', 91, {}, None),
+        MemoryDep('primals_1', 92, {}, None),
+        MemoryDep('primals_1', 93, {}, None),
+        MemoryDep('primals_1', 94, {}, None),
+        MemoryDep('primals_1', 95, {}, None),
+        MemoryDep('primals_1', 96, {}, None),
+        MemoryDep('primals_1', 97, {}, None),
+        MemoryDep('primals_1', 98, {}, None),
+        MemoryDep('primals_1', 99, {}, None)]
+op1_op2_op3_op4_op5_op6_op7_op8_op9_op10_op11_op12_op13_op14_op15_op16_op17.outputs = [
+    buf1: ComputedBuffer
+    buf1.layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+    buf1.users = [NodeUser(node=SchedulerNode(name='op2'), can_inplace=True, is_weak=False)]
+    buf2: ComputedBuffer
+    buf2.layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+    buf2.users = [NodeUser(node=SchedulerNode(name='op3'), can_inplace=True, is_weak=False)]
+    buf3: ComputedBuffer
+    buf3.layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+    buf3.users = [NodeUser(node=SchedulerNode(name='op4'), can_inplace=True, is_weak=False)]
+    buf4: ComputedBuffer
+    buf4.layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+    buf4.users = [NodeUser(node=SchedulerNode(name='op5'), can_inplace=True, is_weak=False)]
+    buf5: ComputedBuffer
+    buf5.layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+    buf5.users = [NodeUser(node=SchedulerNode(name='op6'), can_inplace=True, is_weak=False)]
+    buf6: ComputedBuffer
+    buf6.layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+    buf6.users = [NodeUser(node=SchedulerNode(name='op7'), can_inplace=True, is_weak=False)]
+    buf7: ComputedBuffer
+    buf7.layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+    buf7.users = [NodeUser(node=SchedulerNode(name='op8'), can_inplace=True, is_weak=False)]
+    buf8: ComputedBuffer
+    buf8.layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+    buf8.users = [NodeUser(node=SchedulerNode(name='op9'), can_inplace=True, is_weak=False)]
+    buf9: ComputedBuffer
+    buf9.layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+    buf9.users = [NodeUser(node=SchedulerNode(name='op10'), can_inplace=True, is_weak=False)]
+    buf10: ComputedBuffer
+    buf10.layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+    buf10.users = [NodeUser(node=SchedulerNode(name='op11'), can_inplace=True, is_weak=False)]
+    buf11: ComputedBuffer
+    buf11.layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+    buf11.users = [NodeUser(node=SchedulerNode(name='op12'), can_inplace=True, is_weak=False)]
+    buf12: ComputedBuffer
+    buf12.layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+    buf12.users = [NodeUser(node=SchedulerNode(name='op13'), can_inplace=True, is_weak=False)]
+    buf13: ComputedBuffer
+    buf13.layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+    buf13.users = [NodeUser(node=SchedulerNode(name='op14'), can_inplace=True, is_weak=False)]
+    buf14: ComputedBuffer
+    buf14.layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+    buf14.users = [NodeUser(node=SchedulerNode(name='op15'), can_inplace=True, is_weak=False)]
+    buf15: ComputedBuffer
+    buf15.layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+    buf15.users = [NodeUser(node=SchedulerNode(name='op16'), can_inplace=True, is_weak=False)]
+    buf16: ComputedBuffer
+    buf16.layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+    buf16.users = [NodeUser(node=SchedulerNode(name='op17'), can_inplace=True, is_weak=False)]
+    buf17: ComputedBuffer
+    buf17.layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+    buf17.users = [NodeUser(node=OUTPUT, can_inplace=False, is_weak=False)]
+]
+op1_op2_op3_op4_op5_op6_op7_op8_op9_op10_op11_op12_op13_op14_op15_op16_op17.snodes[0] =
+op1: SchedulerNode(ComputedBuffer)
+op1.writes = [MemoryDep('buf1', c0, {c0: 100}, None)]
+op1.unmet_dependencies = []
+op1.met_dependencies = 
+    [   MemoryDep('primals_1', 0, {}, None),
+        MemoryDep('primals_1', 1, {}, None),
+        MemoryDep('primals_1', 2, {}, None),
+        MemoryDep('primals_1', 3, {}, None),
+        MemoryDep('primals_1', 4, {}, None),
+        MemoryDep('primals_1', 5, {}, None)]
+op1.outputs = [
+    buf1: ComputedBuffer
+    buf1.layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+    buf1.users = [NodeUser(node=SchedulerNode(name='op2'), can_inplace=True, is_weak=False)]
+]
+op1.group.device = cuda:0
+op1.group.iteration = (100, 1)
+op1.sizes = ([100], [])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+buf1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+class op1_loop_body:
+    var_ranges = {z0: 100}
+    index0 = z0
+    index1 = 5
+    index2 = 4
+    index3 = 3
+    index4 = 2
+    index5 = 1
+    index6 = 0
+    def body(self, ops):
+        get_index = self.get_index('index0')
+        index_expr = ops.index_expr(get_index, torch.int32)
+        constant = ops.constant(5, torch.int32)
+        eq = ops.eq(index_expr, constant)
+        get_index_1 = self.get_index('index1')
+        load = ops.load('primals_1', get_index_1)
+        constant_1 = ops.constant(2.0, torch.float32)
+        mul = ops.mul(load, constant_1)
+        get_index_2 = self.get_index('index0')
+        index_expr_1 = ops.index_expr(get_index_2, torch.int32)
+        constant_2 = ops.constant(4, torch.int32)
+        eq_1 = ops.eq(index_expr_1, constant_2)
+        get_index_3 = self.get_index('index2')
+        load_1 = ops.load('primals_1', get_index_3)
+        constant_3 = ops.constant(2.0, torch.float32)
+        mul_1 = ops.mul(load_1, constant_3)
+        get_index_4 = self.get_index('index0')
+        index_expr_2 = ops.index_expr(get_index_4, torch.int32)
+        constant_4 = ops.constant(3, torch.int32)
+        eq_2 = ops.eq(index_expr_2, constant_4)
+        get_index_5 = self.get_index('index3')
+        load_2 = ops.load('primals_1', get_index_5)
+        constant_5 = ops.constant(2.0, torch.float32)
+        mul_2 = ops.mul(load_2, constant_5)
+        get_index_6 = self.get_index('index0')
+        index_expr_3 = ops.index_expr(get_index_6, torch.int32)
+        constant_6 = ops.constant(2, torch.int32)
+        eq_3 = ops.eq(index_expr_3, constant_6)
+        get_index_7 = self.get_index('index4')
+        load_3 = ops.load('primals_1', get_index_7)
+        constant_7 = ops.constant(2.0, torch.float32)
+        mul_3 = ops.mul(load_3, constant_7)
+        get_index_8 = self.get_index('index0')
+        index_expr_4 = ops.index_expr(get_index_8, torch.int32)
+        constant_8 = ops.constant(1, torch.int32)
+        eq_4 = ops.eq(index_expr_4, constant_8)
+        get_index_9 = self.get_index('index5')
+        load_4 = ops.load('primals_1', get_index_9)
+        constant_9 = ops.constant(2.0, torch.float32)
+        mul_4 = ops.mul(load_4, constant_9)
+        get_index_10 = self.get_index('index0')
+        index_expr_5 = ops.index_expr(get_index_10, torch.int32)
+        constant_10 = ops.constant(0, torch.int32)
+        eq_5 = ops.eq(index_expr_5, constant_10)
+        get_index_11 = self.get_index('index6')
+        load_5 = ops.load('primals_1', get_index_11)
+        constant_11 = ops.constant(2.0, torch.float32)
+        mul_5 = ops.mul(load_5, constant_11)
+        constant_12 = ops.constant(0.0, torch.float32)
+        where = ops.where(eq_5, mul_5, constant_12)
+        where_1 = ops.where(eq_4, mul_4, where)
+        where_2 = ops.where(eq_3, mul_3, where_1)
+        where_3 = ops.where(eq_2, mul_2, where_2)
+        where_4 = ops.where(eq_1, mul_1, where_3)
+        where_5 = ops.where(eq, mul, where_4)
+        get_index_12 = self.get_index('index0')
+        store = ops.store('buf1', get_index_12, where_5, None)
+        return store
+op1 Triton code:
+    import triton
+    import triton.language as tl
+    from triton.compiler.compiler import AttrsDescriptor
+
+    from torch._inductor.runtime import triton_helpers, triton_heuristics
+    from torch._inductor.runtime.triton_helpers import libdevice, math as tl_math
+    from torch._inductor.runtime.hints import AutotuneHint, ReductionHint, TileHint, instance_descriptor, DeviceProperties
+
+    @triton_heuristics.pointwise(
+        size_hints=[128], 
+        filename=__file__,
+        triton_meta={'signature': {0: '*fp32', 1: '*fp32', 2: 'i32'}, 'device': DeviceProperties(type='cuda', index=0, cc=86, major=8, regs_per_multiprocessor=65536, max_threads_per_multi_processor=1536, multi_processor_count=20), 'constants': {}, 'configs': [AttrsDescriptor(divisible_by_16=(0, 1), equal_to_1=())]},
+        inductor_meta={'autotune_hints': set(), 'kernel_name': 'Placeholder.DESCRIPTIVE_NAME', 'mutated_arg_names': [], 'no_x_dim': False, 'num_load': 6, 'num_reduction': 0, 'backend_hash': '712B1D69F892A891D8FFA5075DCAB47CFF4E132D88BFC66744701CEAE226F127', 'are_deterministic_algorithms_enabled': False, 'assert_indirect_indexing': True, 'autotune_local_cache': True, 'autotune_pointwise': True, 'autotune_remote_cache': None, 'force_disable_caches': False, 'dynamic_scale_rblock': True, 'max_autotune': False, 'max_autotune_pointwise': False, 'min_split_scan_rblock': 256, 'spill_threshold': 16, 'store_cubin': False},
+        min_elem_per_thread=0
+    )
+    @triton.jit
+    def triton_(in_ptr0, out_ptr0, xnumel, XBLOCK : tl.constexpr):
+        xnumel = 100
+        xoffset = tl.program_id(0) * XBLOCK
+        xindex = xoffset + tl.arange(0, XBLOCK)[:]
+        xmask = xindex < xnumel
+        x0 = xindex
+        tmp3 = tl.load(in_ptr0 + (5))
+        tmp4 = tl.broadcast_to(tmp3, [XBLOCK])
+        tmp9 = tl.load(in_ptr0 + (4))
+        tmp10 = tl.broadcast_to(tmp9, [XBLOCK])
+        tmp14 = tl.load(in_ptr0 + (3))
+        tmp15 = tl.broadcast_to(tmp14, [XBLOCK])
+        tmp19 = tl.load(in_ptr0 + (2))
+        tmp20 = tl.broadcast_to(tmp19, [XBLOCK])
+        tmp24 = tl.load(in_ptr0 + (1))
+        tmp25 = tl.broadcast_to(tmp24, [XBLOCK])
+        tmp29 = tl.load(in_ptr0 + (0))
+        tmp30 = tl.broadcast_to(tmp29, [XBLOCK])
+        tmp0 = x0
+        tmp1 = tl.full([1], 5, tl.int32)
+        tmp2 = tmp0 == tmp1
+        tmp5 = 2.0
+        tmp6 = tmp4 * tmp5
+        tmp7 = tl.full([1], 4, tl.int32)
+        tmp8 = tmp0 == tmp7
+        tmp11 = tmp10 * tmp5
+        tmp12 = tl.full([1], 3, tl.int32)
+        tmp13 = tmp0 == tmp12
+        tmp16 = tmp15 * tmp5
+        tmp17 = tl.full([1], 2, tl.int32)
+        tmp18 = tmp0 == tmp17
+        tmp21 = tmp20 * tmp5
+        tmp22 = tl.full([1], 1, tl.int32)
+        tmp23 = tmp0 == tmp22
+        tmp26 = tmp25 * tmp5
+        tmp27 = tl.full([1], 0, tl.int32)
+        tmp28 = tmp0 == tmp27
+        tmp31 = tmp30 * tmp5
+        tmp32 = 0.0
+        tmp33 = tl.where(tmp28, tmp31, tmp32)
+        tmp34 = tl.where(tmp23, tmp26, tmp33)
+        tmp35 = tl.where(tmp18, tmp21, tmp34)
+        tmp36 = tl.where(tmp13, tmp16, tmp35)
+        tmp37 = tl.where(tmp8, tmp11, tmp36)
+        tmp38 = tl.where(tmp2, tmp6, tmp37)
+        tl.store(out_ptr0 + (x0), tmp38, xmask)
+op1_op2_op3_op4_op5_op6_op7_op8_op9_op10_op11_op12_op13_op14_op15_op16_op17.snodes[1] =
+op2: SchedulerNode(ComputedBuffer)
+op2.writes = [MemoryDep('buf2', c0, {c0: 100}, None)]
+op2.unmet_dependencies = [MemoryDep('buf1', c0, {c0: 100}, None)]
+op2.met_dependencies = 
+    [   MemoryDep('primals_1', 10, {}, None),
+        MemoryDep('primals_1', 11, {}, None),
+        MemoryDep('primals_1', 6, {}, None),
+        MemoryDep('primals_1', 7, {}, None),
+        MemoryDep('primals_1', 8, {}, None),
+        MemoryDep('primals_1', 9, {}, None)]
+op2.outputs = [
+    buf2: ComputedBuffer
+    buf2.layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+    buf2.users = [NodeUser(node=SchedulerNode(name='op3'), can_inplace=True, is_weak=False)]
+]
+op2.group.device = cuda:0
+op2.group.iteration = (100, 1)
+op2.sizes = ([100], [])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+buf1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+buf2_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+class op2_loop_body:
+    var_ranges = {z0: 100}
+    index0 = z0
+    index1 = 11
+    index2 = 10
+    index3 = 9
+    index4 = 8
+    index5 = 7
+    index6 = 6
+    def body(self, ops):
+        get_index = self.get_index('index0')
+        index_expr = ops.index_expr(get_index, torch.int32)
+        constant = ops.constant(11, torch.int32)
+        eq = ops.eq(index_expr, constant)
+        get_index_1 = self.get_index('index1')
+        load = ops.load('primals_1', get_index_1)
+        constant_1 = ops.constant(2.0, torch.float32)
+        mul = ops.mul(load, constant_1)
+        get_index_2 = self.get_index('index0')
+        index_expr_1 = ops.index_expr(get_index_2, torch.int32)
+        constant_2 = ops.constant(10, torch.int32)
+        eq_1 = ops.eq(index_expr_1, constant_2)
+        get_index_3 = self.get_index('index2')
+        load_1 = ops.load('primals_1', get_index_3)
+        constant_3 = ops.constant(2.0, torch.float32)
+        mul_1 = ops.mul(load_1, constant_3)
+        get_index_4 = self.get_index('index0')
+        index_expr_2 = ops.index_expr(get_index_4, torch.int32)
+        constant_4 = ops.constant(9, torch.int32)
+        eq_2 = ops.eq(index_expr_2, constant_4)
+        get_index_5 = self.get_index('index3')
+        load_2 = ops.load('primals_1', get_index_5)
+        constant_5 = ops.constant(2.0, torch.float32)
+        mul_2 = ops.mul(load_2, constant_5)
+        get_index_6 = self.get_index('index0')
+        index_expr_3 = ops.index_expr(get_index_6, torch.int32)
+        constant_6 = ops.constant(8, torch.int32)
+        eq_3 = ops.eq(index_expr_3, constant_6)
+        get_index_7 = self.get_index('index4')
+        load_3 = ops.load('primals_1', get_index_7)
+        constant_7 = ops.constant(2.0, torch.float32)
+        mul_3 = ops.mul(load_3, constant_7)
+        get_index_8 = self.get_index('index0')
+        index_expr_4 = ops.index_expr(get_index_8, torch.int32)
+        constant_8 = ops.constant(7, torch.int32)
+        eq_4 = ops.eq(index_expr_4, constant_8)
+        get_index_9 = self.get_index('index5')
+        load_4 = ops.load('primals_1', get_index_9)
+        constant_9 = ops.constant(2.0, torch.float32)
+        mul_4 = ops.mul(load_4, constant_9)
+        get_index_10 = self.get_index('index0')
+        index_expr_5 = ops.index_expr(get_index_10, torch.int32)
+        constant_10 = ops.constant(6, torch.int32)
+        eq_5 = ops.eq(index_expr_5, constant_10)
+        get_index_11 = self.get_index('index6')
+        load_5 = ops.load('primals_1', get_index_11)
+        constant_11 = ops.constant(2.0, torch.float32)
+        mul_5 = ops.mul(load_5, constant_11)
+        get_index_12 = self.get_index('index0')
+        load_6 = ops.load('buf1', get_index_12)
+        where = ops.where(eq_5, mul_5, load_6)
+        where_1 = ops.where(eq_4, mul_4, where)
+        where_2 = ops.where(eq_3, mul_3, where_1)
+        where_3 = ops.where(eq_2, mul_2, where_2)
+        where_4 = ops.where(eq_1, mul_1, where_3)
+        where_5 = ops.where(eq, mul, where_4)
+        get_index_13 = self.get_index('index0')
+        store = ops.store('buf2', get_index_13, where_5, None)
+        return store
+op2 Triton code:
+    import triton
+    import triton.language as tl
+    from triton.compiler.compiler import AttrsDescriptor
+
+    from torch._inductor.runtime import triton_helpers, triton_heuristics
+    from torch._inductor.runtime.triton_helpers import libdevice, math as tl_math
+    from torch._inductor.runtime.hints import AutotuneHint, ReductionHint, TileHint, instance_descriptor, DeviceProperties
+
+    @triton_heuristics.pointwise(
+        size_hints=[128], 
+        filename=__file__,
+        triton_meta={'signature': {0: '*fp32', 1: '*fp32', 2: 'i32'}, 'device': DeviceProperties(type='cuda', index=0, cc=86, major=8, regs_per_multiprocessor=65536, max_threads_per_multi_processor=1536, multi_processor_count=20), 'constants': {}, 'configs': [AttrsDescriptor(divisible_by_16=(0, 1), equal_to_1=())]},
+        inductor_meta={'autotune_hints': set(), 'kernel_name': 'Placeholder.DESCRIPTIVE_NAME', 'mutated_arg_names': ['in_out_ptr0'], 'no_x_dim': False, 'num_load': 7, 'num_reduction': 0, 'backend_hash': '712B1D69F892A891D8FFA5075DCAB47CFF4E132D88BFC66744701CEAE226F127', 'are_deterministic_algorithms_enabled': False, 'assert_indirect_indexing': True, 'autotune_local_cache': True, 'autotune_pointwise': True, 'autotune_remote_cache': None, 'force_disable_caches': False, 'dynamic_scale_rblock': True, 'max_autotune': False, 'max_autotune_pointwise': False, 'min_split_scan_rblock': 256, 'spill_threshold': 16, 'store_cubin': False},
+        min_elem_per_thread=0
+    )
+    @triton.jit
+    def triton_(in_out_ptr0, in_ptr0, xnumel, XBLOCK : tl.constexpr):
+        xnumel = 100
+        xoffset = tl.program_id(0) * XBLOCK
+        xindex = xoffset + tl.arange(0, XBLOCK)[:]
+        xmask = xindex < xnumel
+        x0 = xindex
+        tmp3 = tl.load(in_ptr0 + (11))
+        tmp4 = tl.broadcast_to(tmp3, [XBLOCK])
+        tmp9 = tl.load(in_ptr0 + (10))
+        tmp10 = tl.broadcast_to(tmp9, [XBLOCK])
+        tmp14 = tl.load(in_ptr0 + (9))
+        tmp15 = tl.broadcast_to(tmp14, [XBLOCK])
+        tmp19 = tl.load(in_ptr0 + (8))
+        tmp20 = tl.broadcast_to(tmp19, [XBLOCK])
+        tmp24 = tl.load(in_ptr0 + (7))
+        tmp25 = tl.broadcast_to(tmp24, [XBLOCK])
+        tmp29 = tl.load(in_ptr0 + (6))
+        tmp30 = tl.broadcast_to(tmp29, [XBLOCK])
+        tmp32 = tl.load(in_out_ptr0 + (x0), xmask)
+        tmp0 = x0
+        tmp1 = tl.full([1], 11, tl.int32)
+        tmp2 = tmp0 == tmp1
+        tmp5 = 2.0
+        tmp6 = tmp4 * tmp5
+        tmp7 = tl.full([1], 10, tl.int32)
+        tmp8 = tmp0 == tmp7
+        tmp11 = tmp10 * tmp5
+        tmp12 = tl.full([1], 9, tl.int32)
+        tmp13 = tmp0 == tmp12
+        tmp16 = tmp15 * tmp5
+        tmp17 = tl.full([1], 8, tl.int32)
+        tmp18 = tmp0 == tmp17
+        tmp21 = tmp20 * tmp5
+        tmp22 = tl.full([1], 7, tl.int32)
+        tmp23 = tmp0 == tmp22
+        tmp26 = tmp25 * tmp5
+        tmp27 = tl.full([1], 6, tl.int32)
+        tmp28 = tmp0 == tmp27
+        tmp31 = tmp30 * tmp5
+        tmp33 = tl.where(tmp28, tmp31, tmp32)
+        tmp34 = tl.where(tmp23, tmp26, tmp33)
+        tmp35 = tl.where(tmp18, tmp21, tmp34)
+        tmp36 = tl.where(tmp13, tmp16, tmp35)
+        tmp37 = tl.where(tmp8, tmp11, tmp36)
+        tmp38 = tl.where(tmp2, tmp6, tmp37)
+        tl.store(in_out_ptr0 + (x0), tmp38, xmask)
+op1_op2_op3_op4_op5_op6_op7_op8_op9_op10_op11_op12_op13_op14_op15_op16_op17.snodes[2] =
+op3: SchedulerNode(ComputedBuffer)
+op3.writes = [MemoryDep('buf3', c0, {c0: 100}, None)]
+op3.unmet_dependencies = [MemoryDep('buf2', c0, {c0: 100}, None)]
+op3.met_dependencies = 
+    [   MemoryDep('primals_1', 12, {}, None),
+        MemoryDep('primals_1', 13, {}, None),
+        MemoryDep('primals_1', 14, {}, None),
+        MemoryDep('primals_1', 15, {}, None),
+        MemoryDep('primals_1', 16, {}, None),
+        MemoryDep('primals_1', 17, {}, None)]
+op3.outputs = [
+    buf3: ComputedBuffer
+    buf3.layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+    buf3.users = [NodeUser(node=SchedulerNode(name='op4'), can_inplace=True, is_weak=False)]
+]
+op3.group.device = cuda:0
+op3.group.iteration = (100, 1)
+op3.sizes = ([100], [])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+buf2_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+buf3_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+class op3_loop_body:
+    var_ranges = {z0: 100}
+    index0 = z0
+    index1 = 17
+    index2 = 16
+    index3 = 15
+    index4 = 14
+    index5 = 13
+    index6 = 12
+    def body(self, ops):
+        get_index = self.get_index('index0')
+        index_expr = ops.index_expr(get_index, torch.int32)
+        constant = ops.constant(17, torch.int32)
+        eq = ops.eq(index_expr, constant)
+        get_index_1 = self.get_index('index1')
+        load = ops.load('primals_1', get_index_1)
+        constant_1 = ops.constant(2.0, torch.float32)
+        mul = ops.mul(load, constant_1)
+        get_index_2 = self.get_index('index0')
+        index_expr_1 = ops.index_expr(get_index_2, torch.int32)
+        constant_2 = ops.constant(16, torch.int32)
+        eq_1 = ops.eq(index_expr_1, constant_2)
+        get_index_3 = self.get_index('index2')
+        load_1 = ops.load('primals_1', get_index_3)
+        constant_3 = ops.constant(2.0, torch.float32)
+        mul_1 = ops.mul(load_1, constant_3)
+        get_index_4 = self.get_index('index0')
+        index_expr_2 = ops.index_expr(get_index_4, torch.int32)
+        constant_4 = ops.constant(15, torch.int32)
+        eq_2 = ops.eq(index_expr_2, constant_4)
+        get_index_5 = self.get_index('index3')
+        load_2 = ops.load('primals_1', get_index_5)
+        constant_5 = ops.constant(2.0, torch.float32)
+        mul_2 = ops.mul(load_2, constant_5)
+        get_index_6 = self.get_index('index0')
+        index_expr_3 = ops.index_expr(get_index_6, torch.int32)
+        constant_6 = ops.constant(14, torch.int32)
+        eq_3 = ops.eq(index_expr_3, constant_6)
+        get_index_7 = self.get_index('index4')
+        load_3 = ops.load('primals_1', get_index_7)
+        constant_7 = ops.constant(2.0, torch.float32)
+        mul_3 = ops.mul(load_3, constant_7)
+        get_index_8 = self.get_index('index0')
+        index_expr_4 = ops.index_expr(get_index_8, torch.int32)
+        constant_8 = ops.constant(13, torch.int32)
+        eq_4 = ops.eq(index_expr_4, constant_8)
+        get_index_9 = self.get_index('index5')
+        load_4 = ops.load('primals_1', get_index_9)
+        constant_9 = ops.constant(2.0, torch.float32)
+        mul_4 = ops.mul(load_4, constant_9)
+        get_index_10 = self.get_index('index0')
+        index_expr_5 = ops.index_expr(get_index_10, torch.int32)
+        constant_10 = ops.constant(12, torch.int32)
+        eq_5 = ops.eq(index_expr_5, constant_10)
+        get_index_11 = self.get_index('index6')
+        load_5 = ops.load('primals_1', get_index_11)
+        constant_11 = ops.constant(2.0, torch.float32)
+        mul_5 = ops.mul(load_5, constant_11)
+        get_index_12 = self.get_index('index0')
+        load_6 = ops.load('buf2', get_index_12)
+        where = ops.where(eq_5, mul_5, load_6)
+        where_1 = ops.where(eq_4, mul_4, where)
+        where_2 = ops.where(eq_3, mul_3, where_1)
+        where_3 = ops.where(eq_2, mul_2, where_2)
+        where_4 = ops.where(eq_1, mul_1, where_3)
+        where_5 = ops.where(eq, mul, where_4)
+        get_index_13 = self.get_index('index0')
+        store = ops.store('buf3', get_index_13, where_5, None)
+        return store
+op3 Triton code:
+    import triton
+    import triton.language as tl
+    from triton.compiler.compiler import AttrsDescriptor
+
+    from torch._inductor.runtime import triton_helpers, triton_heuristics
+    from torch._inductor.runtime.triton_helpers import libdevice, math as tl_math
+    from torch._inductor.runtime.hints import AutotuneHint, ReductionHint, TileHint, instance_descriptor, DeviceProperties
+
+    @triton_heuristics.pointwise(
+        size_hints=[128], 
+        filename=__file__,
+        triton_meta={'signature': {0: '*fp32', 1: '*fp32', 2: 'i32'}, 'device': DeviceProperties(type='cuda', index=0, cc=86, major=8, regs_per_multiprocessor=65536, max_threads_per_multi_processor=1536, multi_processor_count=20), 'constants': {}, 'configs': [AttrsDescriptor(divisible_by_16=(0, 1), equal_to_1=())]},
+        inductor_meta={'autotune_hints': set(), 'kernel_name': 'Placeholder.DESCRIPTIVE_NAME', 'mutated_arg_names': ['in_out_ptr0'], 'no_x_dim': False, 'num_load': 7, 'num_reduction': 0, 'backend_hash': '712B1D69F892A891D8FFA5075DCAB47CFF4E132D88BFC66744701CEAE226F127', 'are_deterministic_algorithms_enabled': False, 'assert_indirect_indexing': True, 'autotune_local_cache': True, 'autotune_pointwise': True, 'autotune_remote_cache': None, 'force_disable_caches': False, 'dynamic_scale_rblock': True, 'max_autotune': False, 'max_autotune_pointwise': False, 'min_split_scan_rblock': 256, 'spill_threshold': 16, 'store_cubin': False},
+        min_elem_per_thread=0
+    )
+    @triton.jit
+    def triton_(in_out_ptr0, in_ptr0, xnumel, XBLOCK : tl.constexpr):
+        xnumel = 100
+        xoffset = tl.program_id(0) * XBLOCK
+        xindex = xoffset + tl.arange(0, XBLOCK)[:]
+        xmask = xindex < xnumel
+        x0 = xindex
+        tmp3 = tl.load(in_ptr0 + (17))
+        tmp4 = tl.broadcast_to(tmp3, [XBLOCK])
+        tmp9 = tl.load(in_ptr0 + (16))
+        tmp10 = tl.broadcast_to(tmp9, [XBLOCK])
+        tmp14 = tl.load(in_ptr0 + (15))
+        tmp15 = tl.broadcast_to(tmp14, [XBLOCK])
+        tmp19 = tl.load(in_ptr0 + (14))
+        tmp20 = tl.broadcast_to(tmp19, [XBLOCK])
+        tmp24 = tl.load(in_ptr0 + (13))
+        tmp25 = tl.broadcast_to(tmp24, [XBLOCK])
+        tmp29 = tl.load(in_ptr0 + (12))
+        tmp30 = tl.broadcast_to(tmp29, [XBLOCK])
+        tmp32 = tl.load(in_out_ptr0 + (x0), xmask)
+        tmp0 = x0
+        tmp1 = tl.full([1], 17, tl.int32)
+        tmp2 = tmp0 == tmp1
+        tmp5 = 2.0
+        tmp6 = tmp4 * tmp5
+        tmp7 = tl.full([1], 16, tl.int32)
+        tmp8 = tmp0 == tmp7
+        tmp11 = tmp10 * tmp5
+        tmp12 = tl.full([1], 15, tl.int32)
+        tmp13 = tmp0 == tmp12
+        tmp16 = tmp15 * tmp5
+        tmp17 = tl.full([1], 14, tl.int32)
+        tmp18 = tmp0 == tmp17
+        tmp21 = tmp20 * tmp5
+        tmp22 = tl.full([1], 13, tl.int32)
+        tmp23 = tmp0 == tmp22
+        tmp26 = tmp25 * tmp5
+        tmp27 = tl.full([1], 12, tl.int32)
+        tmp28 = tmp0 == tmp27
+        tmp31 = tmp30 * tmp5
+        tmp33 = tl.where(tmp28, tmp31, tmp32)
+        tmp34 = tl.where(tmp23, tmp26, tmp33)
+        tmp35 = tl.where(tmp18, tmp21, tmp34)
+        tmp36 = tl.where(tmp13, tmp16, tmp35)
+        tmp37 = tl.where(tmp8, tmp11, tmp36)
+        tmp38 = tl.where(tmp2, tmp6, tmp37)
+        tl.store(in_out_ptr0 + (x0), tmp38, xmask)
+op1_op2_op3_op4_op5_op6_op7_op8_op9_op10_op11_op12_op13_op14_op15_op16_op17.snodes[3] =
+op4: SchedulerNode(ComputedBuffer)
+op4.writes = [MemoryDep('buf4', c0, {c0: 100}, None)]
+op4.unmet_dependencies = [MemoryDep('buf3', c0, {c0: 100}, None)]
+op4.met_dependencies = 
+    [   MemoryDep('primals_1', 18, {}, None),
+        MemoryDep('primals_1', 19, {}, None),
+        MemoryDep('primals_1', 20, {}, None),
+        MemoryDep('primals_1', 21, {}, None),
+        MemoryDep('primals_1', 22, {}, None),
+        MemoryDep('primals_1', 23, {}, None)]
+op4.outputs = [
+    buf4: ComputedBuffer
+    buf4.layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+    buf4.users = [NodeUser(node=SchedulerNode(name='op5'), can_inplace=True, is_weak=False)]
+]
+op4.group.device = cuda:0
+op4.group.iteration = (100, 1)
+op4.sizes = ([100], [])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+buf3_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+buf4_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+class op4_loop_body:
+    var_ranges = {z0: 100}
+    index0 = z0
+    index1 = 23
+    index2 = 22
+    index3 = 21
+    index4 = 20
+    index5 = 19
+    index6 = 18
+    def body(self, ops):
+        get_index = self.get_index('index0')
+        index_expr = ops.index_expr(get_index, torch.int32)
+        constant = ops.constant(23, torch.int32)
+        eq = ops.eq(index_expr, constant)
+        get_index_1 = self.get_index('index1')
+        load = ops.load('primals_1', get_index_1)
+        constant_1 = ops.constant(2.0, torch.float32)
+        mul = ops.mul(load, constant_1)
+        get_index_2 = self.get_index('index0')
+        index_expr_1 = ops.index_expr(get_index_2, torch.int32)
+        constant_2 = ops.constant(22, torch.int32)
+        eq_1 = ops.eq(index_expr_1, constant_2)
+        get_index_3 = self.get_index('index2')
+        load_1 = ops.load('primals_1', get_index_3)
+        constant_3 = ops.constant(2.0, torch.float32)
+        mul_1 = ops.mul(load_1, constant_3)
+        get_index_4 = self.get_index('index0')
+        index_expr_2 = ops.index_expr(get_index_4, torch.int32)
+        constant_4 = ops.constant(21, torch.int32)
+        eq_2 = ops.eq(index_expr_2, constant_4)
+        get_index_5 = self.get_index('index3')
+        load_2 = ops.load('primals_1', get_index_5)
+        constant_5 = ops.constant(2.0, torch.float32)
+        mul_2 = ops.mul(load_2, constant_5)
+        get_index_6 = self.get_index('index0')
+        index_expr_3 = ops.index_expr(get_index_6, torch.int32)
+        constant_6 = ops.constant(20, torch.int32)
+        eq_3 = ops.eq(index_expr_3, constant_6)
+        get_index_7 = self.get_index('index4')
+        load_3 = ops.load('primals_1', get_index_7)
+        constant_7 = ops.constant(2.0, torch.float32)
+        mul_3 = ops.mul(load_3, constant_7)
+        get_index_8 = self.get_index('index0')
+        index_expr_4 = ops.index_expr(get_index_8, torch.int32)
+        constant_8 = ops.constant(19, torch.int32)
+        eq_4 = ops.eq(index_expr_4, constant_8)
+        get_index_9 = self.get_index('index5')
+        load_4 = ops.load('primals_1', get_index_9)
+        constant_9 = ops.constant(2.0, torch.float32)
+        mul_4 = ops.mul(load_4, constant_9)
+        get_index_10 = self.get_index('index0')
+        index_expr_5 = ops.index_expr(get_index_10, torch.int32)
+        constant_10 = ops.constant(18, torch.int32)
+        eq_5 = ops.eq(index_expr_5, constant_10)
+        get_index_11 = self.get_index('index6')
+        load_5 = ops.load('primals_1', get_index_11)
+        constant_11 = ops.constant(2.0, torch.float32)
+        mul_5 = ops.mul(load_5, constant_11)
+        get_index_12 = self.get_index('index0')
+        load_6 = ops.load('buf3', get_index_12)
+        where = ops.where(eq_5, mul_5, load_6)
+        where_1 = ops.where(eq_4, mul_4, where)
+        where_2 = ops.where(eq_3, mul_3, where_1)
+        where_3 = ops.where(eq_2, mul_2, where_2)
+        where_4 = ops.where(eq_1, mul_1, where_3)
+        where_5 = ops.where(eq, mul, where_4)
+        get_index_13 = self.get_index('index0')
+        store = ops.store('buf4', get_index_13, where_5, None)
+        return store
+op4 Triton code:
+    import triton
+    import triton.language as tl
+    from triton.compiler.compiler import AttrsDescriptor
+
+    from torch._inductor.runtime import triton_helpers, triton_heuristics
+    from torch._inductor.runtime.triton_helpers import libdevice, math as tl_math
+    from torch._inductor.runtime.hints import AutotuneHint, ReductionHint, TileHint, instance_descriptor, DeviceProperties
+
+    @triton_heuristics.pointwise(
+        size_hints=[128], 
+        filename=__file__,
+        triton_meta={'signature': {0: '*fp32', 1: '*fp32', 2: 'i32'}, 'device': DeviceProperties(type='cuda', index=0, cc=86, major=8, regs_per_multiprocessor=65536, max_threads_per_multi_processor=1536, multi_processor_count=20), 'constants': {}, 'configs': [AttrsDescriptor(divisible_by_16=(0, 1), equal_to_1=())]},
+        inductor_meta={'autotune_hints': set(), 'kernel_name': 'Placeholder.DESCRIPTIVE_NAME', 'mutated_arg_names': ['in_out_ptr0'], 'no_x_dim': False, 'num_load': 7, 'num_reduction': 0, 'backend_hash': '712B1D69F892A891D8FFA5075DCAB47CFF4E132D88BFC66744701CEAE226F127', 'are_deterministic_algorithms_enabled': False, 'assert_indirect_indexing': True, 'autotune_local_cache': True, 'autotune_pointwise': True, 'autotune_remote_cache': None, 'force_disable_caches': False, 'dynamic_scale_rblock': True, 'max_autotune': False, 'max_autotune_pointwise': False, 'min_split_scan_rblock': 256, 'spill_threshold': 16, 'store_cubin': False},
+        min_elem_per_thread=0
+    )
+    @triton.jit
+    def triton_(in_out_ptr0, in_ptr0, xnumel, XBLOCK : tl.constexpr):
+        xnumel = 100
+        xoffset = tl.program_id(0) * XBLOCK
+        xindex = xoffset + tl.arange(0, XBLOCK)[:]
+        xmask = xindex < xnumel
+        x0 = xindex
+        tmp3 = tl.load(in_ptr0 + (23))
+        tmp4 = tl.broadcast_to(tmp3, [XBLOCK])
+        tmp9 = tl.load(in_ptr0 + (22))
+        tmp10 = tl.broadcast_to(tmp9, [XBLOCK])
+        tmp14 = tl.load(in_ptr0 + (21))
+        tmp15 = tl.broadcast_to(tmp14, [XBLOCK])
+        tmp19 = tl.load(in_ptr0 + (20))
+        tmp20 = tl.broadcast_to(tmp19, [XBLOCK])
+        tmp24 = tl.load(in_ptr0 + (19))
+        tmp25 = tl.broadcast_to(tmp24, [XBLOCK])
+        tmp29 = tl.load(in_ptr0 + (18))
+        tmp30 = tl.broadcast_to(tmp29, [XBLOCK])
+        tmp32 = tl.load(in_out_ptr0 + (x0), xmask)
+        tmp0 = x0
+        tmp1 = tl.full([1], 23, tl.int32)
+        tmp2 = tmp0 == tmp1
+        tmp5 = 2.0
+        tmp6 = tmp4 * tmp5
+        tmp7 = tl.full([1], 22, tl.int32)
+        tmp8 = tmp0 == tmp7
+        tmp11 = tmp10 * tmp5
+        tmp12 = tl.full([1], 21, tl.int32)
+        tmp13 = tmp0 == tmp12
+        tmp16 = tmp15 * tmp5
+        tmp17 = tl.full([1], 20, tl.int32)
+        tmp18 = tmp0 == tmp17
+        tmp21 = tmp20 * tmp5
+        tmp22 = tl.full([1], 19, tl.int32)
+        tmp23 = tmp0 == tmp22
+        tmp26 = tmp25 * tmp5
+        tmp27 = tl.full([1], 18, tl.int32)
+        tmp28 = tmp0 == tmp27
+        tmp31 = tmp30 * tmp5
+        tmp33 = tl.where(tmp28, tmp31, tmp32)
+        tmp34 = tl.where(tmp23, tmp26, tmp33)
+        tmp35 = tl.where(tmp18, tmp21, tmp34)
+        tmp36 = tl.where(tmp13, tmp16, tmp35)
+        tmp37 = tl.where(tmp8, tmp11, tmp36)
+        tmp38 = tl.where(tmp2, tmp6, tmp37)
+        tl.store(in_out_ptr0 + (x0), tmp38, xmask)
+op1_op2_op3_op4_op5_op6_op7_op8_op9_op10_op11_op12_op13_op14_op15_op16_op17.snodes[4] =
+op5: SchedulerNode(ComputedBuffer)
+op5.writes = [MemoryDep('buf5', c0, {c0: 100}, None)]
+op5.unmet_dependencies = [MemoryDep('buf4', c0, {c0: 100}, None)]
+op5.met_dependencies = 
+    [   MemoryDep('primals_1', 24, {}, None),
+        MemoryDep('primals_1', 25, {}, None),
+        MemoryDep('primals_1', 26, {}, None),
+        MemoryDep('primals_1', 27, {}, None),
+        MemoryDep('primals_1', 28, {}, None),
+        MemoryDep('primals_1', 29, {}, None)]
+op5.outputs = [
+    buf5: ComputedBuffer
+    buf5.layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+    buf5.users = [NodeUser(node=SchedulerNode(name='op6'), can_inplace=True, is_weak=False)]
+]
+op5.group.device = cuda:0
+op5.group.iteration = (100, 1)
+op5.sizes = ([100], [])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+buf4_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+buf5_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+class op5_loop_body:
+    var_ranges = {z0: 100}
+    index0 = z0
+    index1 = 29
+    index2 = 28
+    index3 = 27
+    index4 = 26
+    index5 = 25
+    index6 = 24
+    def body(self, ops):
+        get_index = self.get_index('index0')
+        index_expr = ops.index_expr(get_index, torch.int32)
+        constant = ops.constant(29, torch.int32)
+        eq = ops.eq(index_expr, constant)
+        get_index_1 = self.get_index('index1')
+        load = ops.load('primals_1', get_index_1)
+        constant_1 = ops.constant(2.0, torch.float32)
+        mul = ops.mul(load, constant_1)
+        get_index_2 = self.get_index('index0')
+        index_expr_1 = ops.index_expr(get_index_2, torch.int32)
+        constant_2 = ops.constant(28, torch.int32)
+        eq_1 = ops.eq(index_expr_1, constant_2)
+        get_index_3 = self.get_index('index2')
+        load_1 = ops.load('primals_1', get_index_3)
+        constant_3 = ops.constant(2.0, torch.float32)
+        mul_1 = ops.mul(load_1, constant_3)
+        get_index_4 = self.get_index('index0')
+        index_expr_2 = ops.index_expr(get_index_4, torch.int32)
+        constant_4 = ops.constant(27, torch.int32)
+        eq_2 = ops.eq(index_expr_2, constant_4)
+        get_index_5 = self.get_index('index3')
+        load_2 = ops.load('primals_1', get_index_5)
+        constant_5 = ops.constant(2.0, torch.float32)
+        mul_2 = ops.mul(load_2, constant_5)
+        get_index_6 = self.get_index('index0')
+        index_expr_3 = ops.index_expr(get_index_6, torch.int32)
+        constant_6 = ops.constant(26, torch.int32)
+        eq_3 = ops.eq(index_expr_3, constant_6)
+        get_index_7 = self.get_index('index4')
+        load_3 = ops.load('primals_1', get_index_7)
+        constant_7 = ops.constant(2.0, torch.float32)
+        mul_3 = ops.mul(load_3, constant_7)
+        get_index_8 = self.get_index('index0')
+        index_expr_4 = ops.index_expr(get_index_8, torch.int32)
+        constant_8 = ops.constant(25, torch.int32)
+        eq_4 = ops.eq(index_expr_4, constant_8)
+        get_index_9 = self.get_index('index5')
+        load_4 = ops.load('primals_1', get_index_9)
+        constant_9 = ops.constant(2.0, torch.float32)
+        mul_4 = ops.mul(load_4, constant_9)
+        get_index_10 = self.get_index('index0')
+        index_expr_5 = ops.index_expr(get_index_10, torch.int32)
+        constant_10 = ops.constant(24, torch.int32)
+        eq_5 = ops.eq(index_expr_5, constant_10)
+        get_index_11 = self.get_index('index6')
+        load_5 = ops.load('primals_1', get_index_11)
+        constant_11 = ops.constant(2.0, torch.float32)
+        mul_5 = ops.mul(load_5, constant_11)
+        get_index_12 = self.get_index('index0')
+        load_6 = ops.load('buf4', get_index_12)
+        where = ops.where(eq_5, mul_5, load_6)
+        where_1 = ops.where(eq_4, mul_4, where)
+        where_2 = ops.where(eq_3, mul_3, where_1)
+        where_3 = ops.where(eq_2, mul_2, where_2)
+        where_4 = ops.where(eq_1, mul_1, where_3)
+        where_5 = ops.where(eq, mul, where_4)
+        get_index_13 = self.get_index('index0')
+        store = ops.store('buf5', get_index_13, where_5, None)
+        return store
+op5 Triton code:
+    import triton
+    import triton.language as tl
+    from triton.compiler.compiler import AttrsDescriptor
+
+    from torch._inductor.runtime import triton_helpers, triton_heuristics
+    from torch._inductor.runtime.triton_helpers import libdevice, math as tl_math
+    from torch._inductor.runtime.hints import AutotuneHint, ReductionHint, TileHint, instance_descriptor, DeviceProperties
+
+    @triton_heuristics.pointwise(
+        size_hints=[128], 
+        filename=__file__,
+        triton_meta={'signature': {0: '*fp32', 1: '*fp32', 2: 'i32'}, 'device': DeviceProperties(type='cuda', index=0, cc=86, major=8, regs_per_multiprocessor=65536, max_threads_per_multi_processor=1536, multi_processor_count=20), 'constants': {}, 'configs': [AttrsDescriptor(divisible_by_16=(0, 1), equal_to_1=())]},
+        inductor_meta={'autotune_hints': set(), 'kernel_name': 'Placeholder.DESCRIPTIVE_NAME', 'mutated_arg_names': ['in_out_ptr0'], 'no_x_dim': False, 'num_load': 7, 'num_reduction': 0, 'backend_hash': '712B1D69F892A891D8FFA5075DCAB47CFF4E132D88BFC66744701CEAE226F127', 'are_deterministic_algorithms_enabled': False, 'assert_indirect_indexing': True, 'autotune_local_cache': True, 'autotune_pointwise': True, 'autotune_remote_cache': None, 'force_disable_caches': False, 'dynamic_scale_rblock': True, 'max_autotune': False, 'max_autotune_pointwise': False, 'min_split_scan_rblock': 256, 'spill_threshold': 16, 'store_cubin': False},
+        min_elem_per_thread=0
+    )
+    @triton.jit
+    def triton_(in_out_ptr0, in_ptr0, xnumel, XBLOCK : tl.constexpr):
+        xnumel = 100
+        xoffset = tl.program_id(0) * XBLOCK
+        xindex = xoffset + tl.arange(0, XBLOCK)[:]
+        xmask = xindex < xnumel
+        x0 = xindex
+        tmp3 = tl.load(in_ptr0 + (29))
+        tmp4 = tl.broadcast_to(tmp3, [XBLOCK])
+        tmp9 = tl.load(in_ptr0 + (28))
+        tmp10 = tl.broadcast_to(tmp9, [XBLOCK])
+        tmp14 = tl.load(in_ptr0 + (27))
+        tmp15 = tl.broadcast_to(tmp14, [XBLOCK])
+        tmp19 = tl.load(in_ptr0 + (26))
+        tmp20 = tl.broadcast_to(tmp19, [XBLOCK])
+        tmp24 = tl.load(in_ptr0 + (25))
+        tmp25 = tl.broadcast_to(tmp24, [XBLOCK])
+        tmp29 = tl.load(in_ptr0 + (24))
+        tmp30 = tl.broadcast_to(tmp29, [XBLOCK])
+        tmp32 = tl.load(in_out_ptr0 + (x0), xmask)
+        tmp0 = x0
+        tmp1 = tl.full([1], 29, tl.int32)
+        tmp2 = tmp0 == tmp1
+        tmp5 = 2.0
+        tmp6 = tmp4 * tmp5
+        tmp7 = tl.full([1], 28, tl.int32)
+        tmp8 = tmp0 == tmp7
+        tmp11 = tmp10 * tmp5
+        tmp12 = tl.full([1], 27, tl.int32)
+        tmp13 = tmp0 == tmp12
+        tmp16 = tmp15 * tmp5
+        tmp17 = tl.full([1], 26, tl.int32)
+        tmp18 = tmp0 == tmp17
+        tmp21 = tmp20 * tmp5
+        tmp22 = tl.full([1], 25, tl.int32)
+        tmp23 = tmp0 == tmp22
+        tmp26 = tmp25 * tmp5
+        tmp27 = tl.full([1], 24, tl.int32)
+        tmp28 = tmp0 == tmp27
+        tmp31 = tmp30 * tmp5
+        tmp33 = tl.where(tmp28, tmp31, tmp32)
+        tmp34 = tl.where(tmp23, tmp26, tmp33)
+        tmp35 = tl.where(tmp18, tmp21, tmp34)
+        tmp36 = tl.where(tmp13, tmp16, tmp35)
+        tmp37 = tl.where(tmp8, tmp11, tmp36)
+        tmp38 = tl.where(tmp2, tmp6, tmp37)
+        tl.store(in_out_ptr0 + (x0), tmp38, xmask)
+op1_op2_op3_op4_op5_op6_op7_op8_op9_op10_op11_op12_op13_op14_op15_op16_op17.snodes[5] =
+op6: SchedulerNode(ComputedBuffer)
+op6.writes = [MemoryDep('buf6', c0, {c0: 100}, None)]
+op6.unmet_dependencies = [MemoryDep('buf5', c0, {c0: 100}, None)]
+op6.met_dependencies = 
+    [   MemoryDep('primals_1', 30, {}, None),
+        MemoryDep('primals_1', 31, {}, None),
+        MemoryDep('primals_1', 32, {}, None),
+        MemoryDep('primals_1', 33, {}, None),
+        MemoryDep('primals_1', 34, {}, None),
+        MemoryDep('primals_1', 35, {}, None)]
+op6.outputs = [
+    buf6: ComputedBuffer
+    buf6.layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+    buf6.users = [NodeUser(node=SchedulerNode(name='op7'), can_inplace=True, is_weak=False)]
+]
+op6.group.device = cuda:0
+op6.group.iteration = (100, 1)
+op6.sizes = ([100], [])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+buf5_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+buf6_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+class op6_loop_body:
+    var_ranges = {z0: 100}
+    index0 = z0
+    index1 = 35
+    index2 = 34
+    index3 = 33
+    index4 = 32
+    index5 = 31
+    index6 = 30
+    def body(self, ops):
+        get_index = self.get_index('index0')
+        index_expr = ops.index_expr(get_index, torch.int32)
+        constant = ops.constant(35, torch.int32)
+        eq = ops.eq(index_expr, constant)
+        get_index_1 = self.get_index('index1')
+        load = ops.load('primals_1', get_index_1)
+        constant_1 = ops.constant(2.0, torch.float32)
+        mul = ops.mul(load, constant_1)
+        get_index_2 = self.get_index('index0')
+        index_expr_1 = ops.index_expr(get_index_2, torch.int32)
+        constant_2 = ops.constant(34, torch.int32)
+        eq_1 = ops.eq(index_expr_1, constant_2)
+        get_index_3 = self.get_index('index2')
+        load_1 = ops.load('primals_1', get_index_3)
+        constant_3 = ops.constant(2.0, torch.float32)
+        mul_1 = ops.mul(load_1, constant_3)
+        get_index_4 = self.get_index('index0')
+        index_expr_2 = ops.index_expr(get_index_4, torch.int32)
+        constant_4 = ops.constant(33, torch.int32)
+        eq_2 = ops.eq(index_expr_2, constant_4)
+        get_index_5 = self.get_index('index3')
+        load_2 = ops.load('primals_1', get_index_5)
+        constant_5 = ops.constant(2.0, torch.float32)
+        mul_2 = ops.mul(load_2, constant_5)
+        get_index_6 = self.get_index('index0')
+        index_expr_3 = ops.index_expr(get_index_6, torch.int32)
+        constant_6 = ops.constant(32, torch.int32)
+        eq_3 = ops.eq(index_expr_3, constant_6)
+        get_index_7 = self.get_index('index4')
+        load_3 = ops.load('primals_1', get_index_7)
+        constant_7 = ops.constant(2.0, torch.float32)
+        mul_3 = ops.mul(load_3, constant_7)
+        get_index_8 = self.get_index('index0')
+        index_expr_4 = ops.index_expr(get_index_8, torch.int32)
+        constant_8 = ops.constant(31, torch.int32)
+        eq_4 = ops.eq(index_expr_4, constant_8)
+        get_index_9 = self.get_index('index5')
+        load_4 = ops.load('primals_1', get_index_9)
+        constant_9 = ops.constant(2.0, torch.float32)
+        mul_4 = ops.mul(load_4, constant_9)
+        get_index_10 = self.get_index('index0')
+        index_expr_5 = ops.index_expr(get_index_10, torch.int32)
+        constant_10 = ops.constant(30, torch.int32)
+        eq_5 = ops.eq(index_expr_5, constant_10)
+        get_index_11 = self.get_index('index6')
+        load_5 = ops.load('primals_1', get_index_11)
+        constant_11 = ops.constant(2.0, torch.float32)
+        mul_5 = ops.mul(load_5, constant_11)
+        get_index_12 = self.get_index('index0')
+        load_6 = ops.load('buf5', get_index_12)
+        where = ops.where(eq_5, mul_5, load_6)
+        where_1 = ops.where(eq_4, mul_4, where)
+        where_2 = ops.where(eq_3, mul_3, where_1)
+        where_3 = ops.where(eq_2, mul_2, where_2)
+        where_4 = ops.where(eq_1, mul_1, where_3)
+        where_5 = ops.where(eq, mul, where_4)
+        get_index_13 = self.get_index('index0')
+        store = ops.store('buf6', get_index_13, where_5, None)
+        return store
+op6 Triton code:
+    import triton
+    import triton.language as tl
+    from triton.compiler.compiler import AttrsDescriptor
+
+    from torch._inductor.runtime import triton_helpers, triton_heuristics
+    from torch._inductor.runtime.triton_helpers import libdevice, math as tl_math
+    from torch._inductor.runtime.hints import AutotuneHint, ReductionHint, TileHint, instance_descriptor, DeviceProperties
+
+    @triton_heuristics.pointwise(
+        size_hints=[128], 
+        filename=__file__,
+        triton_meta={'signature': {0: '*fp32', 1: '*fp32', 2: 'i32'}, 'device': DeviceProperties(type='cuda', index=0, cc=86, major=8, regs_per_multiprocessor=65536, max_threads_per_multi_processor=1536, multi_processor_count=20), 'constants': {}, 'configs': [AttrsDescriptor(divisible_by_16=(0, 1), equal_to_1=())]},
+        inductor_meta={'autotune_hints': set(), 'kernel_name': 'Placeholder.DESCRIPTIVE_NAME', 'mutated_arg_names': ['in_out_ptr0'], 'no_x_dim': False, 'num_load': 7, 'num_reduction': 0, 'backend_hash': '712B1D69F892A891D8FFA5075DCAB47CFF4E132D88BFC66744701CEAE226F127', 'are_deterministic_algorithms_enabled': False, 'assert_indirect_indexing': True, 'autotune_local_cache': True, 'autotune_pointwise': True, 'autotune_remote_cache': None, 'force_disable_caches': False, 'dynamic_scale_rblock': True, 'max_autotune': False, 'max_autotune_pointwise': False, 'min_split_scan_rblock': 256, 'spill_threshold': 16, 'store_cubin': False},
+        min_elem_per_thread=0
+    )
+    @triton.jit
+    def triton_(in_out_ptr0, in_ptr0, xnumel, XBLOCK : tl.constexpr):
+        xnumel = 100
+        xoffset = tl.program_id(0) * XBLOCK
+        xindex = xoffset + tl.arange(0, XBLOCK)[:]
+        xmask = xindex < xnumel
+        x0 = xindex
+        tmp3 = tl.load(in_ptr0 + (35))
+        tmp4 = tl.broadcast_to(tmp3, [XBLOCK])
+        tmp9 = tl.load(in_ptr0 + (34))
+        tmp10 = tl.broadcast_to(tmp9, [XBLOCK])
+        tmp14 = tl.load(in_ptr0 + (33))
+        tmp15 = tl.broadcast_to(tmp14, [XBLOCK])
+        tmp19 = tl.load(in_ptr0 + (32))
+        tmp20 = tl.broadcast_to(tmp19, [XBLOCK])
+        tmp24 = tl.load(in_ptr0 + (31))
+        tmp25 = tl.broadcast_to(tmp24, [XBLOCK])
+        tmp29 = tl.load(in_ptr0 + (30))
+        tmp30 = tl.broadcast_to(tmp29, [XBLOCK])
+        tmp32 = tl.load(in_out_ptr0 + (x0), xmask)
+        tmp0 = x0
+        tmp1 = tl.full([1], 35, tl.int32)
+        tmp2 = tmp0 == tmp1
+        tmp5 = 2.0
+        tmp6 = tmp4 * tmp5
+        tmp7 = tl.full([1], 34, tl.int32)
+        tmp8 = tmp0 == tmp7
+        tmp11 = tmp10 * tmp5
+        tmp12 = tl.full([1], 33, tl.int32)
+        tmp13 = tmp0 == tmp12
+        tmp16 = tmp15 * tmp5
+        tmp17 = tl.full([1], 32, tl.int32)
+        tmp18 = tmp0 == tmp17
+        tmp21 = tmp20 * tmp5
+        tmp22 = tl.full([1], 31, tl.int32)
+        tmp23 = tmp0 == tmp22
+        tmp26 = tmp25 * tmp5
+        tmp27 = tl.full([1], 30, tl.int32)
+        tmp28 = tmp0 == tmp27
+        tmp31 = tmp30 * tmp5
+        tmp33 = tl.where(tmp28, tmp31, tmp32)
+        tmp34 = tl.where(tmp23, tmp26, tmp33)
+        tmp35 = tl.where(tmp18, tmp21, tmp34)
+        tmp36 = tl.where(tmp13, tmp16, tmp35)
+        tmp37 = tl.where(tmp8, tmp11, tmp36)
+        tmp38 = tl.where(tmp2, tmp6, tmp37)
+        tl.store(in_out_ptr0 + (x0), tmp38, xmask)
+op1_op2_op3_op4_op5_op6_op7_op8_op9_op10_op11_op12_op13_op14_op15_op16_op17.snodes[6] =
+op7: SchedulerNode(ComputedBuffer)
+op7.writes = [MemoryDep('buf7', c0, {c0: 100}, None)]
+op7.unmet_dependencies = [MemoryDep('buf6', c0, {c0: 100}, None)]
+op7.met_dependencies = 
+    [   MemoryDep('primals_1', 36, {}, None),
+        MemoryDep('primals_1', 37, {}, None),
+        MemoryDep('primals_1', 38, {}, None),
+        MemoryDep('primals_1', 39, {}, None),
+        MemoryDep('primals_1', 40, {}, None),
+        MemoryDep('primals_1', 41, {}, None)]
+op7.outputs = [
+    buf7: ComputedBuffer
+    buf7.layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+    buf7.users = [NodeUser(node=SchedulerNode(name='op8'), can_inplace=True, is_weak=False)]
+]
+op7.group.device = cuda:0
+op7.group.iteration = (100, 1)
+op7.sizes = ([100], [])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+buf6_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+buf7_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+class op7_loop_body:
+    var_ranges = {z0: 100}
+    index0 = z0
+    index1 = 41
+    index2 = 40
+    index3 = 39
+    index4 = 38
+    index5 = 37
+    index6 = 36
+    def body(self, ops):
+        get_index = self.get_index('index0')
+        index_expr = ops.index_expr(get_index, torch.int32)
+        constant = ops.constant(41, torch.int32)
+        eq = ops.eq(index_expr, constant)
+        get_index_1 = self.get_index('index1')
+        load = ops.load('primals_1', get_index_1)
+        constant_1 = ops.constant(2.0, torch.float32)
+        mul = ops.mul(load, constant_1)
+        get_index_2 = self.get_index('index0')
+        index_expr_1 = ops.index_expr(get_index_2, torch.int32)
+        constant_2 = ops.constant(40, torch.int32)
+        eq_1 = ops.eq(index_expr_1, constant_2)
+        get_index_3 = self.get_index('index2')
+        load_1 = ops.load('primals_1', get_index_3)
+        constant_3 = ops.constant(2.0, torch.float32)
+        mul_1 = ops.mul(load_1, constant_3)
+        get_index_4 = self.get_index('index0')
+        index_expr_2 = ops.index_expr(get_index_4, torch.int32)
+        constant_4 = ops.constant(39, torch.int32)
+        eq_2 = ops.eq(index_expr_2, constant_4)
+        get_index_5 = self.get_index('index3')
+        load_2 = ops.load('primals_1', get_index_5)
+        constant_5 = ops.constant(2.0, torch.float32)
+        mul_2 = ops.mul(load_2, constant_5)
+        get_index_6 = self.get_index('index0')
+        index_expr_3 = ops.index_expr(get_index_6, torch.int32)
+        constant_6 = ops.constant(38, torch.int32)
+        eq_3 = ops.eq(index_expr_3, constant_6)
+        get_index_7 = self.get_index('index4')
+        load_3 = ops.load('primals_1', get_index_7)
+        constant_7 = ops.constant(2.0, torch.float32)
+        mul_3 = ops.mul(load_3, constant_7)
+        get_index_8 = self.get_index('index0')
+        index_expr_4 = ops.index_expr(get_index_8, torch.int32)
+        constant_8 = ops.constant(37, torch.int32)
+        eq_4 = ops.eq(index_expr_4, constant_8)
+        get_index_9 = self.get_index('index5')
+        load_4 = ops.load('primals_1', get_index_9)
+        constant_9 = ops.constant(2.0, torch.float32)
+        mul_4 = ops.mul(load_4, constant_9)
+        get_index_10 = self.get_index('index0')
+        index_expr_5 = ops.index_expr(get_index_10, torch.int32)
+        constant_10 = ops.constant(36, torch.int32)
+        eq_5 = ops.eq(index_expr_5, constant_10)
+        get_index_11 = self.get_index('index6')
+        load_5 = ops.load('primals_1', get_index_11)
+        constant_11 = ops.constant(2.0, torch.float32)
+        mul_5 = ops.mul(load_5, constant_11)
+        get_index_12 = self.get_index('index0')
+        load_6 = ops.load('buf6', get_index_12)
+        where = ops.where(eq_5, mul_5, load_6)
+        where_1 = ops.where(eq_4, mul_4, where)
+        where_2 = ops.where(eq_3, mul_3, where_1)
+        where_3 = ops.where(eq_2, mul_2, where_2)
+        where_4 = ops.where(eq_1, mul_1, where_3)
+        where_5 = ops.where(eq, mul, where_4)
+        get_index_13 = self.get_index('index0')
+        store = ops.store('buf7', get_index_13, where_5, None)
+        return store
+op7 Triton code:
+    import triton
+    import triton.language as tl
+    from triton.compiler.compiler import AttrsDescriptor
+
+    from torch._inductor.runtime import triton_helpers, triton_heuristics
+    from torch._inductor.runtime.triton_helpers import libdevice, math as tl_math
+    from torch._inductor.runtime.hints import AutotuneHint, ReductionHint, TileHint, instance_descriptor, DeviceProperties
+
+    @triton_heuristics.pointwise(
+        size_hints=[128], 
+        filename=__file__,
+        triton_meta={'signature': {0: '*fp32', 1: '*fp32', 2: 'i32'}, 'device': DeviceProperties(type='cuda', index=0, cc=86, major=8, regs_per_multiprocessor=65536, max_threads_per_multi_processor=1536, multi_processor_count=20), 'constants': {}, 'configs': [AttrsDescriptor(divisible_by_16=(0, 1), equal_to_1=())]},
+        inductor_meta={'autotune_hints': set(), 'kernel_name': 'Placeholder.DESCRIPTIVE_NAME', 'mutated_arg_names': ['in_out_ptr0'], 'no_x_dim': False, 'num_load': 7, 'num_reduction': 0, 'backend_hash': '712B1D69F892A891D8FFA5075DCAB47CFF4E132D88BFC66744701CEAE226F127', 'are_deterministic_algorithms_enabled': False, 'assert_indirect_indexing': True, 'autotune_local_cache': True, 'autotune_pointwise': True, 'autotune_remote_cache': None, 'force_disable_caches': False, 'dynamic_scale_rblock': True, 'max_autotune': False, 'max_autotune_pointwise': False, 'min_split_scan_rblock': 256, 'spill_threshold': 16, 'store_cubin': False},
+        min_elem_per_thread=0
+    )
+    @triton.jit
+    def triton_(in_out_ptr0, in_ptr0, xnumel, XBLOCK : tl.constexpr):
+        xnumel = 100
+        xoffset = tl.program_id(0) * XBLOCK
+        xindex = xoffset + tl.arange(0, XBLOCK)[:]
+        xmask = xindex < xnumel
+        x0 = xindex
+        tmp3 = tl.load(in_ptr0 + (41))
+        tmp4 = tl.broadcast_to(tmp3, [XBLOCK])
+        tmp9 = tl.load(in_ptr0 + (40))
+        tmp10 = tl.broadcast_to(tmp9, [XBLOCK])
+        tmp14 = tl.load(in_ptr0 + (39))
+        tmp15 = tl.broadcast_to(tmp14, [XBLOCK])
+        tmp19 = tl.load(in_ptr0 + (38))
+        tmp20 = tl.broadcast_to(tmp19, [XBLOCK])
+        tmp24 = tl.load(in_ptr0 + (37))
+        tmp25 = tl.broadcast_to(tmp24, [XBLOCK])
+        tmp29 = tl.load(in_ptr0 + (36))
+        tmp30 = tl.broadcast_to(tmp29, [XBLOCK])
+        tmp32 = tl.load(in_out_ptr0 + (x0), xmask)
+        tmp0 = x0
+        tmp1 = tl.full([1], 41, tl.int32)
+        tmp2 = tmp0 == tmp1
+        tmp5 = 2.0
+        tmp6 = tmp4 * tmp5
+        tmp7 = tl.full([1], 40, tl.int32)
+        tmp8 = tmp0 == tmp7
+        tmp11 = tmp10 * tmp5
+        tmp12 = tl.full([1], 39, tl.int32)
+        tmp13 = tmp0 == tmp12
+        tmp16 = tmp15 * tmp5
+        tmp17 = tl.full([1], 38, tl.int32)
+        tmp18 = tmp0 == tmp17
+        tmp21 = tmp20 * tmp5
+        tmp22 = tl.full([1], 37, tl.int32)
+        tmp23 = tmp0 == tmp22
+        tmp26 = tmp25 * tmp5
+        tmp27 = tl.full([1], 36, tl.int32)
+        tmp28 = tmp0 == tmp27
+        tmp31 = tmp30 * tmp5
+        tmp33 = tl.where(tmp28, tmp31, tmp32)
+        tmp34 = tl.where(tmp23, tmp26, tmp33)
+        tmp35 = tl.where(tmp18, tmp21, tmp34)
+        tmp36 = tl.where(tmp13, tmp16, tmp35)
+        tmp37 = tl.where(tmp8, tmp11, tmp36)
+        tmp38 = tl.where(tmp2, tmp6, tmp37)
+        tl.store(in_out_ptr0 + (x0), tmp38, xmask)
+op1_op2_op3_op4_op5_op6_op7_op8_op9_op10_op11_op12_op13_op14_op15_op16_op17.snodes[7] =
+op8: SchedulerNode(ComputedBuffer)
+op8.writes = [MemoryDep('buf8', c0, {c0: 100}, None)]
+op8.unmet_dependencies = [MemoryDep('buf7', c0, {c0: 100}, None)]
+op8.met_dependencies = 
+    [   MemoryDep('primals_1', 42, {}, None),
+        MemoryDep('primals_1', 43, {}, None),
+        MemoryDep('primals_1', 44, {}, None),
+        MemoryDep('primals_1', 45, {}, None),
+        MemoryDep('primals_1', 46, {}, None),
+        MemoryDep('primals_1', 47, {}, None)]
+op8.outputs = [
+    buf8: ComputedBuffer
+    buf8.layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+    buf8.users = [NodeUser(node=SchedulerNode(name='op9'), can_inplace=True, is_weak=False)]
+]
+op8.group.device = cuda:0
+op8.group.iteration = (100, 1)
+op8.sizes = ([100], [])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+buf7_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+buf8_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+class op8_loop_body:
+    var_ranges = {z0: 100}
+    index0 = z0
+    index1 = 47
+    index2 = 46
+    index3 = 45
+    index4 = 44
+    index5 = 43
+    index6 = 42
+    def body(self, ops):
+        get_index = self.get_index('index0')
+        index_expr = ops.index_expr(get_index, torch.int32)
+        constant = ops.constant(47, torch.int32)
+        eq = ops.eq(index_expr, constant)
+        get_index_1 = self.get_index('index1')
+        load = ops.load('primals_1', get_index_1)
+        constant_1 = ops.constant(2.0, torch.float32)
+        mul = ops.mul(load, constant_1)
+        get_index_2 = self.get_index('index0')
+        index_expr_1 = ops.index_expr(get_index_2, torch.int32)
+        constant_2 = ops.constant(46, torch.int32)
+        eq_1 = ops.eq(index_expr_1, constant_2)
+        get_index_3 = self.get_index('index2')
+        load_1 = ops.load('primals_1', get_index_3)
+        constant_3 = ops.constant(2.0, torch.float32)
+        mul_1 = ops.mul(load_1, constant_3)
+        get_index_4 = self.get_index('index0')
+        index_expr_2 = ops.index_expr(get_index_4, torch.int32)
+        constant_4 = ops.constant(45, torch.int32)
+        eq_2 = ops.eq(index_expr_2, constant_4)
+        get_index_5 = self.get_index('index3')
+        load_2 = ops.load('primals_1', get_index_5)
+        constant_5 = ops.constant(2.0, torch.float32)
+        mul_2 = ops.mul(load_2, constant_5)
+        get_index_6 = self.get_index('index0')
+        index_expr_3 = ops.index_expr(get_index_6, torch.int32)
+        constant_6 = ops.constant(44, torch.int32)
+        eq_3 = ops.eq(index_expr_3, constant_6)
+        get_index_7 = self.get_index('index4')
+        load_3 = ops.load('primals_1', get_index_7)
+        constant_7 = ops.constant(2.0, torch.float32)
+        mul_3 = ops.mul(load_3, constant_7)
+        get_index_8 = self.get_index('index0')
+        index_expr_4 = ops.index_expr(get_index_8, torch.int32)
+        constant_8 = ops.constant(43, torch.int32)
+        eq_4 = ops.eq(index_expr_4, constant_8)
+        get_index_9 = self.get_index('index5')
+        load_4 = ops.load('primals_1', get_index_9)
+        constant_9 = ops.constant(2.0, torch.float32)
+        mul_4 = ops.mul(load_4, constant_9)
+        get_index_10 = self.get_index('index0')
+        index_expr_5 = ops.index_expr(get_index_10, torch.int32)
+        constant_10 = ops.constant(42, torch.int32)
+        eq_5 = ops.eq(index_expr_5, constant_10)
+        get_index_11 = self.get_index('index6')
+        load_5 = ops.load('primals_1', get_index_11)
+        constant_11 = ops.constant(2.0, torch.float32)
+        mul_5 = ops.mul(load_5, constant_11)
+        get_index_12 = self.get_index('index0')
+        load_6 = ops.load('buf7', get_index_12)
+        where = ops.where(eq_5, mul_5, load_6)
+        where_1 = ops.where(eq_4, mul_4, where)
+        where_2 = ops.where(eq_3, mul_3, where_1)
+        where_3 = ops.where(eq_2, mul_2, where_2)
+        where_4 = ops.where(eq_1, mul_1, where_3)
+        where_5 = ops.where(eq, mul, where_4)
+        get_index_13 = self.get_index('index0')
+        store = ops.store('buf8', get_index_13, where_5, None)
+        return store
+op8 Triton code:
+    import triton
+    import triton.language as tl
+    from triton.compiler.compiler import AttrsDescriptor
+
+    from torch._inductor.runtime import triton_helpers, triton_heuristics
+    from torch._inductor.runtime.triton_helpers import libdevice, math as tl_math
+    from torch._inductor.runtime.hints import AutotuneHint, ReductionHint, TileHint, instance_descriptor, DeviceProperties
+
+    @triton_heuristics.pointwise(
+        size_hints=[128], 
+        filename=__file__,
+        triton_meta={'signature': {0: '*fp32', 1: '*fp32', 2: 'i32'}, 'device': DeviceProperties(type='cuda', index=0, cc=86, major=8, regs_per_multiprocessor=65536, max_threads_per_multi_processor=1536, multi_processor_count=20), 'constants': {}, 'configs': [AttrsDescriptor(divisible_by_16=(0, 1), equal_to_1=())]},
+        inductor_meta={'autotune_hints': set(), 'kernel_name': 'Placeholder.DESCRIPTIVE_NAME', 'mutated_arg_names': ['in_out_ptr0'], 'no_x_dim': False, 'num_load': 7, 'num_reduction': 0, 'backend_hash': '712B1D69F892A891D8FFA5075DCAB47CFF4E132D88BFC66744701CEAE226F127', 'are_deterministic_algorithms_enabled': False, 'assert_indirect_indexing': True, 'autotune_local_cache': True, 'autotune_pointwise': True, 'autotune_remote_cache': None, 'force_disable_caches': False, 'dynamic_scale_rblock': True, 'max_autotune': False, 'max_autotune_pointwise': False, 'min_split_scan_rblock': 256, 'spill_threshold': 16, 'store_cubin': False},
+        min_elem_per_thread=0
+    )
+    @triton.jit
+    def triton_(in_out_ptr0, in_ptr0, xnumel, XBLOCK : tl.constexpr):
+        xnumel = 100
+        xoffset = tl.program_id(0) * XBLOCK
+        xindex = xoffset + tl.arange(0, XBLOCK)[:]
+        xmask = xindex < xnumel
+        x0 = xindex
+        tmp3 = tl.load(in_ptr0 + (47))
+        tmp4 = tl.broadcast_to(tmp3, [XBLOCK])
+        tmp9 = tl.load(in_ptr0 + (46))
+        tmp10 = tl.broadcast_to(tmp9, [XBLOCK])
+        tmp14 = tl.load(in_ptr0 + (45))
+        tmp15 = tl.broadcast_to(tmp14, [XBLOCK])
+        tmp19 = tl.load(in_ptr0 + (44))
+        tmp20 = tl.broadcast_to(tmp19, [XBLOCK])
+        tmp24 = tl.load(in_ptr0 + (43))
+        tmp25 = tl.broadcast_to(tmp24, [XBLOCK])
+        tmp29 = tl.load(in_ptr0 + (42))
+        tmp30 = tl.broadcast_to(tmp29, [XBLOCK])
+        tmp32 = tl.load(in_out_ptr0 + (x0), xmask)
+        tmp0 = x0
+        tmp1 = tl.full([1], 47, tl.int32)
+        tmp2 = tmp0 == tmp1
+        tmp5 = 2.0
+        tmp6 = tmp4 * tmp5
+        tmp7 = tl.full([1], 46, tl.int32)
+        tmp8 = tmp0 == tmp7
+        tmp11 = tmp10 * tmp5
+        tmp12 = tl.full([1], 45, tl.int32)
+        tmp13 = tmp0 == tmp12
+        tmp16 = tmp15 * tmp5
+        tmp17 = tl.full([1], 44, tl.int32)
+        tmp18 = tmp0 == tmp17
+        tmp21 = tmp20 * tmp5
+        tmp22 = tl.full([1], 43, tl.int32)
+        tmp23 = tmp0 == tmp22
+        tmp26 = tmp25 * tmp5
+        tmp27 = tl.full([1], 42, tl.int32)
+        tmp28 = tmp0 == tmp27
+        tmp31 = tmp30 * tmp5
+        tmp33 = tl.where(tmp28, tmp31, tmp32)
+        tmp34 = tl.where(tmp23, tmp26, tmp33)
+        tmp35 = tl.where(tmp18, tmp21, tmp34)
+        tmp36 = tl.where(tmp13, tmp16, tmp35)
+        tmp37 = tl.where(tmp8, tmp11, tmp36)
+        tmp38 = tl.where(tmp2, tmp6, tmp37)
+        tl.store(in_out_ptr0 + (x0), tmp38, xmask)
+op1_op2_op3_op4_op5_op6_op7_op8_op9_op10_op11_op12_op13_op14_op15_op16_op17.snodes[8] =
+op9: SchedulerNode(ComputedBuffer)
+op9.writes = [MemoryDep('buf9', c0, {c0: 100}, None)]
+op9.unmet_dependencies = [MemoryDep('buf8', c0, {c0: 100}, None)]
+op9.met_dependencies = 
+    [   MemoryDep('primals_1', 48, {}, None),
+        MemoryDep('primals_1', 49, {}, None),
+        MemoryDep('primals_1', 50, {}, None),
+        MemoryDep('primals_1', 51, {}, None),
+        MemoryDep('primals_1', 52, {}, None),
+        MemoryDep('primals_1', 53, {}, None)]
+op9.outputs = [
+    buf9: ComputedBuffer
+    buf9.layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+    buf9.users = [NodeUser(node=SchedulerNode(name='op10'), can_inplace=True, is_weak=False)]
+]
+op9.group.device = cuda:0
+op9.group.iteration = (100, 1)
+op9.sizes = ([100], [])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+buf8_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+buf9_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+class op9_loop_body:
+    var_ranges = {z0: 100}
+    index0 = z0
+    index1 = 53
+    index2 = 52
+    index3 = 51
+    index4 = 50
+    index5 = 49
+    index6 = 48
+    def body(self, ops):
+        get_index = self.get_index('index0')
+        index_expr = ops.index_expr(get_index, torch.int32)
+        constant = ops.constant(53, torch.int32)
+        eq = ops.eq(index_expr, constant)
+        get_index_1 = self.get_index('index1')
+        load = ops.load('primals_1', get_index_1)
+        constant_1 = ops.constant(2.0, torch.float32)
+        mul = ops.mul(load, constant_1)
+        get_index_2 = self.get_index('index0')
+        index_expr_1 = ops.index_expr(get_index_2, torch.int32)
+        constant_2 = ops.constant(52, torch.int32)
+        eq_1 = ops.eq(index_expr_1, constant_2)
+        get_index_3 = self.get_index('index2')
+        load_1 = ops.load('primals_1', get_index_3)
+        constant_3 = ops.constant(2.0, torch.float32)
+        mul_1 = ops.mul(load_1, constant_3)
+        get_index_4 = self.get_index('index0')
+        index_expr_2 = ops.index_expr(get_index_4, torch.int32)
+        constant_4 = ops.constant(51, torch.int32)
+        eq_2 = ops.eq(index_expr_2, constant_4)
+        get_index_5 = self.get_index('index3')
+        load_2 = ops.load('primals_1', get_index_5)
+        constant_5 = ops.constant(2.0, torch.float32)
+        mul_2 = ops.mul(load_2, constant_5)
+        get_index_6 = self.get_index('index0')
+        index_expr_3 = ops.index_expr(get_index_6, torch.int32)
+        constant_6 = ops.constant(50, torch.int32)
+        eq_3 = ops.eq(index_expr_3, constant_6)
+        get_index_7 = self.get_index('index4')
+        load_3 = ops.load('primals_1', get_index_7)
+        constant_7 = ops.constant(2.0, torch.float32)
+        mul_3 = ops.mul(load_3, constant_7)
+        get_index_8 = self.get_index('index0')
+        index_expr_4 = ops.index_expr(get_index_8, torch.int32)
+        constant_8 = ops.constant(49, torch.int32)
+        eq_4 = ops.eq(index_expr_4, constant_8)
+        get_index_9 = self.get_index('index5')
+        load_4 = ops.load('primals_1', get_index_9)
+        constant_9 = ops.constant(2.0, torch.float32)
+        mul_4 = ops.mul(load_4, constant_9)
+        get_index_10 = self.get_index('index0')
+        index_expr_5 = ops.index_expr(get_index_10, torch.int32)
+        constant_10 = ops.constant(48, torch.int32)
+        eq_5 = ops.eq(index_expr_5, constant_10)
+        get_index_11 = self.get_index('index6')
+        load_5 = ops.load('primals_1', get_index_11)
+        constant_11 = ops.constant(2.0, torch.float32)
+        mul_5 = ops.mul(load_5, constant_11)
+        get_index_12 = self.get_index('index0')
+        load_6 = ops.load('buf8', get_index_12)
+        where = ops.where(eq_5, mul_5, load_6)
+        where_1 = ops.where(eq_4, mul_4, where)
+        where_2 = ops.where(eq_3, mul_3, where_1)
+        where_3 = ops.where(eq_2, mul_2, where_2)
+        where_4 = ops.where(eq_1, mul_1, where_3)
+        where_5 = ops.where(eq, mul, where_4)
+        get_index_13 = self.get_index('index0')
+        store = ops.store('buf9', get_index_13, where_5, None)
+        return store
+op9 Triton code:
+    import triton
+    import triton.language as tl
+    from triton.compiler.compiler import AttrsDescriptor
+
+    from torch._inductor.runtime import triton_helpers, triton_heuristics
+    from torch._inductor.runtime.triton_helpers import libdevice, math as tl_math
+    from torch._inductor.runtime.hints import AutotuneHint, ReductionHint, TileHint, instance_descriptor, DeviceProperties
+
+    @triton_heuristics.pointwise(
+        size_hints=[128], 
+        filename=__file__,
+        triton_meta={'signature': {0: '*fp32', 1: '*fp32', 2: 'i32'}, 'device': DeviceProperties(type='cuda', index=0, cc=86, major=8, regs_per_multiprocessor=65536, max_threads_per_multi_processor=1536, multi_processor_count=20), 'constants': {}, 'configs': [AttrsDescriptor(divisible_by_16=(0, 1), equal_to_1=())]},
+        inductor_meta={'autotune_hints': set(), 'kernel_name': 'Placeholder.DESCRIPTIVE_NAME', 'mutated_arg_names': ['in_out_ptr0'], 'no_x_dim': False, 'num_load': 7, 'num_reduction': 0, 'backend_hash': '712B1D69F892A891D8FFA5075DCAB47CFF4E132D88BFC66744701CEAE226F127', 'are_deterministic_algorithms_enabled': False, 'assert_indirect_indexing': True, 'autotune_local_cache': True, 'autotune_pointwise': True, 'autotune_remote_cache': None, 'force_disable_caches': False, 'dynamic_scale_rblock': True, 'max_autotune': False, 'max_autotune_pointwise': False, 'min_split_scan_rblock': 256, 'spill_threshold': 16, 'store_cubin': False},
+        min_elem_per_thread=0
+    )
+    @triton.jit
+    def triton_(in_out_ptr0, in_ptr0, xnumel, XBLOCK : tl.constexpr):
+        xnumel = 100
+        xoffset = tl.program_id(0) * XBLOCK
+        xindex = xoffset + tl.arange(0, XBLOCK)[:]
+        xmask = xindex < xnumel
+        x0 = xindex
+        tmp3 = tl.load(in_ptr0 + (53))
+        tmp4 = tl.broadcast_to(tmp3, [XBLOCK])
+        tmp9 = tl.load(in_ptr0 + (52))
+        tmp10 = tl.broadcast_to(tmp9, [XBLOCK])
+        tmp14 = tl.load(in_ptr0 + (51))
+        tmp15 = tl.broadcast_to(tmp14, [XBLOCK])
+        tmp19 = tl.load(in_ptr0 + (50))
+        tmp20 = tl.broadcast_to(tmp19, [XBLOCK])
+        tmp24 = tl.load(in_ptr0 + (49))
+        tmp25 = tl.broadcast_to(tmp24, [XBLOCK])
+        tmp29 = tl.load(in_ptr0 + (48))
+        tmp30 = tl.broadcast_to(tmp29, [XBLOCK])
+        tmp32 = tl.load(in_out_ptr0 + (x0), xmask)
+        tmp0 = x0
+        tmp1 = tl.full([1], 53, tl.int32)
+        tmp2 = tmp0 == tmp1
+        tmp5 = 2.0
+        tmp6 = tmp4 * tmp5
+        tmp7 = tl.full([1], 52, tl.int32)
+        tmp8 = tmp0 == tmp7
+        tmp11 = tmp10 * tmp5
+        tmp12 = tl.full([1], 51, tl.int32)
+        tmp13 = tmp0 == tmp12
+        tmp16 = tmp15 * tmp5
+        tmp17 = tl.full([1], 50, tl.int32)
+        tmp18 = tmp0 == tmp17
+        tmp21 = tmp20 * tmp5
+        tmp22 = tl.full([1], 49, tl.int32)
+        tmp23 = tmp0 == tmp22
+        tmp26 = tmp25 * tmp5
+        tmp27 = tl.full([1], 48, tl.int32)
+        tmp28 = tmp0 == tmp27
+        tmp31 = tmp30 * tmp5
+        tmp33 = tl.where(tmp28, tmp31, tmp32)
+        tmp34 = tl.where(tmp23, tmp26, tmp33)
+        tmp35 = tl.where(tmp18, tmp21, tmp34)
+        tmp36 = tl.where(tmp13, tmp16, tmp35)
+        tmp37 = tl.where(tmp8, tmp11, tmp36)
+        tmp38 = tl.where(tmp2, tmp6, tmp37)
+        tl.store(in_out_ptr0 + (x0), tmp38, xmask)
+op1_op2_op3_op4_op5_op6_op7_op8_op9_op10_op11_op12_op13_op14_op15_op16_op17.snodes[9] =
+op10: SchedulerNode(ComputedBuffer)
+op10.writes = [MemoryDep('buf10', c0, {c0: 100}, None)]
+op10.unmet_dependencies = [MemoryDep('buf9', c0, {c0: 100}, None)]
+op10.met_dependencies = 
+    [   MemoryDep('primals_1', 54, {}, None),
+        MemoryDep('primals_1', 55, {}, None),
+        MemoryDep('primals_1', 56, {}, None),
+        MemoryDep('primals_1', 57, {}, None),
+        MemoryDep('primals_1', 58, {}, None),
+        MemoryDep('primals_1', 59, {}, None)]
+op10.outputs = [
+    buf10: ComputedBuffer
+    buf10.layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+    buf10.users = [NodeUser(node=SchedulerNode(name='op11'), can_inplace=True, is_weak=False)]
+]
+op10.group.device = cuda:0
+op10.group.iteration = (100, 1)
+op10.sizes = ([100], [])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+buf9_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+buf10_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+class op10_loop_body:
+    var_ranges = {z0: 100}
+    index0 = z0
+    index1 = 59
+    index2 = 58
+    index3 = 57
+    index4 = 56
+    index5 = 55
+    index6 = 54
+    def body(self, ops):
+        get_index = self.get_index('index0')
+        index_expr = ops.index_expr(get_index, torch.int32)
+        constant = ops.constant(59, torch.int32)
+        eq = ops.eq(index_expr, constant)
+        get_index_1 = self.get_index('index1')
+        load = ops.load('primals_1', get_index_1)
+        constant_1 = ops.constant(2.0, torch.float32)
+        mul = ops.mul(load, constant_1)
+        get_index_2 = self.get_index('index0')
+        index_expr_1 = ops.index_expr(get_index_2, torch.int32)
+        constant_2 = ops.constant(58, torch.int32)
+        eq_1 = ops.eq(index_expr_1, constant_2)
+        get_index_3 = self.get_index('index2')
+        load_1 = ops.load('primals_1', get_index_3)
+        constant_3 = ops.constant(2.0, torch.float32)
+        mul_1 = ops.mul(load_1, constant_3)
+        get_index_4 = self.get_index('index0')
+        index_expr_2 = ops.index_expr(get_index_4, torch.int32)
+        constant_4 = ops.constant(57, torch.int32)
+        eq_2 = ops.eq(index_expr_2, constant_4)
+        get_index_5 = self.get_index('index3')
+        load_2 = ops.load('primals_1', get_index_5)
+        constant_5 = ops.constant(2.0, torch.float32)
+        mul_2 = ops.mul(load_2, constant_5)
+        get_index_6 = self.get_index('index0')
+        index_expr_3 = ops.index_expr(get_index_6, torch.int32)
+        constant_6 = ops.constant(56, torch.int32)
+        eq_3 = ops.eq(index_expr_3, constant_6)
+        get_index_7 = self.get_index('index4')
+        load_3 = ops.load('primals_1', get_index_7)
+        constant_7 = ops.constant(2.0, torch.float32)
+        mul_3 = ops.mul(load_3, constant_7)
+        get_index_8 = self.get_index('index0')
+        index_expr_4 = ops.index_expr(get_index_8, torch.int32)
+        constant_8 = ops.constant(55, torch.int32)
+        eq_4 = ops.eq(index_expr_4, constant_8)
+        get_index_9 = self.get_index('index5')
+        load_4 = ops.load('primals_1', get_index_9)
+        constant_9 = ops.constant(2.0, torch.float32)
+        mul_4 = ops.mul(load_4, constant_9)
+        get_index_10 = self.get_index('index0')
+        index_expr_5 = ops.index_expr(get_index_10, torch.int32)
+        constant_10 = ops.constant(54, torch.int32)
+        eq_5 = ops.eq(index_expr_5, constant_10)
+        get_index_11 = self.get_index('index6')
+        load_5 = ops.load('primals_1', get_index_11)
+        constant_11 = ops.constant(2.0, torch.float32)
+        mul_5 = ops.mul(load_5, constant_11)
+        get_index_12 = self.get_index('index0')
+        load_6 = ops.load('buf9', get_index_12)
+        where = ops.where(eq_5, mul_5, load_6)
+        where_1 = ops.where(eq_4, mul_4, where)
+        where_2 = ops.where(eq_3, mul_3, where_1)
+        where_3 = ops.where(eq_2, mul_2, where_2)
+        where_4 = ops.where(eq_1, mul_1, where_3)
+        where_5 = ops.where(eq, mul, where_4)
+        get_index_13 = self.get_index('index0')
+        store = ops.store('buf10', get_index_13, where_5, None)
+        return store
+op10 Triton code:
+    import triton
+    import triton.language as tl
+    from triton.compiler.compiler import AttrsDescriptor
+
+    from torch._inductor.runtime import triton_helpers, triton_heuristics
+    from torch._inductor.runtime.triton_helpers import libdevice, math as tl_math
+    from torch._inductor.runtime.hints import AutotuneHint, ReductionHint, TileHint, instance_descriptor, DeviceProperties
+
+    @triton_heuristics.pointwise(
+        size_hints=[128], 
+        filename=__file__,
+        triton_meta={'signature': {0: '*fp32', 1: '*fp32', 2: 'i32'}, 'device': DeviceProperties(type='cuda', index=0, cc=86, major=8, regs_per_multiprocessor=65536, max_threads_per_multi_processor=1536, multi_processor_count=20), 'constants': {}, 'configs': [AttrsDescriptor(divisible_by_16=(0, 1), equal_to_1=())]},
+        inductor_meta={'autotune_hints': set(), 'kernel_name': 'Placeholder.DESCRIPTIVE_NAME', 'mutated_arg_names': ['in_out_ptr0'], 'no_x_dim': False, 'num_load': 7, 'num_reduction': 0, 'backend_hash': '712B1D69F892A891D8FFA5075DCAB47CFF4E132D88BFC66744701CEAE226F127', 'are_deterministic_algorithms_enabled': False, 'assert_indirect_indexing': True, 'autotune_local_cache': True, 'autotune_pointwise': True, 'autotune_remote_cache': None, 'force_disable_caches': False, 'dynamic_scale_rblock': True, 'max_autotune': False, 'max_autotune_pointwise': False, 'min_split_scan_rblock': 256, 'spill_threshold': 16, 'store_cubin': False},
+        min_elem_per_thread=0
+    )
+    @triton.jit
+    def triton_(in_out_ptr0, in_ptr0, xnumel, XBLOCK : tl.constexpr):
+        xnumel = 100
+        xoffset = tl.program_id(0) * XBLOCK
+        xindex = xoffset + tl.arange(0, XBLOCK)[:]
+        xmask = xindex < xnumel
+        x0 = xindex
+        tmp3 = tl.load(in_ptr0 + (59))
+        tmp4 = tl.broadcast_to(tmp3, [XBLOCK])
+        tmp9 = tl.load(in_ptr0 + (58))
+        tmp10 = tl.broadcast_to(tmp9, [XBLOCK])
+        tmp14 = tl.load(in_ptr0 + (57))
+        tmp15 = tl.broadcast_to(tmp14, [XBLOCK])
+        tmp19 = tl.load(in_ptr0 + (56))
+        tmp20 = tl.broadcast_to(tmp19, [XBLOCK])
+        tmp24 = tl.load(in_ptr0 + (55))
+        tmp25 = tl.broadcast_to(tmp24, [XBLOCK])
+        tmp29 = tl.load(in_ptr0 + (54))
+        tmp30 = tl.broadcast_to(tmp29, [XBLOCK])
+        tmp32 = tl.load(in_out_ptr0 + (x0), xmask)
+        tmp0 = x0
+        tmp1 = tl.full([1], 59, tl.int32)
+        tmp2 = tmp0 == tmp1
+        tmp5 = 2.0
+        tmp6 = tmp4 * tmp5
+        tmp7 = tl.full([1], 58, tl.int32)
+        tmp8 = tmp0 == tmp7
+        tmp11 = tmp10 * tmp5
+        tmp12 = tl.full([1], 57, tl.int32)
+        tmp13 = tmp0 == tmp12
+        tmp16 = tmp15 * tmp5
+        tmp17 = tl.full([1], 56, tl.int32)
+        tmp18 = tmp0 == tmp17
+        tmp21 = tmp20 * tmp5
+        tmp22 = tl.full([1], 55, tl.int32)
+        tmp23 = tmp0 == tmp22
+        tmp26 = tmp25 * tmp5
+        tmp27 = tl.full([1], 54, tl.int32)
+        tmp28 = tmp0 == tmp27
+        tmp31 = tmp30 * tmp5
+        tmp33 = tl.where(tmp28, tmp31, tmp32)
+        tmp34 = tl.where(tmp23, tmp26, tmp33)
+        tmp35 = tl.where(tmp18, tmp21, tmp34)
+        tmp36 = tl.where(tmp13, tmp16, tmp35)
+        tmp37 = tl.where(tmp8, tmp11, tmp36)
+        tmp38 = tl.where(tmp2, tmp6, tmp37)
+        tl.store(in_out_ptr0 + (x0), tmp38, xmask)
+op1_op2_op3_op4_op5_op6_op7_op8_op9_op10_op11_op12_op13_op14_op15_op16_op17.snodes[10] =
+op11: SchedulerNode(ComputedBuffer)
+op11.writes = [MemoryDep('buf11', c0, {c0: 100}, None)]
+op11.unmet_dependencies = [MemoryDep('buf10', c0, {c0: 100}, None)]
+op11.met_dependencies = 
+    [   MemoryDep('primals_1', 60, {}, None),
+        MemoryDep('primals_1', 61, {}, None),
+        MemoryDep('primals_1', 62, {}, None),
+        MemoryDep('primals_1', 63, {}, None),
+        MemoryDep('primals_1', 64, {}, None),
+        MemoryDep('primals_1', 65, {}, None)]
+op11.outputs = [
+    buf11: ComputedBuffer
+    buf11.layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+    buf11.users = [NodeUser(node=SchedulerNode(name='op12'), can_inplace=True, is_weak=False)]
+]
+op11.group.device = cuda:0
+op11.group.iteration = (100, 1)
+op11.sizes = ([100], [])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+buf10_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+buf11_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+class op11_loop_body:
+    var_ranges = {z0: 100}
+    index0 = z0
+    index1 = 65
+    index2 = 64
+    index3 = 63
+    index4 = 62
+    index5 = 61
+    index6 = 60
+    def body(self, ops):
+        get_index = self.get_index('index0')
+        index_expr = ops.index_expr(get_index, torch.int32)
+        constant = ops.constant(65, torch.int32)
+        eq = ops.eq(index_expr, constant)
+        get_index_1 = self.get_index('index1')
+        load = ops.load('primals_1', get_index_1)
+        constant_1 = ops.constant(2.0, torch.float32)
+        mul = ops.mul(load, constant_1)
+        get_index_2 = self.get_index('index0')
+        index_expr_1 = ops.index_expr(get_index_2, torch.int32)
+        constant_2 = ops.constant(64, torch.int32)
+        eq_1 = ops.eq(index_expr_1, constant_2)
+        get_index_3 = self.get_index('index2')
+        load_1 = ops.load('primals_1', get_index_3)
+        constant_3 = ops.constant(2.0, torch.float32)
+        mul_1 = ops.mul(load_1, constant_3)
+        get_index_4 = self.get_index('index0')
+        index_expr_2 = ops.index_expr(get_index_4, torch.int32)
+        constant_4 = ops.constant(63, torch.int32)
+        eq_2 = ops.eq(index_expr_2, constant_4)
+        get_index_5 = self.get_index('index3')
+        load_2 = ops.load('primals_1', get_index_5)
+        constant_5 = ops.constant(2.0, torch.float32)
+        mul_2 = ops.mul(load_2, constant_5)
+        get_index_6 = self.get_index('index0')
+        index_expr_3 = ops.index_expr(get_index_6, torch.int32)
+        constant_6 = ops.constant(62, torch.int32)
+        eq_3 = ops.eq(index_expr_3, constant_6)
+        get_index_7 = self.get_index('index4')
+        load_3 = ops.load('primals_1', get_index_7)
+        constant_7 = ops.constant(2.0, torch.float32)
+        mul_3 = ops.mul(load_3, constant_7)
+        get_index_8 = self.get_index('index0')
+        index_expr_4 = ops.index_expr(get_index_8, torch.int32)
+        constant_8 = ops.constant(61, torch.int32)
+        eq_4 = ops.eq(index_expr_4, constant_8)
+        get_index_9 = self.get_index('index5')
+        load_4 = ops.load('primals_1', get_index_9)
+        constant_9 = ops.constant(2.0, torch.float32)
+        mul_4 = ops.mul(load_4, constant_9)
+        get_index_10 = self.get_index('index0')
+        index_expr_5 = ops.index_expr(get_index_10, torch.int32)
+        constant_10 = ops.constant(60, torch.int32)
+        eq_5 = ops.eq(index_expr_5, constant_10)
+        get_index_11 = self.get_index('index6')
+        load_5 = ops.load('primals_1', get_index_11)
+        constant_11 = ops.constant(2.0, torch.float32)
+        mul_5 = ops.mul(load_5, constant_11)
+        get_index_12 = self.get_index('index0')
+        load_6 = ops.load('buf10', get_index_12)
+        where = ops.where(eq_5, mul_5, load_6)
+        where_1 = ops.where(eq_4, mul_4, where)
+        where_2 = ops.where(eq_3, mul_3, where_1)
+        where_3 = ops.where(eq_2, mul_2, where_2)
+        where_4 = ops.where(eq_1, mul_1, where_3)
+        where_5 = ops.where(eq, mul, where_4)
+        get_index_13 = self.get_index('index0')
+        store = ops.store('buf11', get_index_13, where_5, None)
+        return store
+op11 Triton code:
+    import triton
+    import triton.language as tl
+    from triton.compiler.compiler import AttrsDescriptor
+
+    from torch._inductor.runtime import triton_helpers, triton_heuristics
+    from torch._inductor.runtime.triton_helpers import libdevice, math as tl_math
+    from torch._inductor.runtime.hints import AutotuneHint, ReductionHint, TileHint, instance_descriptor, DeviceProperties
+
+    @triton_heuristics.pointwise(
+        size_hints=[128], 
+        filename=__file__,
+        triton_meta={'signature': {0: '*fp32', 1: '*fp32', 2: 'i32'}, 'device': DeviceProperties(type='cuda', index=0, cc=86, major=8, regs_per_multiprocessor=65536, max_threads_per_multi_processor=1536, multi_processor_count=20), 'constants': {}, 'configs': [AttrsDescriptor(divisible_by_16=(0, 1), equal_to_1=())]},
+        inductor_meta={'autotune_hints': set(), 'kernel_name': 'Placeholder.DESCRIPTIVE_NAME', 'mutated_arg_names': ['in_out_ptr0'], 'no_x_dim': False, 'num_load': 7, 'num_reduction': 0, 'backend_hash': '712B1D69F892A891D8FFA5075DCAB47CFF4E132D88BFC66744701CEAE226F127', 'are_deterministic_algorithms_enabled': False, 'assert_indirect_indexing': True, 'autotune_local_cache': True, 'autotune_pointwise': True, 'autotune_remote_cache': None, 'force_disable_caches': False, 'dynamic_scale_rblock': True, 'max_autotune': False, 'max_autotune_pointwise': False, 'min_split_scan_rblock': 256, 'spill_threshold': 16, 'store_cubin': False},
+        min_elem_per_thread=0
+    )
+    @triton.jit
+    def triton_(in_out_ptr0, in_ptr0, xnumel, XBLOCK : tl.constexpr):
+        xnumel = 100
+        xoffset = tl.program_id(0) * XBLOCK
+        xindex = xoffset + tl.arange(0, XBLOCK)[:]
+        xmask = xindex < xnumel
+        x0 = xindex
+        tmp3 = tl.load(in_ptr0 + (65))
+        tmp4 = tl.broadcast_to(tmp3, [XBLOCK])
+        tmp9 = tl.load(in_ptr0 + (64))
+        tmp10 = tl.broadcast_to(tmp9, [XBLOCK])
+        tmp14 = tl.load(in_ptr0 + (63))
+        tmp15 = tl.broadcast_to(tmp14, [XBLOCK])
+        tmp19 = tl.load(in_ptr0 + (62))
+        tmp20 = tl.broadcast_to(tmp19, [XBLOCK])
+        tmp24 = tl.load(in_ptr0 + (61))
+        tmp25 = tl.broadcast_to(tmp24, [XBLOCK])
+        tmp29 = tl.load(in_ptr0 + (60))
+        tmp30 = tl.broadcast_to(tmp29, [XBLOCK])
+        tmp32 = tl.load(in_out_ptr0 + (x0), xmask)
+        tmp0 = x0
+        tmp1 = tl.full([1], 65, tl.int32)
+        tmp2 = tmp0 == tmp1
+        tmp5 = 2.0
+        tmp6 = tmp4 * tmp5
+        tmp7 = tl.full([1], 64, tl.int32)
+        tmp8 = tmp0 == tmp7
+        tmp11 = tmp10 * tmp5
+        tmp12 = tl.full([1], 63, tl.int32)
+        tmp13 = tmp0 == tmp12
+        tmp16 = tmp15 * tmp5
+        tmp17 = tl.full([1], 62, tl.int32)
+        tmp18 = tmp0 == tmp17
+        tmp21 = tmp20 * tmp5
+        tmp22 = tl.full([1], 61, tl.int32)
+        tmp23 = tmp0 == tmp22
+        tmp26 = tmp25 * tmp5
+        tmp27 = tl.full([1], 60, tl.int32)
+        tmp28 = tmp0 == tmp27
+        tmp31 = tmp30 * tmp5
+        tmp33 = tl.where(tmp28, tmp31, tmp32)
+        tmp34 = tl.where(tmp23, tmp26, tmp33)
+        tmp35 = tl.where(tmp18, tmp21, tmp34)
+        tmp36 = tl.where(tmp13, tmp16, tmp35)
+        tmp37 = tl.where(tmp8, tmp11, tmp36)
+        tmp38 = tl.where(tmp2, tmp6, tmp37)
+        tl.store(in_out_ptr0 + (x0), tmp38, xmask)
+op1_op2_op3_op4_op5_op6_op7_op8_op9_op10_op11_op12_op13_op14_op15_op16_op17.snodes[11] =
+op12: SchedulerNode(ComputedBuffer)
+op12.writes = [MemoryDep('buf12', c0, {c0: 100}, None)]
+op12.unmet_dependencies = [MemoryDep('buf11', c0, {c0: 100}, None)]
+op12.met_dependencies = 
+    [   MemoryDep('primals_1', 66, {}, None),
+        MemoryDep('primals_1', 67, {}, None),
+        MemoryDep('primals_1', 68, {}, None),
+        MemoryDep('primals_1', 69, {}, None),
+        MemoryDep('primals_1', 70, {}, None),
+        MemoryDep('primals_1', 71, {}, None)]
+op12.outputs = [
+    buf12: ComputedBuffer
+    buf12.layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+    buf12.users = [NodeUser(node=SchedulerNode(name='op13'), can_inplace=True, is_weak=False)]
+]
+op12.group.device = cuda:0
+op12.group.iteration = (100, 1)
+op12.sizes = ([100], [])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+buf11_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+buf12_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+class op12_loop_body:
+    var_ranges = {z0: 100}
+    index0 = z0
+    index1 = 71
+    index2 = 70
+    index3 = 69
+    index4 = 68
+    index5 = 67
+    index6 = 66
+    def body(self, ops):
+        get_index = self.get_index('index0')
+        index_expr = ops.index_expr(get_index, torch.int32)
+        constant = ops.constant(71, torch.int32)
+        eq = ops.eq(index_expr, constant)
+        get_index_1 = self.get_index('index1')
+        load = ops.load('primals_1', get_index_1)
+        constant_1 = ops.constant(2.0, torch.float32)
+        mul = ops.mul(load, constant_1)
+        get_index_2 = self.get_index('index0')
+        index_expr_1 = ops.index_expr(get_index_2, torch.int32)
+        constant_2 = ops.constant(70, torch.int32)
+        eq_1 = ops.eq(index_expr_1, constant_2)
+        get_index_3 = self.get_index('index2')
+        load_1 = ops.load('primals_1', get_index_3)
+        constant_3 = ops.constant(2.0, torch.float32)
+        mul_1 = ops.mul(load_1, constant_3)
+        get_index_4 = self.get_index('index0')
+        index_expr_2 = ops.index_expr(get_index_4, torch.int32)
+        constant_4 = ops.constant(69, torch.int32)
+        eq_2 = ops.eq(index_expr_2, constant_4)
+        get_index_5 = self.get_index('index3')
+        load_2 = ops.load('primals_1', get_index_5)
+        constant_5 = ops.constant(2.0, torch.float32)
+        mul_2 = ops.mul(load_2, constant_5)
+        get_index_6 = self.get_index('index0')
+        index_expr_3 = ops.index_expr(get_index_6, torch.int32)
+        constant_6 = ops.constant(68, torch.int32)
+        eq_3 = ops.eq(index_expr_3, constant_6)
+        get_index_7 = self.get_index('index4')
+        load_3 = ops.load('primals_1', get_index_7)
+        constant_7 = ops.constant(2.0, torch.float32)
+        mul_3 = ops.mul(load_3, constant_7)
+        get_index_8 = self.get_index('index0')
+        index_expr_4 = ops.index_expr(get_index_8, torch.int32)
+        constant_8 = ops.constant(67, torch.int32)
+        eq_4 = ops.eq(index_expr_4, constant_8)
+        get_index_9 = self.get_index('index5')
+        load_4 = ops.load('primals_1', get_index_9)
+        constant_9 = ops.constant(2.0, torch.float32)
+        mul_4 = ops.mul(load_4, constant_9)
+        get_index_10 = self.get_index('index0')
+        index_expr_5 = ops.index_expr(get_index_10, torch.int32)
+        constant_10 = ops.constant(66, torch.int32)
+        eq_5 = ops.eq(index_expr_5, constant_10)
+        get_index_11 = self.get_index('index6')
+        load_5 = ops.load('primals_1', get_index_11)
+        constant_11 = ops.constant(2.0, torch.float32)
+        mul_5 = ops.mul(load_5, constant_11)
+        get_index_12 = self.get_index('index0')
+        load_6 = ops.load('buf11', get_index_12)
+        where = ops.where(eq_5, mul_5, load_6)
+        where_1 = ops.where(eq_4, mul_4, where)
+        where_2 = ops.where(eq_3, mul_3, where_1)
+        where_3 = ops.where(eq_2, mul_2, where_2)
+        where_4 = ops.where(eq_1, mul_1, where_3)
+        where_5 = ops.where(eq, mul, where_4)
+        get_index_13 = self.get_index('index0')
+        store = ops.store('buf12', get_index_13, where_5, None)
+        return store
+op12 Triton code:
+    import triton
+    import triton.language as tl
+    from triton.compiler.compiler import AttrsDescriptor
+
+    from torch._inductor.runtime import triton_helpers, triton_heuristics
+    from torch._inductor.runtime.triton_helpers import libdevice, math as tl_math
+    from torch._inductor.runtime.hints import AutotuneHint, ReductionHint, TileHint, instance_descriptor, DeviceProperties
+
+    @triton_heuristics.pointwise(
+        size_hints=[128], 
+        filename=__file__,
+        triton_meta={'signature': {0: '*fp32', 1: '*fp32', 2: 'i32'}, 'device': DeviceProperties(type='cuda', index=0, cc=86, major=8, regs_per_multiprocessor=65536, max_threads_per_multi_processor=1536, multi_processor_count=20), 'constants': {}, 'configs': [AttrsDescriptor(divisible_by_16=(0, 1), equal_to_1=())]},
+        inductor_meta={'autotune_hints': set(), 'kernel_name': 'Placeholder.DESCRIPTIVE_NAME', 'mutated_arg_names': ['in_out_ptr0'], 'no_x_dim': False, 'num_load': 7, 'num_reduction': 0, 'backend_hash': '712B1D69F892A891D8FFA5075DCAB47CFF4E132D88BFC66744701CEAE226F127', 'are_deterministic_algorithms_enabled': False, 'assert_indirect_indexing': True, 'autotune_local_cache': True, 'autotune_pointwise': True, 'autotune_remote_cache': None, 'force_disable_caches': False, 'dynamic_scale_rblock': True, 'max_autotune': False, 'max_autotune_pointwise': False, 'min_split_scan_rblock': 256, 'spill_threshold': 16, 'store_cubin': False},
+        min_elem_per_thread=0
+    )
+    @triton.jit
+    def triton_(in_out_ptr0, in_ptr0, xnumel, XBLOCK : tl.constexpr):
+        xnumel = 100
+        xoffset = tl.program_id(0) * XBLOCK
+        xindex = xoffset + tl.arange(0, XBLOCK)[:]
+        xmask = xindex < xnumel
+        x0 = xindex
+        tmp3 = tl.load(in_ptr0 + (71))
+        tmp4 = tl.broadcast_to(tmp3, [XBLOCK])
+        tmp9 = tl.load(in_ptr0 + (70))
+        tmp10 = tl.broadcast_to(tmp9, [XBLOCK])
+        tmp14 = tl.load(in_ptr0 + (69))
+        tmp15 = tl.broadcast_to(tmp14, [XBLOCK])
+        tmp19 = tl.load(in_ptr0 + (68))
+        tmp20 = tl.broadcast_to(tmp19, [XBLOCK])
+        tmp24 = tl.load(in_ptr0 + (67))
+        tmp25 = tl.broadcast_to(tmp24, [XBLOCK])
+        tmp29 = tl.load(in_ptr0 + (66))
+        tmp30 = tl.broadcast_to(tmp29, [XBLOCK])
+        tmp32 = tl.load(in_out_ptr0 + (x0), xmask)
+        tmp0 = x0
+        tmp1 = tl.full([1], 71, tl.int32)
+        tmp2 = tmp0 == tmp1
+        tmp5 = 2.0
+        tmp6 = tmp4 * tmp5
+        tmp7 = tl.full([1], 70, tl.int32)
+        tmp8 = tmp0 == tmp7
+        tmp11 = tmp10 * tmp5
+        tmp12 = tl.full([1], 69, tl.int32)
+        tmp13 = tmp0 == tmp12
+        tmp16 = tmp15 * tmp5
+        tmp17 = tl.full([1], 68, tl.int32)
+        tmp18 = tmp0 == tmp17
+        tmp21 = tmp20 * tmp5
+        tmp22 = tl.full([1], 67, tl.int32)
+        tmp23 = tmp0 == tmp22
+        tmp26 = tmp25 * tmp5
+        tmp27 = tl.full([1], 66, tl.int32)
+        tmp28 = tmp0 == tmp27
+        tmp31 = tmp30 * tmp5
+        tmp33 = tl.where(tmp28, tmp31, tmp32)
+        tmp34 = tl.where(tmp23, tmp26, tmp33)
+        tmp35 = tl.where(tmp18, tmp21, tmp34)
+        tmp36 = tl.where(tmp13, tmp16, tmp35)
+        tmp37 = tl.where(tmp8, tmp11, tmp36)
+        tmp38 = tl.where(tmp2, tmp6, tmp37)
+        tl.store(in_out_ptr0 + (x0), tmp38, xmask)
+op1_op2_op3_op4_op5_op6_op7_op8_op9_op10_op11_op12_op13_op14_op15_op16_op17.snodes[12] =
+op13: SchedulerNode(ComputedBuffer)
+op13.writes = [MemoryDep('buf13', c0, {c0: 100}, None)]
+op13.unmet_dependencies = [MemoryDep('buf12', c0, {c0: 100}, None)]
+op13.met_dependencies = 
+    [   MemoryDep('primals_1', 72, {}, None),
+        MemoryDep('primals_1', 73, {}, None),
+        MemoryDep('primals_1', 74, {}, None),
+        MemoryDep('primals_1', 75, {}, None),
+        MemoryDep('primals_1', 76, {}, None),
+        MemoryDep('primals_1', 77, {}, None)]
+op13.outputs = [
+    buf13: ComputedBuffer
+    buf13.layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+    buf13.users = [NodeUser(node=SchedulerNode(name='op14'), can_inplace=True, is_weak=False)]
+]
+op13.group.device = cuda:0
+op13.group.iteration = (100, 1)
+op13.sizes = ([100], [])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+buf12_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+buf13_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+class op13_loop_body:
+    var_ranges = {z0: 100}
+    index0 = z0
+    index1 = 77
+    index2 = 76
+    index3 = 75
+    index4 = 74
+    index5 = 73
+    index6 = 72
+    def body(self, ops):
+        get_index = self.get_index('index0')
+        index_expr = ops.index_expr(get_index, torch.int32)
+        constant = ops.constant(77, torch.int32)
+        eq = ops.eq(index_expr, constant)
+        get_index_1 = self.get_index('index1')
+        load = ops.load('primals_1', get_index_1)
+        constant_1 = ops.constant(2.0, torch.float32)
+        mul = ops.mul(load, constant_1)
+        get_index_2 = self.get_index('index0')
+        index_expr_1 = ops.index_expr(get_index_2, torch.int32)
+        constant_2 = ops.constant(76, torch.int32)
+        eq_1 = ops.eq(index_expr_1, constant_2)
+        get_index_3 = self.get_index('index2')
+        load_1 = ops.load('primals_1', get_index_3)
+        constant_3 = ops.constant(2.0, torch.float32)
+        mul_1 = ops.mul(load_1, constant_3)
+        get_index_4 = self.get_index('index0')
+        index_expr_2 = ops.index_expr(get_index_4, torch.int32)
+        constant_4 = ops.constant(75, torch.int32)
+        eq_2 = ops.eq(index_expr_2, constant_4)
+        get_index_5 = self.get_index('index3')
+        load_2 = ops.load('primals_1', get_index_5)
+        constant_5 = ops.constant(2.0, torch.float32)
+        mul_2 = ops.mul(load_2, constant_5)
+        get_index_6 = self.get_index('index0')
+        index_expr_3 = ops.index_expr(get_index_6, torch.int32)
+        constant_6 = ops.constant(74, torch.int32)
+        eq_3 = ops.eq(index_expr_3, constant_6)
+        get_index_7 = self.get_index('index4')
+        load_3 = ops.load('primals_1', get_index_7)
+        constant_7 = ops.constant(2.0, torch.float32)
+        mul_3 = ops.mul(load_3, constant_7)
+        get_index_8 = self.get_index('index0')
+        index_expr_4 = ops.index_expr(get_index_8, torch.int32)
+        constant_8 = ops.constant(73, torch.int32)
+        eq_4 = ops.eq(index_expr_4, constant_8)
+        get_index_9 = self.get_index('index5')
+        load_4 = ops.load('primals_1', get_index_9)
+        constant_9 = ops.constant(2.0, torch.float32)
+        mul_4 = ops.mul(load_4, constant_9)
+        get_index_10 = self.get_index('index0')
+        index_expr_5 = ops.index_expr(get_index_10, torch.int32)
+        constant_10 = ops.constant(72, torch.int32)
+        eq_5 = ops.eq(index_expr_5, constant_10)
+        get_index_11 = self.get_index('index6')
+        load_5 = ops.load('primals_1', get_index_11)
+        constant_11 = ops.constant(2.0, torch.float32)
+        mul_5 = ops.mul(load_5, constant_11)
+        get_index_12 = self.get_index('index0')
+        load_6 = ops.load('buf12', get_index_12)
+        where = ops.where(eq_5, mul_5, load_6)
+        where_1 = ops.where(eq_4, mul_4, where)
+        where_2 = ops.where(eq_3, mul_3, where_1)
+        where_3 = ops.where(eq_2, mul_2, where_2)
+        where_4 = ops.where(eq_1, mul_1, where_3)
+        where_5 = ops.where(eq, mul, where_4)
+        get_index_13 = self.get_index('index0')
+        store = ops.store('buf13', get_index_13, where_5, None)
+        return store
+op13 Triton code:
+    import triton
+    import triton.language as tl
+    from triton.compiler.compiler import AttrsDescriptor
+
+    from torch._inductor.runtime import triton_helpers, triton_heuristics
+    from torch._inductor.runtime.triton_helpers import libdevice, math as tl_math
+    from torch._inductor.runtime.hints import AutotuneHint, ReductionHint, TileHint, instance_descriptor, DeviceProperties
+
+    @triton_heuristics.pointwise(
+        size_hints=[128], 
+        filename=__file__,
+        triton_meta={'signature': {0: '*fp32', 1: '*fp32', 2: 'i32'}, 'device': DeviceProperties(type='cuda', index=0, cc=86, major=8, regs_per_multiprocessor=65536, max_threads_per_multi_processor=1536, multi_processor_count=20), 'constants': {}, 'configs': [AttrsDescriptor(divisible_by_16=(0, 1), equal_to_1=())]},
+        inductor_meta={'autotune_hints': set(), 'kernel_name': 'Placeholder.DESCRIPTIVE_NAME', 'mutated_arg_names': ['in_out_ptr0'], 'no_x_dim': False, 'num_load': 7, 'num_reduction': 0, 'backend_hash': '712B1D69F892A891D8FFA5075DCAB47CFF4E132D88BFC66744701CEAE226F127', 'are_deterministic_algorithms_enabled': False, 'assert_indirect_indexing': True, 'autotune_local_cache': True, 'autotune_pointwise': True, 'autotune_remote_cache': None, 'force_disable_caches': False, 'dynamic_scale_rblock': True, 'max_autotune': False, 'max_autotune_pointwise': False, 'min_split_scan_rblock': 256, 'spill_threshold': 16, 'store_cubin': False},
+        min_elem_per_thread=0
+    )
+    @triton.jit
+    def triton_(in_out_ptr0, in_ptr0, xnumel, XBLOCK : tl.constexpr):
+        xnumel = 100
+        xoffset = tl.program_id(0) * XBLOCK
+        xindex = xoffset + tl.arange(0, XBLOCK)[:]
+        xmask = xindex < xnumel
+        x0 = xindex
+        tmp3 = tl.load(in_ptr0 + (77))
+        tmp4 = tl.broadcast_to(tmp3, [XBLOCK])
+        tmp9 = tl.load(in_ptr0 + (76))
+        tmp10 = tl.broadcast_to(tmp9, [XBLOCK])
+        tmp14 = tl.load(in_ptr0 + (75))
+        tmp15 = tl.broadcast_to(tmp14, [XBLOCK])
+        tmp19 = tl.load(in_ptr0 + (74))
+        tmp20 = tl.broadcast_to(tmp19, [XBLOCK])
+        tmp24 = tl.load(in_ptr0 + (73))
+        tmp25 = tl.broadcast_to(tmp24, [XBLOCK])
+        tmp29 = tl.load(in_ptr0 + (72))
+        tmp30 = tl.broadcast_to(tmp29, [XBLOCK])
+        tmp32 = tl.load(in_out_ptr0 + (x0), xmask)
+        tmp0 = x0
+        tmp1 = tl.full([1], 77, tl.int32)
+        tmp2 = tmp0 == tmp1
+        tmp5 = 2.0
+        tmp6 = tmp4 * tmp5
+        tmp7 = tl.full([1], 76, tl.int32)
+        tmp8 = tmp0 == tmp7
+        tmp11 = tmp10 * tmp5
+        tmp12 = tl.full([1], 75, tl.int32)
+        tmp13 = tmp0 == tmp12
+        tmp16 = tmp15 * tmp5
+        tmp17 = tl.full([1], 74, tl.int32)
+        tmp18 = tmp0 == tmp17
+        tmp21 = tmp20 * tmp5
+        tmp22 = tl.full([1], 73, tl.int32)
+        tmp23 = tmp0 == tmp22
+        tmp26 = tmp25 * tmp5
+        tmp27 = tl.full([1], 72, tl.int32)
+        tmp28 = tmp0 == tmp27
+        tmp31 = tmp30 * tmp5
+        tmp33 = tl.where(tmp28, tmp31, tmp32)
+        tmp34 = tl.where(tmp23, tmp26, tmp33)
+        tmp35 = tl.where(tmp18, tmp21, tmp34)
+        tmp36 = tl.where(tmp13, tmp16, tmp35)
+        tmp37 = tl.where(tmp8, tmp11, tmp36)
+        tmp38 = tl.where(tmp2, tmp6, tmp37)
+        tl.store(in_out_ptr0 + (x0), tmp38, xmask)
+op1_op2_op3_op4_op5_op6_op7_op8_op9_op10_op11_op12_op13_op14_op15_op16_op17.snodes[13] =
+op14: SchedulerNode(ComputedBuffer)
+op14.writes = [MemoryDep('buf14', c0, {c0: 100}, None)]
+op14.unmet_dependencies = [MemoryDep('buf13', c0, {c0: 100}, None)]
+op14.met_dependencies = 
+    [   MemoryDep('primals_1', 78, {}, None),
+        MemoryDep('primals_1', 79, {}, None),
+        MemoryDep('primals_1', 80, {}, None),
+        MemoryDep('primals_1', 81, {}, None),
+        MemoryDep('primals_1', 82, {}, None),
+        MemoryDep('primals_1', 83, {}, None)]
+op14.outputs = [
+    buf14: ComputedBuffer
+    buf14.layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+    buf14.users = [NodeUser(node=SchedulerNode(name='op15'), can_inplace=True, is_weak=False)]
+]
+op14.group.device = cuda:0
+op14.group.iteration = (100, 1)
+op14.sizes = ([100], [])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+buf13_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+buf14_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+class op14_loop_body:
+    var_ranges = {z0: 100}
+    index0 = z0
+    index1 = 83
+    index2 = 82
+    index3 = 81
+    index4 = 80
+    index5 = 79
+    index6 = 78
+    def body(self, ops):
+        get_index = self.get_index('index0')
+        index_expr = ops.index_expr(get_index, torch.int32)
+        constant = ops.constant(83, torch.int32)
+        eq = ops.eq(index_expr, constant)
+        get_index_1 = self.get_index('index1')
+        load = ops.load('primals_1', get_index_1)
+        constant_1 = ops.constant(2.0, torch.float32)
+        mul = ops.mul(load, constant_1)
+        get_index_2 = self.get_index('index0')
+        index_expr_1 = ops.index_expr(get_index_2, torch.int32)
+        constant_2 = ops.constant(82, torch.int32)
+        eq_1 = ops.eq(index_expr_1, constant_2)
+        get_index_3 = self.get_index('index2')
+        load_1 = ops.load('primals_1', get_index_3)
+        constant_3 = ops.constant(2.0, torch.float32)
+        mul_1 = ops.mul(load_1, constant_3)
+        get_index_4 = self.get_index('index0')
+        index_expr_2 = ops.index_expr(get_index_4, torch.int32)
+        constant_4 = ops.constant(81, torch.int32)
+        eq_2 = ops.eq(index_expr_2, constant_4)
+        get_index_5 = self.get_index('index3')
+        load_2 = ops.load('primals_1', get_index_5)
+        constant_5 = ops.constant(2.0, torch.float32)
+        mul_2 = ops.mul(load_2, constant_5)
+        get_index_6 = self.get_index('index0')
+        index_expr_3 = ops.index_expr(get_index_6, torch.int32)
+        constant_6 = ops.constant(80, torch.int32)
+        eq_3 = ops.eq(index_expr_3, constant_6)
+        get_index_7 = self.get_index('index4')
+        load_3 = ops.load('primals_1', get_index_7)
+        constant_7 = ops.constant(2.0, torch.float32)
+        mul_3 = ops.mul(load_3, constant_7)
+        get_index_8 = self.get_index('index0')
+        index_expr_4 = ops.index_expr(get_index_8, torch.int32)
+        constant_8 = ops.constant(79, torch.int32)
+        eq_4 = ops.eq(index_expr_4, constant_8)
+        get_index_9 = self.get_index('index5')
+        load_4 = ops.load('primals_1', get_index_9)
+        constant_9 = ops.constant(2.0, torch.float32)
+        mul_4 = ops.mul(load_4, constant_9)
+        get_index_10 = self.get_index('index0')
+        index_expr_5 = ops.index_expr(get_index_10, torch.int32)
+        constant_10 = ops.constant(78, torch.int32)
+        eq_5 = ops.eq(index_expr_5, constant_10)
+        get_index_11 = self.get_index('index6')
+        load_5 = ops.load('primals_1', get_index_11)
+        constant_11 = ops.constant(2.0, torch.float32)
+        mul_5 = ops.mul(load_5, constant_11)
+        get_index_12 = self.get_index('index0')
+        load_6 = ops.load('buf13', get_index_12)
+        where = ops.where(eq_5, mul_5, load_6)
+        where_1 = ops.where(eq_4, mul_4, where)
+        where_2 = ops.where(eq_3, mul_3, where_1)
+        where_3 = ops.where(eq_2, mul_2, where_2)
+        where_4 = ops.where(eq_1, mul_1, where_3)
+        where_5 = ops.where(eq, mul, where_4)
+        get_index_13 = self.get_index('index0')
+        store = ops.store('buf14', get_index_13, where_5, None)
+        return store
+op14 Triton code:
+    import triton
+    import triton.language as tl
+    from triton.compiler.compiler import AttrsDescriptor
+
+    from torch._inductor.runtime import triton_helpers, triton_heuristics
+    from torch._inductor.runtime.triton_helpers import libdevice, math as tl_math
+    from torch._inductor.runtime.hints import AutotuneHint, ReductionHint, TileHint, instance_descriptor, DeviceProperties
+
+    @triton_heuristics.pointwise(
+        size_hints=[128], 
+        filename=__file__,
+        triton_meta={'signature': {0: '*fp32', 1: '*fp32', 2: 'i32'}, 'device': DeviceProperties(type='cuda', index=0, cc=86, major=8, regs_per_multiprocessor=65536, max_threads_per_multi_processor=1536, multi_processor_count=20), 'constants': {}, 'configs': [AttrsDescriptor(divisible_by_16=(0, 1), equal_to_1=())]},
+        inductor_meta={'autotune_hints': set(), 'kernel_name': 'Placeholder.DESCRIPTIVE_NAME', 'mutated_arg_names': ['in_out_ptr0'], 'no_x_dim': False, 'num_load': 7, 'num_reduction': 0, 'backend_hash': '712B1D69F892A891D8FFA5075DCAB47CFF4E132D88BFC66744701CEAE226F127', 'are_deterministic_algorithms_enabled': False, 'assert_indirect_indexing': True, 'autotune_local_cache': True, 'autotune_pointwise': True, 'autotune_remote_cache': None, 'force_disable_caches': False, 'dynamic_scale_rblock': True, 'max_autotune': False, 'max_autotune_pointwise': False, 'min_split_scan_rblock': 256, 'spill_threshold': 16, 'store_cubin': False},
+        min_elem_per_thread=0
+    )
+    @triton.jit
+    def triton_(in_out_ptr0, in_ptr0, xnumel, XBLOCK : tl.constexpr):
+        xnumel = 100
+        xoffset = tl.program_id(0) * XBLOCK
+        xindex = xoffset + tl.arange(0, XBLOCK)[:]
+        xmask = xindex < xnumel
+        x0 = xindex
+        tmp3 = tl.load(in_ptr0 + (83))
+        tmp4 = tl.broadcast_to(tmp3, [XBLOCK])
+        tmp9 = tl.load(in_ptr0 + (82))
+        tmp10 = tl.broadcast_to(tmp9, [XBLOCK])
+        tmp14 = tl.load(in_ptr0 + (81))
+        tmp15 = tl.broadcast_to(tmp14, [XBLOCK])
+        tmp19 = tl.load(in_ptr0 + (80))
+        tmp20 = tl.broadcast_to(tmp19, [XBLOCK])
+        tmp24 = tl.load(in_ptr0 + (79))
+        tmp25 = tl.broadcast_to(tmp24, [XBLOCK])
+        tmp29 = tl.load(in_ptr0 + (78))
+        tmp30 = tl.broadcast_to(tmp29, [XBLOCK])
+        tmp32 = tl.load(in_out_ptr0 + (x0), xmask)
+        tmp0 = x0
+        tmp1 = tl.full([1], 83, tl.int32)
+        tmp2 = tmp0 == tmp1
+        tmp5 = 2.0
+        tmp6 = tmp4 * tmp5
+        tmp7 = tl.full([1], 82, tl.int32)
+        tmp8 = tmp0 == tmp7
+        tmp11 = tmp10 * tmp5
+        tmp12 = tl.full([1], 81, tl.int32)
+        tmp13 = tmp0 == tmp12
+        tmp16 = tmp15 * tmp5
+        tmp17 = tl.full([1], 80, tl.int32)
+        tmp18 = tmp0 == tmp17
+        tmp21 = tmp20 * tmp5
+        tmp22 = tl.full([1], 79, tl.int32)
+        tmp23 = tmp0 == tmp22
+        tmp26 = tmp25 * tmp5
+        tmp27 = tl.full([1], 78, tl.int32)
+        tmp28 = tmp0 == tmp27
+        tmp31 = tmp30 * tmp5
+        tmp33 = tl.where(tmp28, tmp31, tmp32)
+        tmp34 = tl.where(tmp23, tmp26, tmp33)
+        tmp35 = tl.where(tmp18, tmp21, tmp34)
+        tmp36 = tl.where(tmp13, tmp16, tmp35)
+        tmp37 = tl.where(tmp8, tmp11, tmp36)
+        tmp38 = tl.where(tmp2, tmp6, tmp37)
+        tl.store(in_out_ptr0 + (x0), tmp38, xmask)
+op1_op2_op3_op4_op5_op6_op7_op8_op9_op10_op11_op12_op13_op14_op15_op16_op17.snodes[14] =
+op15: SchedulerNode(ComputedBuffer)
+op15.writes = [MemoryDep('buf15', c0, {c0: 100}, None)]
+op15.unmet_dependencies = [MemoryDep('buf14', c0, {c0: 100}, None)]
+op15.met_dependencies = 
+    [   MemoryDep('primals_1', 84, {}, None),
+        MemoryDep('primals_1', 85, {}, None),
+        MemoryDep('primals_1', 86, {}, None),
+        MemoryDep('primals_1', 87, {}, None),
+        MemoryDep('primals_1', 88, {}, None),
+        MemoryDep('primals_1', 89, {}, None)]
+op15.outputs = [
+    buf15: ComputedBuffer
+    buf15.layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+    buf15.users = [NodeUser(node=SchedulerNode(name='op16'), can_inplace=True, is_weak=False)]
+]
+op15.group.device = cuda:0
+op15.group.iteration = (100, 1)
+op15.sizes = ([100], [])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+buf14_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+buf15_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+class op15_loop_body:
+    var_ranges = {z0: 100}
+    index0 = z0
+    index1 = 89
+    index2 = 88
+    index3 = 87
+    index4 = 86
+    index5 = 85
+    index6 = 84
+    def body(self, ops):
+        get_index = self.get_index('index0')
+        index_expr = ops.index_expr(get_index, torch.int32)
+        constant = ops.constant(89, torch.int32)
+        eq = ops.eq(index_expr, constant)
+        get_index_1 = self.get_index('index1')
+        load = ops.load('primals_1', get_index_1)
+        constant_1 = ops.constant(2.0, torch.float32)
+        mul = ops.mul(load, constant_1)
+        get_index_2 = self.get_index('index0')
+        index_expr_1 = ops.index_expr(get_index_2, torch.int32)
+        constant_2 = ops.constant(88, torch.int32)
+        eq_1 = ops.eq(index_expr_1, constant_2)
+        get_index_3 = self.get_index('index2')
+        load_1 = ops.load('primals_1', get_index_3)
+        constant_3 = ops.constant(2.0, torch.float32)
+        mul_1 = ops.mul(load_1, constant_3)
+        get_index_4 = self.get_index('index0')
+        index_expr_2 = ops.index_expr(get_index_4, torch.int32)
+        constant_4 = ops.constant(87, torch.int32)
+        eq_2 = ops.eq(index_expr_2, constant_4)
+        get_index_5 = self.get_index('index3')
+        load_2 = ops.load('primals_1', get_index_5)
+        constant_5 = ops.constant(2.0, torch.float32)
+        mul_2 = ops.mul(load_2, constant_5)
+        get_index_6 = self.get_index('index0')
+        index_expr_3 = ops.index_expr(get_index_6, torch.int32)
+        constant_6 = ops.constant(86, torch.int32)
+        eq_3 = ops.eq(index_expr_3, constant_6)
+        get_index_7 = self.get_index('index4')
+        load_3 = ops.load('primals_1', get_index_7)
+        constant_7 = ops.constant(2.0, torch.float32)
+        mul_3 = ops.mul(load_3, constant_7)
+        get_index_8 = self.get_index('index0')
+        index_expr_4 = ops.index_expr(get_index_8, torch.int32)
+        constant_8 = ops.constant(85, torch.int32)
+        eq_4 = ops.eq(index_expr_4, constant_8)
+        get_index_9 = self.get_index('index5')
+        load_4 = ops.load('primals_1', get_index_9)
+        constant_9 = ops.constant(2.0, torch.float32)
+        mul_4 = ops.mul(load_4, constant_9)
+        get_index_10 = self.get_index('index0')
+        index_expr_5 = ops.index_expr(get_index_10, torch.int32)
+        constant_10 = ops.constant(84, torch.int32)
+        eq_5 = ops.eq(index_expr_5, constant_10)
+        get_index_11 = self.get_index('index6')
+        load_5 = ops.load('primals_1', get_index_11)
+        constant_11 = ops.constant(2.0, torch.float32)
+        mul_5 = ops.mul(load_5, constant_11)
+        get_index_12 = self.get_index('index0')
+        load_6 = ops.load('buf14', get_index_12)
+        where = ops.where(eq_5, mul_5, load_6)
+        where_1 = ops.where(eq_4, mul_4, where)
+        where_2 = ops.where(eq_3, mul_3, where_1)
+        where_3 = ops.where(eq_2, mul_2, where_2)
+        where_4 = ops.where(eq_1, mul_1, where_3)
+        where_5 = ops.where(eq, mul, where_4)
+        get_index_13 = self.get_index('index0')
+        store = ops.store('buf15', get_index_13, where_5, None)
+        return store
+op15 Triton code:
+    import triton
+    import triton.language as tl
+    from triton.compiler.compiler import AttrsDescriptor
+
+    from torch._inductor.runtime import triton_helpers, triton_heuristics
+    from torch._inductor.runtime.triton_helpers import libdevice, math as tl_math
+    from torch._inductor.runtime.hints import AutotuneHint, ReductionHint, TileHint, instance_descriptor, DeviceProperties
+
+    @triton_heuristics.pointwise(
+        size_hints=[128], 
+        filename=__file__,
+        triton_meta={'signature': {0: '*fp32', 1: '*fp32', 2: 'i32'}, 'device': DeviceProperties(type='cuda', index=0, cc=86, major=8, regs_per_multiprocessor=65536, max_threads_per_multi_processor=1536, multi_processor_count=20), 'constants': {}, 'configs': [AttrsDescriptor(divisible_by_16=(0, 1), equal_to_1=())]},
+        inductor_meta={'autotune_hints': set(), 'kernel_name': 'Placeholder.DESCRIPTIVE_NAME', 'mutated_arg_names': ['in_out_ptr0'], 'no_x_dim': False, 'num_load': 7, 'num_reduction': 0, 'backend_hash': '712B1D69F892A891D8FFA5075DCAB47CFF4E132D88BFC66744701CEAE226F127', 'are_deterministic_algorithms_enabled': False, 'assert_indirect_indexing': True, 'autotune_local_cache': True, 'autotune_pointwise': True, 'autotune_remote_cache': None, 'force_disable_caches': False, 'dynamic_scale_rblock': True, 'max_autotune': False, 'max_autotune_pointwise': False, 'min_split_scan_rblock': 256, 'spill_threshold': 16, 'store_cubin': False},
+        min_elem_per_thread=0
+    )
+    @triton.jit
+    def triton_(in_out_ptr0, in_ptr0, xnumel, XBLOCK : tl.constexpr):
+        xnumel = 100
+        xoffset = tl.program_id(0) * XBLOCK
+        xindex = xoffset + tl.arange(0, XBLOCK)[:]
+        xmask = xindex < xnumel
+        x0 = xindex
+        tmp3 = tl.load(in_ptr0 + (89))
+        tmp4 = tl.broadcast_to(tmp3, [XBLOCK])
+        tmp9 = tl.load(in_ptr0 + (88))
+        tmp10 = tl.broadcast_to(tmp9, [XBLOCK])
+        tmp14 = tl.load(in_ptr0 + (87))
+        tmp15 = tl.broadcast_to(tmp14, [XBLOCK])
+        tmp19 = tl.load(in_ptr0 + (86))
+        tmp20 = tl.broadcast_to(tmp19, [XBLOCK])
+        tmp24 = tl.load(in_ptr0 + (85))
+        tmp25 = tl.broadcast_to(tmp24, [XBLOCK])
+        tmp29 = tl.load(in_ptr0 + (84))
+        tmp30 = tl.broadcast_to(tmp29, [XBLOCK])
+        tmp32 = tl.load(in_out_ptr0 + (x0), xmask)
+        tmp0 = x0
+        tmp1 = tl.full([1], 89, tl.int32)
+        tmp2 = tmp0 == tmp1
+        tmp5 = 2.0
+        tmp6 = tmp4 * tmp5
+        tmp7 = tl.full([1], 88, tl.int32)
+        tmp8 = tmp0 == tmp7
+        tmp11 = tmp10 * tmp5
+        tmp12 = tl.full([1], 87, tl.int32)
+        tmp13 = tmp0 == tmp12
+        tmp16 = tmp15 * tmp5
+        tmp17 = tl.full([1], 86, tl.int32)
+        tmp18 = tmp0 == tmp17
+        tmp21 = tmp20 * tmp5
+        tmp22 = tl.full([1], 85, tl.int32)
+        tmp23 = tmp0 == tmp22
+        tmp26 = tmp25 * tmp5
+        tmp27 = tl.full([1], 84, tl.int32)
+        tmp28 = tmp0 == tmp27
+        tmp31 = tmp30 * tmp5
+        tmp33 = tl.where(tmp28, tmp31, tmp32)
+        tmp34 = tl.where(tmp23, tmp26, tmp33)
+        tmp35 = tl.where(tmp18, tmp21, tmp34)
+        tmp36 = tl.where(tmp13, tmp16, tmp35)
+        tmp37 = tl.where(tmp8, tmp11, tmp36)
+        tmp38 = tl.where(tmp2, tmp6, tmp37)
+        tl.store(in_out_ptr0 + (x0), tmp38, xmask)
+op1_op2_op3_op4_op5_op6_op7_op8_op9_op10_op11_op12_op13_op14_op15_op16_op17.snodes[15] =
+op16: SchedulerNode(ComputedBuffer)
+op16.writes = [MemoryDep('buf16', c0, {c0: 100}, None)]
+op16.unmet_dependencies = [MemoryDep('buf15', c0, {c0: 100}, None)]
+op16.met_dependencies = 
+    [   MemoryDep('primals_1', 90, {}, None),
+        MemoryDep('primals_1', 91, {}, None),
+        MemoryDep('primals_1', 92, {}, None),
+        MemoryDep('primals_1', 93, {}, None),
+        MemoryDep('primals_1', 94, {}, None),
+        MemoryDep('primals_1', 95, {}, None)]
+op16.outputs = [
+    buf16: ComputedBuffer
+    buf16.layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+    buf16.users = [NodeUser(node=SchedulerNode(name='op17'), can_inplace=True, is_weak=False)]
+]
+op16.group.device = cuda:0
+op16.group.iteration = (100, 1)
+op16.sizes = ([100], [])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+buf15_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+buf16_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+class op16_loop_body:
+    var_ranges = {z0: 100}
+    index0 = z0
+    index1 = 95
+    index2 = 94
+    index3 = 93
+    index4 = 92
+    index5 = 91
+    index6 = 90
+    def body(self, ops):
+        get_index = self.get_index('index0')
+        index_expr = ops.index_expr(get_index, torch.int32)
+        constant = ops.constant(95, torch.int32)
+        eq = ops.eq(index_expr, constant)
+        get_index_1 = self.get_index('index1')
+        load = ops.load('primals_1', get_index_1)
+        constant_1 = ops.constant(2.0, torch.float32)
+        mul = ops.mul(load, constant_1)
+        get_index_2 = self.get_index('index0')
+        index_expr_1 = ops.index_expr(get_index_2, torch.int32)
+        constant_2 = ops.constant(94, torch.int32)
+        eq_1 = ops.eq(index_expr_1, constant_2)
+        get_index_3 = self.get_index('index2')
+        load_1 = ops.load('primals_1', get_index_3)
+        constant_3 = ops.constant(2.0, torch.float32)
+        mul_1 = ops.mul(load_1, constant_3)
+        get_index_4 = self.get_index('index0')
+        index_expr_2 = ops.index_expr(get_index_4, torch.int32)
+        constant_4 = ops.constant(93, torch.int32)
+        eq_2 = ops.eq(index_expr_2, constant_4)
+        get_index_5 = self.get_index('index3')
+        load_2 = ops.load('primals_1', get_index_5)
+        constant_5 = ops.constant(2.0, torch.float32)
+        mul_2 = ops.mul(load_2, constant_5)
+        get_index_6 = self.get_index('index0')
+        index_expr_3 = ops.index_expr(get_index_6, torch.int32)
+        constant_6 = ops.constant(92, torch.int32)
+        eq_3 = ops.eq(index_expr_3, constant_6)
+        get_index_7 = self.get_index('index4')
+        load_3 = ops.load('primals_1', get_index_7)
+        constant_7 = ops.constant(2.0, torch.float32)
+        mul_3 = ops.mul(load_3, constant_7)
+        get_index_8 = self.get_index('index0')
+        index_expr_4 = ops.index_expr(get_index_8, torch.int32)
+        constant_8 = ops.constant(91, torch.int32)
+        eq_4 = ops.eq(index_expr_4, constant_8)
+        get_index_9 = self.get_index('index5')
+        load_4 = ops.load('primals_1', get_index_9)
+        constant_9 = ops.constant(2.0, torch.float32)
+        mul_4 = ops.mul(load_4, constant_9)
+        get_index_10 = self.get_index('index0')
+        index_expr_5 = ops.index_expr(get_index_10, torch.int32)
+        constant_10 = ops.constant(90, torch.int32)
+        eq_5 = ops.eq(index_expr_5, constant_10)
+        get_index_11 = self.get_index('index6')
+        load_5 = ops.load('primals_1', get_index_11)
+        constant_11 = ops.constant(2.0, torch.float32)
+        mul_5 = ops.mul(load_5, constant_11)
+        get_index_12 = self.get_index('index0')
+        load_6 = ops.load('buf15', get_index_12)
+        where = ops.where(eq_5, mul_5, load_6)
+        where_1 = ops.where(eq_4, mul_4, where)
+        where_2 = ops.where(eq_3, mul_3, where_1)
+        where_3 = ops.where(eq_2, mul_2, where_2)
+        where_4 = ops.where(eq_1, mul_1, where_3)
+        where_5 = ops.where(eq, mul, where_4)
+        get_index_13 = self.get_index('index0')
+        store = ops.store('buf16', get_index_13, where_5, None)
+        return store
+op16 Triton code:
+    import triton
+    import triton.language as tl
+    from triton.compiler.compiler import AttrsDescriptor
+
+    from torch._inductor.runtime import triton_helpers, triton_heuristics
+    from torch._inductor.runtime.triton_helpers import libdevice, math as tl_math
+    from torch._inductor.runtime.hints import AutotuneHint, ReductionHint, TileHint, instance_descriptor, DeviceProperties
+
+    @triton_heuristics.pointwise(
+        size_hints=[128], 
+        filename=__file__,
+        triton_meta={'signature': {0: '*fp32', 1: '*fp32', 2: 'i32'}, 'device': DeviceProperties(type='cuda', index=0, cc=86, major=8, regs_per_multiprocessor=65536, max_threads_per_multi_processor=1536, multi_processor_count=20), 'constants': {}, 'configs': [AttrsDescriptor(divisible_by_16=(0, 1), equal_to_1=())]},
+        inductor_meta={'autotune_hints': set(), 'kernel_name': 'Placeholder.DESCRIPTIVE_NAME', 'mutated_arg_names': ['in_out_ptr0'], 'no_x_dim': False, 'num_load': 7, 'num_reduction': 0, 'backend_hash': '712B1D69F892A891D8FFA5075DCAB47CFF4E132D88BFC66744701CEAE226F127', 'are_deterministic_algorithms_enabled': False, 'assert_indirect_indexing': True, 'autotune_local_cache': True, 'autotune_pointwise': True, 'autotune_remote_cache': None, 'force_disable_caches': False, 'dynamic_scale_rblock': True, 'max_autotune': False, 'max_autotune_pointwise': False, 'min_split_scan_rblock': 256, 'spill_threshold': 16, 'store_cubin': False},
+        min_elem_per_thread=0
+    )
+    @triton.jit
+    def triton_(in_out_ptr0, in_ptr0, xnumel, XBLOCK : tl.constexpr):
+        xnumel = 100
+        xoffset = tl.program_id(0) * XBLOCK
+        xindex = xoffset + tl.arange(0, XBLOCK)[:]
+        xmask = xindex < xnumel
+        x0 = xindex
+        tmp3 = tl.load(in_ptr0 + (95))
+        tmp4 = tl.broadcast_to(tmp3, [XBLOCK])
+        tmp9 = tl.load(in_ptr0 + (94))
+        tmp10 = tl.broadcast_to(tmp9, [XBLOCK])
+        tmp14 = tl.load(in_ptr0 + (93))
+        tmp15 = tl.broadcast_to(tmp14, [XBLOCK])
+        tmp19 = tl.load(in_ptr0 + (92))
+        tmp20 = tl.broadcast_to(tmp19, [XBLOCK])
+        tmp24 = tl.load(in_ptr0 + (91))
+        tmp25 = tl.broadcast_to(tmp24, [XBLOCK])
+        tmp29 = tl.load(in_ptr0 + (90))
+        tmp30 = tl.broadcast_to(tmp29, [XBLOCK])
+        tmp32 = tl.load(in_out_ptr0 + (x0), xmask)
+        tmp0 = x0
+        tmp1 = tl.full([1], 95, tl.int32)
+        tmp2 = tmp0 == tmp1
+        tmp5 = 2.0
+        tmp6 = tmp4 * tmp5
+        tmp7 = tl.full([1], 94, tl.int32)
+        tmp8 = tmp0 == tmp7
+        tmp11 = tmp10 * tmp5
+        tmp12 = tl.full([1], 93, tl.int32)
+        tmp13 = tmp0 == tmp12
+        tmp16 = tmp15 * tmp5
+        tmp17 = tl.full([1], 92, tl.int32)
+        tmp18 = tmp0 == tmp17
+        tmp21 = tmp20 * tmp5
+        tmp22 = tl.full([1], 91, tl.int32)
+        tmp23 = tmp0 == tmp22
+        tmp26 = tmp25 * tmp5
+        tmp27 = tl.full([1], 90, tl.int32)
+        tmp28 = tmp0 == tmp27
+        tmp31 = tmp30 * tmp5
+        tmp33 = tl.where(tmp28, tmp31, tmp32)
+        tmp34 = tl.where(tmp23, tmp26, tmp33)
+        tmp35 = tl.where(tmp18, tmp21, tmp34)
+        tmp36 = tl.where(tmp13, tmp16, tmp35)
+        tmp37 = tl.where(tmp8, tmp11, tmp36)
+        tmp38 = tl.where(tmp2, tmp6, tmp37)
+        tl.store(in_out_ptr0 + (x0), tmp38, xmask)
+op1_op2_op3_op4_op5_op6_op7_op8_op9_op10_op11_op12_op13_op14_op15_op16_op17.snodes[16] =
+op17: SchedulerNode(ComputedBuffer)
+op17.writes = [MemoryDep('buf17', c0, {c0: 100}, None)]
+op17.unmet_dependencies = [MemoryDep('buf16', c0, {c0: 100}, None)]
+op17.met_dependencies = 
+    [   MemoryDep('primals_1', 96, {}, None),
+        MemoryDep('primals_1', 97, {}, None),
+        MemoryDep('primals_1', 98, {}, None),
+        MemoryDep('primals_1', 99, {}, None)]
+op17.outputs = [
+    buf17: ComputedBuffer
+    buf17.layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+    buf17.users = [NodeUser(node=OUTPUT, can_inplace=False, is_weak=False)]
+]
+op17.group.device = cuda:0
+op17.group.iteration = (100, 1)
+op17.sizes = ([100], [])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+primals_1_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+buf16_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+buf17_layout = FixedLayout('cuda', torch.float32, size=[100], stride=[1])
+class op17_loop_body:
+    var_ranges = {z0: 100}
+    index0 = z0
+    index1 = 99
+    index2 = 98
+    index3 = 97
+    index4 = 96
+    def body(self, ops):
+        get_index = self.get_index('index0')
+        index_expr = ops.index_expr(get_index, torch.int32)
+        constant = ops.constant(99, torch.int32)
+        eq = ops.eq(index_expr, constant)
+        get_index_1 = self.get_index('index1')
+        load = ops.load('primals_1', get_index_1)
+        constant_1 = ops.constant(2.0, torch.float32)
+        mul = ops.mul(load, constant_1)
+        get_index_2 = self.get_index('index0')
+        index_expr_1 = ops.index_expr(get_index_2, torch.int32)
+        constant_2 = ops.constant(98, torch.int32)
+        eq_1 = ops.eq(index_expr_1, constant_2)
+        get_index_3 = self.get_index('index2')
+        load_1 = ops.load('primals_1', get_index_3)
+        constant_3 = ops.constant(2.0, torch.float32)
+        mul_1 = ops.mul(load_1, constant_3)
+        get_index_4 = self.get_index('index0')
+        index_expr_2 = ops.index_expr(get_index_4, torch.int32)
+        constant_4 = ops.constant(97, torch.int32)
+        eq_2 = ops.eq(index_expr_2, constant_4)
+        get_index_5 = self.get_index('index3')
+        load_2 = ops.load('primals_1', get_index_5)
+        constant_5 = ops.constant(2.0, torch.float32)
+        mul_2 = ops.mul(load_2, constant_5)
+        get_index_6 = self.get_index('index0')
+        index_expr_3 = ops.index_expr(get_index_6, torch.int32)
+        constant_6 = ops.constant(96, torch.int32)
+        eq_3 = ops.eq(index_expr_3, constant_6)
+        get_index_7 = self.get_index('index4')
+        load_3 = ops.load('primals_1', get_index_7)
+        constant_7 = ops.constant(2.0, torch.float32)
+        mul_3 = ops.mul(load_3, constant_7)
+        get_index_8 = self.get_index('index0')
+        load_4 = ops.load('buf16', get_index_8)
+        where = ops.where(eq_3, mul_3, load_4)
+        where_1 = ops.where(eq_2, mul_2, where)
+        where_2 = ops.where(eq_1, mul_1, where_1)
+        where_3 = ops.where(eq, mul, where_2)
+        get_index_9 = self.get_index('index0')
+        store = ops.store('buf17', get_index_9, where_3, None)
+        return store
+op17 Triton code:
+    import triton
+    import triton.language as tl
+    from triton.compiler.compiler import AttrsDescriptor
+
+    from torch._inductor.runtime import triton_helpers, triton_heuristics
+    from torch._inductor.runtime.triton_helpers import libdevice, math as tl_math
+    from torch._inductor.runtime.hints import AutotuneHint, ReductionHint, TileHint, instance_descriptor, DeviceProperties
+
+    @triton_heuristics.pointwise(
+        size_hints=[128], 
+        filename=__file__,
+        triton_meta={'signature': {0: '*fp32', 1: '*fp32', 2: 'i32'}, 'device': DeviceProperties(type='cuda', index=0, cc=86, major=8, regs_per_multiprocessor=65536, max_threads_per_multi_processor=1536, multi_processor_count=20), 'constants': {}, 'configs': [AttrsDescriptor(divisible_by_16=(0, 1), equal_to_1=())]},
+        inductor_meta={'autotune_hints': set(), 'kernel_name': 'Placeholder.DESCRIPTIVE_NAME', 'mutated_arg_names': ['in_out_ptr0'], 'no_x_dim': False, 'num_load': 5, 'num_reduction': 0, 'backend_hash': '712B1D69F892A891D8FFA5075DCAB47CFF4E132D88BFC66744701CEAE226F127', 'are_deterministic_algorithms_enabled': False, 'assert_indirect_indexing': True, 'autotune_local_cache': True, 'autotune_pointwise': True, 'autotune_remote_cache': None, 'force_disable_caches': False, 'dynamic_scale_rblock': True, 'max_autotune': False, 'max_autotune_pointwise': False, 'min_split_scan_rblock': 256, 'spill_threshold': 16, 'store_cubin': False},
+        min_elem_per_thread=0
+    )
+    @triton.jit
+    def triton_(in_out_ptr0, in_ptr0, xnumel, XBLOCK : tl.constexpr):
+        xnumel = 100
+        xoffset = tl.program_id(0) * XBLOCK
+        xindex = xoffset + tl.arange(0, XBLOCK)[:]
+        xmask = xindex < xnumel
+        x0 = xindex
+        tmp3 = tl.load(in_ptr0 + (99))
+        tmp4 = tl.broadcast_to(tmp3, [XBLOCK])
+        tmp9 = tl.load(in_ptr0 + (98))
+        tmp10 = tl.broadcast_to(tmp9, [XBLOCK])
+        tmp14 = tl.load(in_ptr0 + (97))
+        tmp15 = tl.broadcast_to(tmp14, [XBLOCK])
+        tmp19 = tl.load(in_ptr0 + (96))
+        tmp20 = tl.broadcast_to(tmp19, [XBLOCK])
+        tmp22 = tl.load(in_out_ptr0 + (x0), xmask)
+        tmp0 = x0
+        tmp1 = tl.full([1], 99, tl.int32)
+        tmp2 = tmp0 == tmp1
+        tmp5 = 2.0
+        tmp6 = tmp4 * tmp5
+        tmp7 = tl.full([1], 98, tl.int32)
+        tmp8 = tmp0 == tmp7
+        tmp11 = tmp10 * tmp5
+        tmp12 = tl.full([1], 97, tl.int32)
+        tmp13 = tmp0 == tmp12
+        tmp16 = tmp15 * tmp5
+        tmp17 = tl.full([1], 96, tl.int32)
+        tmp18 = tmp0 == tmp17
+        tmp21 = tmp20 * tmp5
+        tmp23 = tl.where(tmp18, tmp21, tmp22)
+        tmp24 = tl.where(tmp13, tmp16, tmp23)
+        tmp25 = tl.where(tmp8, tmp11, tmp24)
+        tmp26 = tl.where(tmp2, tmp6, tmp25)
+        tl.store(in_out_ptr0 + (x0), tmp26, xmask)
+op1_op2_op3_op4_op5_op6_op7_op8_op9_op10_op11_op12_op13_op14_op15_op16_op17 Triton code:
+    import triton
+    import triton.language as tl
+    from triton.compiler.compiler import AttrsDescriptor
+
+    from torch._inductor.runtime import triton_helpers, triton_heuristics
+    from torch._inductor.runtime.triton_helpers import libdevice, math as tl_math
+    from torch._inductor.runtime.hints import AutotuneHint, ReductionHint, TileHint, instance_descriptor, DeviceProperties
+
+    @triton_heuristics.pointwise(
+        size_hints=[128], 
+        filename=__file__,
+        triton_meta={'signature': {0: '*fp32', 1: '*fp32', 2: 'i32'}, 'device': DeviceProperties(type='cuda', index=0, cc=86, major=8, regs_per_multiprocessor=65536, max_threads_per_multi_processor=1536, multi_processor_count=20), 'constants': {}, 'configs': [AttrsDescriptor(divisible_by_16=(0, 1), equal_to_1=())]},
+        inductor_meta={'autotune_hints': set(), 'kernel_name': 'Placeholder.DESCRIPTIVE_NAME', 'mutated_arg_names': ['in_out_ptr0'], 'no_x_dim': False, 'num_load': 100, 'num_reduction': 0, 'backend_hash': '712B1D69F892A891D8FFA5075DCAB47CFF4E132D88BFC66744701CEAE226F127', 'are_deterministic_algorithms_enabled': False, 'assert_indirect_indexing': True, 'autotune_local_cache': True, 'autotune_pointwise': True, 'autotune_remote_cache': None, 'force_disable_caches': False, 'dynamic_scale_rblock': True, 'max_autotune': False, 'max_autotune_pointwise': False, 'min_split_scan_rblock': 256, 'spill_threshold': 16, 'store_cubin': False},
+        min_elem_per_thread=0
+    )
+    @triton.jit
+    def triton_(in_out_ptr0, in_ptr0, xnumel, XBLOCK : tl.constexpr):
+        xnumel = 100
+        xoffset = tl.program_id(0) * XBLOCK
+        xindex = xoffset + tl.arange(0, XBLOCK)[:]
+        xmask = xindex < xnumel
+        x0 = xindex
+        tmp3 = tl.load(in_ptr0 + (5))
+        tmp4 = tl.broadcast_to(tmp3, [XBLOCK])
+        tmp9 = tl.load(in_ptr0 + (4))
+        tmp10 = tl.broadcast_to(tmp9, [XBLOCK])
+        tmp14 = tl.load(in_ptr0 + (3))
+        tmp15 = tl.broadcast_to(tmp14, [XBLOCK])
+        tmp19 = tl.load(in_ptr0 + (2))
+        tmp20 = tl.broadcast_to(tmp19, [XBLOCK])
+        tmp24 = tl.load(in_ptr0 + (1))
+        tmp25 = tl.broadcast_to(tmp24, [XBLOCK])
+        tmp29 = tl.load(in_ptr0 + (0))
+        tmp30 = tl.broadcast_to(tmp29, [XBLOCK])
+        tmp41 = tl.load(in_ptr0 + (11))
+        tmp42 = tl.broadcast_to(tmp41, [XBLOCK])
+        tmp46 = tl.load(in_ptr0 + (10))
+        tmp47 = tl.broadcast_to(tmp46, [XBLOCK])
+        tmp51 = tl.load(in_ptr0 + (9))
+        tmp52 = tl.broadcast_to(tmp51, [XBLOCK])
+        tmp56 = tl.load(in_ptr0 + (8))
+        tmp57 = tl.broadcast_to(tmp56, [XBLOCK])
+        tmp61 = tl.load(in_ptr0 + (7))
+        tmp62 = tl.broadcast_to(tmp61, [XBLOCK])
+        tmp66 = tl.load(in_ptr0 + (6))
+        tmp67 = tl.broadcast_to(tmp66, [XBLOCK])
+        tmp77 = tl.load(in_ptr0 + (17))
+        tmp78 = tl.broadcast_to(tmp77, [XBLOCK])
+        tmp82 = tl.load(in_ptr0 + (16))
+        tmp83 = tl.broadcast_to(tmp82, [XBLOCK])
+        tmp87 = tl.load(in_ptr0 + (15))
+        tmp88 = tl.broadcast_to(tmp87, [XBLOCK])
+        tmp92 = tl.load(in_ptr0 + (14))
+        tmp93 = tl.broadcast_to(tmp92, [XBLOCK])
+        tmp97 = tl.load(in_ptr0 + (13))
+        tmp98 = tl.broadcast_to(tmp97, [XBLOCK])
+        tmp102 = tl.load(in_ptr0 + (12))
+        tmp103 = tl.broadcast_to(tmp102, [XBLOCK])
+        tmp113 = tl.load(in_ptr0 + (23))
+        tmp114 = tl.broadcast_to(tmp113, [XBLOCK])
+        tmp118 = tl.load(in_ptr0 + (22))
+        tmp119 = tl.broadcast_to(tmp118, [XBLOCK])
+        tmp123 = tl.load(in_ptr0 + (21))
+        tmp124 = tl.broadcast_to(tmp123, [XBLOCK])
+        tmp128 = tl.load(in_ptr0 + (20))
+        tmp129 = tl.broadcast_to(tmp128, [XBLOCK])
+        tmp133 = tl.load(in_ptr0 + (19))
+        tmp134 = tl.broadcast_to(tmp133, [XBLOCK])
+        tmp138 = tl.load(in_ptr0 + (18))
+        tmp139 = tl.broadcast_to(tmp138, [XBLOCK])
+        tmp149 = tl.load(in_ptr0 + (29))
+        tmp150 = tl.broadcast_to(tmp149, [XBLOCK])
+        tmp154 = tl.load(in_ptr0 + (28))
+        tmp155 = tl.broadcast_to(tmp154, [XBLOCK])
+        tmp159 = tl.load(in_ptr0 + (27))
+        tmp160 = tl.broadcast_to(tmp159, [XBLOCK])
+        tmp164 = tl.load(in_ptr0 + (26))
+        tmp165 = tl.broadcast_to(tmp164, [XBLOCK])
+        tmp169 = tl.load(in_ptr0 + (25))
+        tmp170 = tl.broadcast_to(tmp169, [XBLOCK])
+        tmp174 = tl.load(in_ptr0 + (24))
+        tmp175 = tl.broadcast_to(tmp174, [XBLOCK])
+        tmp185 = tl.load(in_ptr0 + (35))
+        tmp186 = tl.broadcast_to(tmp185, [XBLOCK])
+        tmp190 = tl.load(in_ptr0 + (34))
+        tmp191 = tl.broadcast_to(tmp190, [XBLOCK])
+        tmp195 = tl.load(in_ptr0 + (33))
+        tmp196 = tl.broadcast_to(tmp195, [XBLOCK])
+        tmp200 = tl.load(in_ptr0 + (32))
+        tmp201 = tl.broadcast_to(tmp200, [XBLOCK])
+        tmp205 = tl.load(in_ptr0 + (31))
+        tmp206 = tl.broadcast_to(tmp205, [XBLOCK])
+        tmp210 = tl.load(in_ptr0 + (30))
+        tmp211 = tl.broadcast_to(tmp210, [XBLOCK])
+        tmp221 = tl.load(in_ptr0 + (41))
+        tmp222 = tl.broadcast_to(tmp221, [XBLOCK])
+        tmp226 = tl.load(in_ptr0 + (40))
+        tmp227 = tl.broadcast_to(tmp226, [XBLOCK])
+        tmp231 = tl.load(in_ptr0 + (39))
+        tmp232 = tl.broadcast_to(tmp231, [XBLOCK])
+        tmp236 = tl.load(in_ptr0 + (38))
+        tmp237 = tl.broadcast_to(tmp236, [XBLOCK])
+        tmp241 = tl.load(in_ptr0 + (37))
+        tmp242 = tl.broadcast_to(tmp241, [XBLOCK])
+        tmp246 = tl.load(in_ptr0 + (36))
+        tmp247 = tl.broadcast_to(tmp246, [XBLOCK])
+        tmp257 = tl.load(in_ptr0 + (47))
+        tmp258 = tl.broadcast_to(tmp257, [XBLOCK])
+        tmp262 = tl.load(in_ptr0 + (46))
+        tmp263 = tl.broadcast_to(tmp262, [XBLOCK])
+        tmp267 = tl.load(in_ptr0 + (45))
+        tmp268 = tl.broadcast_to(tmp267, [XBLOCK])
+        tmp272 = tl.load(in_ptr0 + (44))
+        tmp273 = tl.broadcast_to(tmp272, [XBLOCK])
+        tmp277 = tl.load(in_ptr0 + (43))
+        tmp278 = tl.broadcast_to(tmp277, [XBLOCK])
+        tmp282 = tl.load(in_ptr0 + (42))
+        tmp283 = tl.broadcast_to(tmp282, [XBLOCK])
+        tmp293 = tl.load(in_ptr0 + (53))
+        tmp294 = tl.broadcast_to(tmp293, [XBLOCK])
+        tmp298 = tl.load(in_ptr0 + (52))
+        tmp299 = tl.broadcast_to(tmp298, [XBLOCK])
+        tmp303 = tl.load(in_ptr0 + (51))
+        tmp304 = tl.broadcast_to(tmp303, [XBLOCK])
+        tmp308 = tl.load(in_ptr0 + (50))
+        tmp309 = tl.broadcast_to(tmp308, [XBLOCK])
+        tmp313 = tl.load(in_ptr0 + (49))
+        tmp314 = tl.broadcast_to(tmp313, [XBLOCK])
+        tmp318 = tl.load(in_ptr0 + (48))
+        tmp319 = tl.broadcast_to(tmp318, [XBLOCK])
+        tmp329 = tl.load(in_ptr0 + (59))
+        tmp330 = tl.broadcast_to(tmp329, [XBLOCK])
+        tmp334 = tl.load(in_ptr0 + (58))
+        tmp335 = tl.broadcast_to(tmp334, [XBLOCK])
+        tmp339 = tl.load(in_ptr0 + (57))
+        tmp340 = tl.broadcast_to(tmp339, [XBLOCK])
+        tmp344 = tl.load(in_ptr0 + (56))
+        tmp345 = tl.broadcast_to(tmp344, [XBLOCK])
+        tmp349 = tl.load(in_ptr0 + (55))
+        tmp350 = tl.broadcast_to(tmp349, [XBLOCK])
+        tmp354 = tl.load(in_ptr0 + (54))
+        tmp355 = tl.broadcast_to(tmp354, [XBLOCK])
+        tmp365 = tl.load(in_ptr0 + (65))
+        tmp366 = tl.broadcast_to(tmp365, [XBLOCK])
+        tmp370 = tl.load(in_ptr0 + (64))
+        tmp371 = tl.broadcast_to(tmp370, [XBLOCK])
+        tmp375 = tl.load(in_ptr0 + (63))
+        tmp376 = tl.broadcast_to(tmp375, [XBLOCK])
+        tmp380 = tl.load(in_ptr0 + (62))
+        tmp381 = tl.broadcast_to(tmp380, [XBLOCK])
+        tmp385 = tl.load(in_ptr0 + (61))
+        tmp386 = tl.broadcast_to(tmp385, [XBLOCK])
+        tmp390 = tl.load(in_ptr0 + (60))
+        tmp391 = tl.broadcast_to(tmp390, [XBLOCK])
+        tmp401 = tl.load(in_ptr0 + (71))
+        tmp402 = tl.broadcast_to(tmp401, [XBLOCK])
+        tmp406 = tl.load(in_ptr0 + (70))
+        tmp407 = tl.broadcast_to(tmp406, [XBLOCK])
+        tmp411 = tl.load(in_ptr0 + (69))
+        tmp412 = tl.broadcast_to(tmp411, [XBLOCK])
+        tmp416 = tl.load(in_ptr0 + (68))
+        tmp417 = tl.broadcast_to(tmp416, [XBLOCK])
+        tmp421 = tl.load(in_ptr0 + (67))
+        tmp422 = tl.broadcast_to(tmp421, [XBLOCK])
+        tmp426 = tl.load(in_ptr0 + (66))
+        tmp427 = tl.broadcast_to(tmp426, [XBLOCK])
+        tmp437 = tl.load(in_ptr0 + (77))
+        tmp438 = tl.broadcast_to(tmp437, [XBLOCK])
+        tmp442 = tl.load(in_ptr0 + (76))
+        tmp443 = tl.broadcast_to(tmp442, [XBLOCK])
+        tmp447 = tl.load(in_ptr0 + (75))
+        tmp448 = tl.broadcast_to(tmp447, [XBLOCK])
+        tmp452 = tl.load(in_ptr0 + (74))
+        tmp453 = tl.broadcast_to(tmp452, [XBLOCK])
+        tmp457 = tl.load(in_ptr0 + (73))
+        tmp458 = tl.broadcast_to(tmp457, [XBLOCK])
+        tmp462 = tl.load(in_ptr0 + (72))
+        tmp463 = tl.broadcast_to(tmp462, [XBLOCK])
+        tmp473 = tl.load(in_ptr0 + (83))
+        tmp474 = tl.broadcast_to(tmp473, [XBLOCK])
+        tmp478 = tl.load(in_ptr0 + (82))
+        tmp479 = tl.broadcast_to(tmp478, [XBLOCK])
+        tmp483 = tl.load(in_ptr0 + (81))
+        tmp484 = tl.broadcast_to(tmp483, [XBLOCK])
+        tmp488 = tl.load(in_ptr0 + (80))
+        tmp489 = tl.broadcast_to(tmp488, [XBLOCK])
+        tmp493 = tl.load(in_ptr0 + (79))
+        tmp494 = tl.broadcast_to(tmp493, [XBLOCK])
+        tmp498 = tl.load(in_ptr0 + (78))
+        tmp499 = tl.broadcast_to(tmp498, [XBLOCK])
+        tmp509 = tl.load(in_ptr0 + (89))
+        tmp510 = tl.broadcast_to(tmp509, [XBLOCK])
+        tmp514 = tl.load(in_ptr0 + (88))
+        tmp515 = tl.broadcast_to(tmp514, [XBLOCK])
+        tmp519 = tl.load(in_ptr0 + (87))
+        tmp520 = tl.broadcast_to(tmp519, [XBLOCK])
+        tmp524 = tl.load(in_ptr0 + (86))
+        tmp525 = tl.broadcast_to(tmp524, [XBLOCK])
+        tmp529 = tl.load(in_ptr0 + (85))
+        tmp530 = tl.broadcast_to(tmp529, [XBLOCK])
+        tmp534 = tl.load(in_ptr0 + (84))
+        tmp535 = tl.broadcast_to(tmp534, [XBLOCK])
+        tmp545 = tl.load(in_ptr0 + (95))
+        tmp546 = tl.broadcast_to(tmp545, [XBLOCK])
+        tmp550 = tl.load(in_ptr0 + (94))
+        tmp551 = tl.broadcast_to(tmp550, [XBLOCK])
+        tmp555 = tl.load(in_ptr0 + (93))
+        tmp556 = tl.broadcast_to(tmp555, [XBLOCK])
+        tmp560 = tl.load(in_ptr0 + (92))
+        tmp561 = tl.broadcast_to(tmp560, [XBLOCK])
+        tmp565 = tl.load(in_ptr0 + (91))
+        tmp566 = tl.broadcast_to(tmp565, [XBLOCK])
+        tmp570 = tl.load(in_ptr0 + (90))
+        tmp571 = tl.broadcast_to(tmp570, [XBLOCK])
+        tmp581 = tl.load(in_ptr0 + (99))
+        tmp582 = tl.broadcast_to(tmp581, [XBLOCK])
+        tmp586 = tl.load(in_ptr0 + (98))
+        tmp587 = tl.broadcast_to(tmp586, [XBLOCK])
+        tmp591 = tl.load(in_ptr0 + (97))
+        tmp592 = tl.broadcast_to(tmp591, [XBLOCK])
+        tmp596 = tl.load(in_ptr0 + (96))
+        tmp597 = tl.broadcast_to(tmp596, [XBLOCK])
+        tmp0 = x0
+        tmp1 = tl.full([1], 5, tl.int32)
+        tmp2 = tmp0 == tmp1
+        tmp5 = 2.0
+        tmp6 = tmp4 * tmp5
+        tmp7 = tl.full([1], 4, tl.int32)
+        tmp8 = tmp0 == tmp7
+        tmp11 = tmp10 * tmp5
+        tmp12 = tl.full([1], 3, tl.int32)
+        tmp13 = tmp0 == tmp12
+        tmp16 = tmp15 * tmp5
+        tmp17 = tl.full([1], 2, tl.int32)
+        tmp18 = tmp0 == tmp17
+        tmp21 = tmp20 * tmp5
+        tmp22 = tl.full([1], 1, tl.int32)
+        tmp23 = tmp0 == tmp22
+        tmp26 = tmp25 * tmp5
+        tmp27 = tl.full([1], 0, tl.int32)
+        tmp28 = tmp0 == tmp27
+        tmp31 = tmp30 * tmp5
+        tmp32 = 0.0
+        tmp33 = tl.where(tmp28, tmp31, tmp32)
+        tmp34 = tl.where(tmp23, tmp26, tmp33)
+        tmp35 = tl.where(tmp18, tmp21, tmp34)
+        tmp36 = tl.where(tmp13, tmp16, tmp35)
+        tmp37 = tl.where(tmp8, tmp11, tmp36)
+        tmp38 = tl.where(tmp2, tmp6, tmp37)
+        tmp39 = tl.full([1], 11, tl.int32)
+        tmp40 = tmp0 == tmp39
+        tmp43 = tmp42 * tmp5
+        tmp44 = tl.full([1], 10, tl.int32)
+        tmp45 = tmp0 == tmp44
+        tmp48 = tmp47 * tmp5
+        tmp49 = tl.full([1], 9, tl.int32)
+        tmp50 = tmp0 == tmp49
+        tmp53 = tmp52 * tmp5
+        tmp54 = tl.full([1], 8, tl.int32)
+        tmp55 = tmp0 == tmp54
+        tmp58 = tmp57 * tmp5
+        tmp59 = tl.full([1], 7, tl.int32)
+        tmp60 = tmp0 == tmp59
+        tmp63 = tmp62 * tmp5
+        tmp64 = tl.full([1], 6, tl.int32)
+        tmp65 = tmp0 == tmp64
+        tmp68 = tmp67 * tmp5
+        tmp69 = tl.where(tmp65, tmp68, tmp38)
+        tmp70 = tl.where(tmp60, tmp63, tmp69)
+        tmp71 = tl.where(tmp55, tmp58, tmp70)
+        tmp72 = tl.where(tmp50, tmp53, tmp71)
+        tmp73 = tl.where(tmp45, tmp48, tmp72)
+        tmp74 = tl.where(tmp40, tmp43, tmp73)
+        tmp75 = tl.full([1], 17, tl.int32)
+        tmp76 = tmp0 == tmp75
+        tmp79 = tmp78 * tmp5
+        tmp80 = tl.full([1], 16, tl.int32)
+        tmp81 = tmp0 == tmp80
+        tmp84 = tmp83 * tmp5
+        tmp85 = tl.full([1], 15, tl.int32)
+        tmp86 = tmp0 == tmp85
+        tmp89 = tmp88 * tmp5
+        tmp90 = tl.full([1], 14, tl.int32)
+        tmp91 = tmp0 == tmp90
+        tmp94 = tmp93 * tmp5
+        tmp95 = tl.full([1], 13, tl.int32)
+        tmp96 = tmp0 == tmp95
+        tmp99 = tmp98 * tmp5
+        tmp100 = tl.full([1], 12, tl.int32)
+        tmp101 = tmp0 == tmp100
+        tmp104 = tmp103 * tmp5
+        tmp105 = tl.where(tmp101, tmp104, tmp74)
+        tmp106 = tl.where(tmp96, tmp99, tmp105)
+        tmp107 = tl.where(tmp91, tmp94, tmp106)
+        tmp108 = tl.where(tmp86, tmp89, tmp107)
+        tmp109 = tl.where(tmp81, tmp84, tmp108)
+        tmp110 = tl.where(tmp76, tmp79, tmp109)
+        tmp111 = tl.full([1], 23, tl.int32)
+        tmp112 = tmp0 == tmp111
+        tmp115 = tmp114 * tmp5
+        tmp116 = tl.full([1], 22, tl.int32)
+        tmp117 = tmp0 == tmp116
+        tmp120 = tmp119 * tmp5
+        tmp121 = tl.full([1], 21, tl.int32)
+        tmp122 = tmp0 == tmp121
+        tmp125 = tmp124 * tmp5
+        tmp126 = tl.full([1], 20, tl.int32)
+        tmp127 = tmp0 == tmp126
+        tmp130 = tmp129 * tmp5
+        tmp131 = tl.full([1], 19, tl.int32)
+        tmp132 = tmp0 == tmp131
+        tmp135 = tmp134 * tmp5
+        tmp136 = tl.full([1], 18, tl.int32)
+        tmp137 = tmp0 == tmp136
+        tmp140 = tmp139 * tmp5
+        tmp141 = tl.where(tmp137, tmp140, tmp110)
+        tmp142 = tl.where(tmp132, tmp135, tmp141)
+        tmp143 = tl.where(tmp127, tmp130, tmp142)
+        tmp144 = tl.where(tmp122, tmp125, tmp143)
+        tmp145 = tl.where(tmp117, tmp120, tmp144)
+        tmp146 = tl.where(tmp112, tmp115, tmp145)
+        tmp147 = tl.full([1], 29, tl.int32)
+        tmp148 = tmp0 == tmp147
+        tmp151 = tmp150 * tmp5
+        tmp152 = tl.full([1], 28, tl.int32)
+        tmp153 = tmp0 == tmp152
+        tmp156 = tmp155 * tmp5
+        tmp157 = tl.full([1], 27, tl.int32)
+        tmp158 = tmp0 == tmp157
+        tmp161 = tmp160 * tmp5
+        tmp162 = tl.full([1], 26, tl.int32)
+        tmp163 = tmp0 == tmp162
+        tmp166 = tmp165 * tmp5
+        tmp167 = tl.full([1], 25, tl.int32)
+        tmp168 = tmp0 == tmp167
+        tmp171 = tmp170 * tmp5
+        tmp172 = tl.full([1], 24, tl.int32)
+        tmp173 = tmp0 == tmp172
+        tmp176 = tmp175 * tmp5
+        tmp177 = tl.where(tmp173, tmp176, tmp146)
+        tmp178 = tl.where(tmp168, tmp171, tmp177)
+        tmp179 = tl.where(tmp163, tmp166, tmp178)
+        tmp180 = tl.where(tmp158, tmp161, tmp179)
+        tmp181 = tl.where(tmp153, tmp156, tmp180)
+        tmp182 = tl.where(tmp148, tmp151, tmp181)
+        tmp183 = tl.full([1], 35, tl.int32)
+        tmp184 = tmp0 == tmp183
+        tmp187 = tmp186 * tmp5
+        tmp188 = tl.full([1], 34, tl.int32)
+        tmp189 = tmp0 == tmp188
+        tmp192 = tmp191 * tmp5
+        tmp193 = tl.full([1], 33, tl.int32)
+        tmp194 = tmp0 == tmp193
+        tmp197 = tmp196 * tmp5
+        tmp198 = tl.full([1], 32, tl.int32)
+        tmp199 = tmp0 == tmp198
+        tmp202 = tmp201 * tmp5
+        tmp203 = tl.full([1], 31, tl.int32)
+        tmp204 = tmp0 == tmp203
+        tmp207 = tmp206 * tmp5
+        tmp208 = tl.full([1], 30, tl.int32)
+        tmp209 = tmp0 == tmp208
+        tmp212 = tmp211 * tmp5
+        tmp213 = tl.where(tmp209, tmp212, tmp182)
+        tmp214 = tl.where(tmp204, tmp207, tmp213)
+        tmp215 = tl.where(tmp199, tmp202, tmp214)
+        tmp216 = tl.where(tmp194, tmp197, tmp215)
+        tmp217 = tl.where(tmp189, tmp192, tmp216)
+        tmp218 = tl.where(tmp184, tmp187, tmp217)
+        tmp219 = tl.full([1], 41, tl.int32)
+        tmp220 = tmp0 == tmp219
+        tmp223 = tmp222 * tmp5
+        tmp224 = tl.full([1], 40, tl.int32)
+        tmp225 = tmp0 == tmp224
+        tmp228 = tmp227 * tmp5
+        tmp229 = tl.full([1], 39, tl.int32)
+        tmp230 = tmp0 == tmp229
+        tmp233 = tmp232 * tmp5
+        tmp234 = tl.full([1], 38, tl.int32)
+        tmp235 = tmp0 == tmp234
+        tmp238 = tmp237 * tmp5
+        tmp239 = tl.full([1], 37, tl.int32)
+        tmp240 = tmp0 == tmp239
+        tmp243 = tmp242 * tmp5
+        tmp244 = tl.full([1], 36, tl.int32)
+        tmp245 = tmp0 == tmp244
+        tmp248 = tmp247 * tmp5
+        tmp249 = tl.where(tmp245, tmp248, tmp218)
+        tmp250 = tl.where(tmp240, tmp243, tmp249)
+        tmp251 = tl.where(tmp235, tmp238, tmp250)
+        tmp252 = tl.where(tmp230, tmp233, tmp251)
+        tmp253 = tl.where(tmp225, tmp228, tmp252)
+        tmp254 = tl.where(tmp220, tmp223, tmp253)
+        tmp255 = tl.full([1], 47, tl.int32)
+        tmp256 = tmp0 == tmp255
+        tmp259 = tmp258 * tmp5
+        tmp260 = tl.full([1], 46, tl.int32)
+        tmp261 = tmp0 == tmp260
+        tmp264 = tmp263 * tmp5
+        tmp265 = tl.full([1], 45, tl.int32)
+        tmp266 = tmp0 == tmp265
+        tmp269 = tmp268 * tmp5
+        tmp270 = tl.full([1], 44, tl.int32)
+        tmp271 = tmp0 == tmp270
+        tmp274 = tmp273 * tmp5
+        tmp275 = tl.full([1], 43, tl.int32)
+        tmp276 = tmp0 == tmp275
+        tmp279 = tmp278 * tmp5
+        tmp280 = tl.full([1], 42, tl.int32)
+        tmp281 = tmp0 == tmp280
+        tmp284 = tmp283 * tmp5
+        tmp285 = tl.where(tmp281, tmp284, tmp254)
+        tmp286 = tl.where(tmp276, tmp279, tmp285)
+        tmp287 = tl.where(tmp271, tmp274, tmp286)
+        tmp288 = tl.where(tmp266, tmp269, tmp287)
+        tmp289 = tl.where(tmp261, tmp264, tmp288)
+        tmp290 = tl.where(tmp256, tmp259, tmp289)
+        tmp291 = tl.full([1], 53, tl.int32)
+        tmp292 = tmp0 == tmp291
+        tmp295 = tmp294 * tmp5
+        tmp296 = tl.full([1], 52, tl.int32)
+        tmp297 = tmp0 == tmp296
+        tmp300 = tmp299 * tmp5
+        tmp301 = tl.full([1], 51, tl.int32)
+        tmp302 = tmp0 == tmp301
+        tmp305 = tmp304 * tmp5
+        tmp306 = tl.full([1], 50, tl.int32)
+        tmp307 = tmp0 == tmp306
+        tmp310 = tmp309 * tmp5
+        tmp311 = tl.full([1], 49, tl.int32)
+        tmp312 = tmp0 == tmp311
+        tmp315 = tmp314 * tmp5
+        tmp316 = tl.full([1], 48, tl.int32)
+        tmp317 = tmp0 == tmp316
+        tmp320 = tmp319 * tmp5
+        tmp321 = tl.where(tmp317, tmp320, tmp290)
+        tmp322 = tl.where(tmp312, tmp315, tmp321)
+        tmp323 = tl.where(tmp307, tmp310, tmp322)
+        tmp324 = tl.where(tmp302, tmp305, tmp323)
+        tmp325 = tl.where(tmp297, tmp300, tmp324)
+        tmp326 = tl.where(tmp292, tmp295, tmp325)
+        tmp327 = tl.full([1], 59, tl.int32)
+        tmp328 = tmp0 == tmp327
+        tmp331 = tmp330 * tmp5
+        tmp332 = tl.full([1], 58, tl.int32)
+        tmp333 = tmp0 == tmp332
+        tmp336 = tmp335 * tmp5
+        tmp337 = tl.full([1], 57, tl.int32)
+        tmp338 = tmp0 == tmp337
+        tmp341 = tmp340 * tmp5
+        tmp342 = tl.full([1], 56, tl.int32)
+        tmp343 = tmp0 == tmp342
+        tmp346 = tmp345 * tmp5
+        tmp347 = tl.full([1], 55, tl.int32)
+        tmp348 = tmp0 == tmp347
+        tmp351 = tmp350 * tmp5
+        tmp352 = tl.full([1], 54, tl.int32)
+        tmp353 = tmp0 == tmp352
+        tmp356 = tmp355 * tmp5
+        tmp357 = tl.where(tmp353, tmp356, tmp326)
+        tmp358 = tl.where(tmp348, tmp351, tmp357)
+        tmp359 = tl.where(tmp343, tmp346, tmp358)
+        tmp360 = tl.where(tmp338, tmp341, tmp359)
+        tmp361 = tl.where(tmp333, tmp336, tmp360)
+        tmp362 = tl.where(tmp328, tmp331, tmp361)
+        tmp363 = tl.full([1], 65, tl.int32)
+        tmp364 = tmp0 == tmp363
+        tmp367 = tmp366 * tmp5
+        tmp368 = tl.full([1], 64, tl.int32)
+        tmp369 = tmp0 == tmp368
+        tmp372 = tmp371 * tmp5
+        tmp373 = tl.full([1], 63, tl.int32)
+        tmp374 = tmp0 == tmp373
+        tmp377 = tmp376 * tmp5
+        tmp378 = tl.full([1], 62, tl.int32)
+        tmp379 = tmp0 == tmp378
+        tmp382 = tmp381 * tmp5
+        tmp383 = tl.full([1], 61, tl.int32)
+        tmp384 = tmp0 == tmp383
+        tmp387 = tmp386 * tmp5
+        tmp388 = tl.full([1], 60, tl.int32)
+        tmp389 = tmp0 == tmp388
+        tmp392 = tmp391 * tmp5
+        tmp393 = tl.where(tmp389, tmp392, tmp362)
+        tmp394 = tl.where(tmp384, tmp387, tmp393)
+        tmp395 = tl.where(tmp379, tmp382, tmp394)
+        tmp396 = tl.where(tmp374, tmp377, tmp395)
+        tmp397 = tl.where(tmp369, tmp372, tmp396)
+        tmp398 = tl.where(tmp364, tmp367, tmp397)
+        tmp399 = tl.full([1], 71, tl.int32)
+        tmp400 = tmp0 == tmp399
+        tmp403 = tmp402 * tmp5
+        tmp404 = tl.full([1], 70, tl.int32)
+        tmp405 = tmp0 == tmp404
+        tmp408 = tmp407 * tmp5
+        tmp409 = tl.full([1], 69, tl.int32)
+        tmp410 = tmp0 == tmp409
+        tmp413 = tmp412 * tmp5
+        tmp414 = tl.full([1], 68, tl.int32)
+        tmp415 = tmp0 == tmp414
+        tmp418 = tmp417 * tmp5
+        tmp419 = tl.full([1], 67, tl.int32)
+        tmp420 = tmp0 == tmp419
+        tmp423 = tmp422 * tmp5
+        tmp424 = tl.full([1], 66, tl.int32)
+        tmp425 = tmp0 == tmp424
+        tmp428 = tmp427 * tmp5
+        tmp429 = tl.where(tmp425, tmp428, tmp398)
+        tmp430 = tl.where(tmp420, tmp423, tmp429)
+        tmp431 = tl.where(tmp415, tmp418, tmp430)
+        tmp432 = tl.where(tmp410, tmp413, tmp431)
+        tmp433 = tl.where(tmp405, tmp408, tmp432)
+        tmp434 = tl.where(tmp400, tmp403, tmp433)
+        tmp435 = tl.full([1], 77, tl.int32)
+        tmp436 = tmp0 == tmp435
+        tmp439 = tmp438 * tmp5
+        tmp440 = tl.full([1], 76, tl.int32)
+        tmp441 = tmp0 == tmp440
+        tmp444 = tmp443 * tmp5
+        tmp445 = tl.full([1], 75, tl.int32)
+        tmp446 = tmp0 == tmp445
+        tmp449 = tmp448 * tmp5
+        tmp450 = tl.full([1], 74, tl.int32)
+        tmp451 = tmp0 == tmp450
+        tmp454 = tmp453 * tmp5
+        tmp455 = tl.full([1], 73, tl.int32)
+        tmp456 = tmp0 == tmp455
+        tmp459 = tmp458 * tmp5
+        tmp460 = tl.full([1], 72, tl.int32)
+        tmp461 = tmp0 == tmp460
+        tmp464 = tmp463 * tmp5
+        tmp465 = tl.where(tmp461, tmp464, tmp434)
+        tmp466 = tl.where(tmp456, tmp459, tmp465)
+        tmp467 = tl.where(tmp451, tmp454, tmp466)
+        tmp468 = tl.where(tmp446, tmp449, tmp467)
+        tmp469 = tl.where(tmp441, tmp444, tmp468)
+        tmp470 = tl.where(tmp436, tmp439, tmp469)
+        tmp471 = tl.full([1], 83, tl.int32)
+        tmp472 = tmp0 == tmp471
+        tmp475 = tmp474 * tmp5
+        tmp476 = tl.full([1], 82, tl.int32)
+        tmp477 = tmp0 == tmp476
+        tmp480 = tmp479 * tmp5
+        tmp481 = tl.full([1], 81, tl.int32)
+        tmp482 = tmp0 == tmp481
+        tmp485 = tmp484 * tmp5
+        tmp486 = tl.full([1], 80, tl.int32)
+        tmp487 = tmp0 == tmp486
+        tmp490 = tmp489 * tmp5
+        tmp491 = tl.full([1], 79, tl.int32)
+        tmp492 = tmp0 == tmp491
+        tmp495 = tmp494 * tmp5
+        tmp496 = tl.full([1], 78, tl.int32)
+        tmp497 = tmp0 == tmp496
+        tmp500 = tmp499 * tmp5
+        tmp501 = tl.where(tmp497, tmp500, tmp470)
+        tmp502 = tl.where(tmp492, tmp495, tmp501)
+        tmp503 = tl.where(tmp487, tmp490, tmp502)
+        tmp504 = tl.where(tmp482, tmp485, tmp503)
+        tmp505 = tl.where(tmp477, tmp480, tmp504)
+        tmp506 = tl.where(tmp472, tmp475, tmp505)
+        tmp507 = tl.full([1], 89, tl.int32)
+        tmp508 = tmp0 == tmp507
+        tmp511 = tmp510 * tmp5
+        tmp512 = tl.full([1], 88, tl.int32)
+        tmp513 = tmp0 == tmp512
+        tmp516 = tmp515 * tmp5
+        tmp517 = tl.full([1], 87, tl.int32)
+        tmp518 = tmp0 == tmp517
+        tmp521 = tmp520 * tmp5
+        tmp522 = tl.full([1], 86, tl.int32)
+        tmp523 = tmp0 == tmp522
+        tmp526 = tmp525 * tmp5
+        tmp527 = tl.full([1], 85, tl.int32)
+        tmp528 = tmp0 == tmp527
+        tmp531 = tmp530 * tmp5
+        tmp532 = tl.full([1], 84, tl.int32)
+        tmp533 = tmp0 == tmp532
+        tmp536 = tmp535 * tmp5
+        tmp537 = tl.where(tmp533, tmp536, tmp506)
+        tmp538 = tl.where(tmp528, tmp531, tmp537)
+        tmp539 = tl.where(tmp523, tmp526, tmp538)
+        tmp540 = tl.where(tmp518, tmp521, tmp539)
+        tmp541 = tl.where(tmp513, tmp516, tmp540)
+        tmp542 = tl.where(tmp508, tmp511, tmp541)
+        tmp543 = tl.full([1], 95, tl.int32)
+        tmp544 = tmp0 == tmp543
+        tmp547 = tmp546 * tmp5
+        tmp548 = tl.full([1], 94, tl.int32)
+        tmp549 = tmp0 == tmp548
+        tmp552 = tmp551 * tmp5
+        tmp553 = tl.full([1], 93, tl.int32)
+        tmp554 = tmp0 == tmp553
+        tmp557 = tmp556 * tmp5
+        tmp558 = tl.full([1], 92, tl.int32)
+        tmp559 = tmp0 == tmp558
+        tmp562 = tmp561 * tmp5
+        tmp563 = tl.full([1], 91, tl.int32)
+        tmp564 = tmp0 == tmp563
+        tmp567 = tmp566 * tmp5
+        tmp568 = tl.full([1], 90, tl.int32)
+        tmp569 = tmp0 == tmp568
+        tmp572 = tmp571 * tmp5
+        tmp573 = tl.where(tmp569, tmp572, tmp542)
+        tmp574 = tl.where(tmp564, tmp567, tmp573)
+        tmp575 = tl.where(tmp559, tmp562, tmp574)
+        tmp576 = tl.where(tmp554, tmp557, tmp575)
+        tmp577 = tl.where(tmp549, tmp552, tmp576)
+        tmp578 = tl.where(tmp544, tmp547, tmp577)
+        tmp579 = tl.full([1], 99, tl.int32)
+        tmp580 = tmp0 == tmp579
+        tmp583 = tmp582 * tmp5
+        tmp584 = tl.full([1], 98, tl.int32)
+        tmp585 = tmp0 == tmp584
+        tmp588 = tmp587 * tmp5
+        tmp589 = tl.full([1], 97, tl.int32)
+        tmp590 = tmp0 == tmp589
+        tmp593 = tmp592 * tmp5
+        tmp594 = tl.full([1], 96, tl.int32)
+        tmp595 = tmp0 == tmp594
+        tmp598 = tmp597 * tmp5
+        tmp599 = tl.where(tmp595, tmp598, tmp578)
+        tmp600 = tl.where(tmp590, tmp593, tmp599)
+        tmp601 = tl.where(tmp585, tmp588, tmp600)
+        tmp602 = tl.where(tmp580, tmp583, tmp601)
+        tl.store(in_out_ptr0 + (x0), tmp602, xmask)
+
+
