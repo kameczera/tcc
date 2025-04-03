@@ -1,34 +1,57 @@
 import torch
+import time
+import matplotlib.pyplot as plt
 
-def explicit_loop(x):
+def explicit_loop_iterative(x):
     out = torch.zeros_like(x)
     out = x * x * x * x
     return out
 
+def explicit_loop_vectorized(x):
+    return x * 2
+
+# Compilação
 torch._dynamo.reset()
-compiled_f = torch.compile(explicit_loop, backend='inductor')
+compiled_iterative = torch.compile(explicit_loop_iterative, backend='inductor')
+compiled_vectorized = torch.compile(explicit_loop_vectorized, backend='inductor')
 
-device = 'cuda'
-torch.manual_seed(0)
-x = torch.rand(10, requires_grad=True).to(device)
-y = torch.ones_like(x)
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-# Criando eventos CUDA para marcação do tempo
-start_event = torch.cuda.Event(enable_timing=True)
-end_event = torch.cuda.Event(enable_timing=True)
+sizes = [100, 200, 300, 400, 500, 600]
+times_iterative = []
+times_vectorized = []
 
-# Sincroniza antes de medir o tempo
-torch.cuda.synchronize()
-start_event.record()
+def measure_time(func, x):
+    func(x)
 
-# Execução da função compilada
-out = torch.nn.functional.mse_loss(compiled_f(x), y).backward()
+    torch.cuda.synchronize()
+    start_event = torch.cuda.Event(enable_timing=True)
+    end_event = torch.cuda.Event(enable_timing=True)
 
-# Marca o fim da execução
-end_event.record()
-torch.cuda.synchronize()  # Aguarda todas as operações terminarem
+    start_event.record()
+    func(x)  # Chamada real da função
+    end_event.record()
 
-# Calcula o tempo total
-elapsed_time = start_event.elapsed_time(end_event)  # Tempo em milissegundos
+    torch.cuda.synchronize()
+    return start_event.elapsed_time(end_event)
 
-print(f"Tempo de execução: {elapsed_time:.3f} ms")
+for size in sizes:
+    x = torch.rand(size, requires_grad=False, device=device)
+
+    time_iter = measure_time(compiled_iterative, x)
+    time_vect = measure_time(compiled_vectorized, x)
+
+    times_iterative.append(time_iter)
+    times_vectorized.append(time_vect)
+
+plt.figure(figsize=(8, 5))
+plt.plot(sizes, times_iterative, label="Iterativo (Loop)", marker='o', linestyle='--', color='r')
+plt.plot(sizes, times_vectorized, label="Vetorizado (Multiplicação Direta)", marker='s', linestyle='-', color='g')
+
+plt.xlabel("Tamanho do Tensor")
+plt.ylabel("Tempo de Execução (ms)")
+plt.title("Comparação de Tempo de Execução - Iterativo vs Vetorizado")
+plt.legend()
+plt.grid()
+
+plt.savefig("comparacao_tempo_execucao.png", dpi=300, bbox_inches='tight')
