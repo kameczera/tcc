@@ -2,7 +2,7 @@ import torch
 
 def explicit_loop(x):
     out = torch.zeros_like(x)
-    out = x * 2
+    out = x * x * x * x
     return out
 
 torch._dynamo.reset()
