@@ -4,8 +4,7 @@ import matplotlib.pyplot as plt
 
 def explicit_loop_iterative(x):
     out = torch.zeros_like(x)
-    for i in range(x.shape[0]):
-        out[i] = x[i] * 2
+    out = x * x * x * x
     return out
 
 def explicit_loop_vectorized(x):
