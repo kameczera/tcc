@@ -1,46 +1,58 @@
 import torch
 import time
-import logging
-import os
+import matplotlib.pyplot as plt
 
-# 1. Forçar uso de CUDA
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+def explicit_loop_iterative(x):
+    out = torch.zeros_like(x)
+    for i in range(x.shape[0]):
+        out[i] = x[i] * 2
+    return out
 
-# 2. Definir a função alvo
-def tensor_power_10(x):
-    return x ** 10
+def explicit_loop_vectorized(x):
+    return x * 2
 
-# 3. Resetar e ativar logs detalhados
+# Compilação
 torch._dynamo.reset()
-torch._logging.set_logs(
-    dynamo=logging.DEBUG,
-    inductor=logging.DEBUG,
-    aot=logging.DEBUG
-)
+compiled_iterative = torch.compile(explicit_loop_iterative, backend='inductor')
+compiled_vectorized = torch.compile(explicit_loop_vectorized, backend='inductor')
 
-# 4. Compilar com TorchInductor
-compiled_fn = torch.compile(tensor_power_10, backend="inductor", mode="default")
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-# 5. Criar um tensor grande o bastante (para evitar fallback)
-x = torch.randn(1024 * 1024 * 4, device=device)  # ~4 milhões de floats
+sizes = [100, 200, 300, 400, 500, 600]
+times_iterative = []
+times_vectorized = []
 
-# 6. Executar e medir tempo
-start = time.time()
-result = compiled_fn(x)
-torch.cuda.synchronize()
-end = time.time()
+def measure_time(func, x):
+    func(x)
 
-print(f"Tempo de execução: {end - start:.6f} segundos")
-print(f"Resultado (primeiros 5 elementos): {result[:5]}")
+    torch.cuda.synchronize()
+    start_event = torch.cuda.Event(enable_timing=True)
+    end_event = torch.cuda.Event(enable_timing=True)
 
-# 7. Salvar debug info
-debug_dir = "torch_compile_debug"
-torch._dynamo.debug_utils.save_debug_info(debug_dir)
+    start_event.record()
+    func(x)  # Chamada real da função
+    end_event.record()
 
-# 8. Verificar se algo foi salvo
-print(f"\nArquivos salvos em '{debug_dir}':")
-for root, dirs, files in os.walk(debug_dir):
-    for f in files:
-        print(os.path.join(root, f))
-    for d in dirs:
-        print(f"[DIR] {os.path.join(root, d)}")
+    torch.cuda.synchronize()
+    return start_event.elapsed_time(end_event)
+
+for size in sizes:
+    x = torch.rand(size, requires_grad=False, device=device)
+
+    time_iter = measure_time(compiled_iterative, x)
+    time_vect = measure_time(compiled_vectorized, x)
+
+    times_iterative.append(time_iter)
+    times_vectorized.append(time_vect)
+
+plt.figure(figsize=(8, 5))
+plt.plot(sizes, times_iterative, label="Iterativo (Loop)", marker='o', linestyle='--', color='r')
+plt.plot(sizes, times_vectorized, label="Vetorizado (Multiplicação Direta)", marker='s', linestyle='-', color='g')
+
+plt.xlabel("Tamanho do Tensor")
+plt.ylabel("Tempo de Execução (ms)")
+plt.title("Comparação de Tempo de Execução - Iterativo vs Vetorizado")
+plt.legend()
+plt.grid()
+
+plt.savefig("comparacao_tempo_execucao.png", dpi=300, bbox_inches='tight')
