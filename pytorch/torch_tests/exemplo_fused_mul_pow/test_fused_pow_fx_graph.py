@@ -7,7 +7,6 @@ def f(x):
     return x ** 10
 
 def inspect_backend(gm, sample_inputs): 
-    # Forward compiler capture
     def fw(gm, sample_inputs):
         gm.print_readable()
         g = FxGraphDrawer(gm, 'fn')
@@ -15,7 +14,6 @@ def inspect_backend(gm, sample_inputs):
             file.write(g.get_dot_graph().create_svg())
         return make_boxed_func(gm.forward)
     
-    # Backward compiler capture
     def bw(gm, sample_inputs):
         gm.print_readable()
         g = FxGraphDrawer(gm, 'fn')
